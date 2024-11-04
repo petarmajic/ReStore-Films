@@ -1,0 +1,3 @@
+[submodule "ReStore-Films.wiki"]
+	path = ReStore-Films.wiki
+	url = git@github.com:petarmajic/ReStore-Films.wiki.git
