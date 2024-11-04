@@ -1,14 +1,12 @@
-// Dev/progi/src/App.jsx
-
-import React from 'react';
-import LoginSignUp from './assets/login/login';
-
+import React from "react";
+import LoginSignUp from "./assets/login/login";
+import { LayoutProvider } from "./assets/layout/layoutcontext";
 
 function App() {
   return (
-    <div>
+    <LayoutProvider>
       <LoginSignUp />
-    </div>
+    </LayoutProvider>
   );
 }
 
