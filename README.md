@@ -71,7 +71,7 @@ Očekujemo da ćete poštovati [etički kodeks IEEE-a](https://www.ieee.org/abou
 Kodeks ponašanja skup je provedivih pravila koja služe za jasnu komunikaciju očekivanja i zahtjeva za rad zajednice/tima. Njime se jasno definiraju obaveze, prava, neprihvatljiva ponašanja te  odgovarajuće posljedice (za razliku od etičkog kodeksa). U ovom repozitoriju dan je jedan od široko prihvačenih kodeks ponašanja za rad u zajednici otvorenog koda.
 
 # Kontribucije
->Pravila su izdvojena u CODE_OF_CONDUCT.md
+>Pravila su izdvojena u CONTRIBUTING.md
 
 # 📝 Licenca
 
