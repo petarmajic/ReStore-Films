@@ -3,7 +3,6 @@
   top: 0;
   left: 0;
   background-color: #ffffff;
-  width: calc(100% - 32px);
   color: #fff;
   padding: 1em;
   display: flex;
@@ -11,7 +10,7 @@
   justify-content: space-between;
   align-items: center;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  padding: 16px;
+
 }
 
 .navbar .dark-mode{
