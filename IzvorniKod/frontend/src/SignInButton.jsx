@@ -2,6 +2,7 @@ import React from "react";
 import { useMsal } from "@azure/msal-react";
 import { loginRequest } from "./authConfig";
 import Button from "react-bootstrap/Button";
+import "./SignInButton.css";
 
 /**
  * Renders a drop down button with child buttons for logging in with a popup or redirect
@@ -20,7 +21,7 @@ export const SignInButton = () => {
     <Button  as="button" onClick={() => handleLogin("redirect")}
       variant="secondary"
       className="ml-auto">
-      Sign in
+      SIGN IN
     </Button>
   );
 };
