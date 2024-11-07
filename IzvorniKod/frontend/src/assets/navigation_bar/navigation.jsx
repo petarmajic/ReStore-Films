@@ -21,26 +21,32 @@ const Navigation = () => {
       isAuthenticated ? navigate("/home") : navigate("/");
     }
   };
-  const handleLoginClick = () => {
-    navigate("/");
+  const handleScannerClick = () => {
+    navigate("/scanner");
+  };
+  const handleBarcodesClick = () => {
+    navigate("/barcodes");
   };
 
   return (
     <nav className={`navbar ${darkMode ? "dark-mode" : ""}`}>
-      <ul>
-        <li>
-          <button onClick={handleHomeClick}>Home</button>
+      <ul style={{ display: "flex", justifyContent: "space-between" }}>
+        <li style={{ display: "flex", alignItems: "center" }}>
+          <button onClick={handleHomeClick} style={{ marginRight: "10px" }}>
+            Home
+          </button>
         </li>
-        <li>
+        <li style={{ display: "flex", alignItems: "center" }}>
+          <button onClick={handleScannerClick} style={{ marginRight: "10px" }}>
+            Scanner
+          </button>
+          <button onClick={handleBarcodesClick}>Barcodes</button>
+        </li>
+        <li style={{ display: "flex", alignItems: "center" }}>
+          <button onClick={handleDarkMode} style={{ marginRight: "10px" }}>
+            {darkMode ? "Light Mode" : "Dark Mode"}
+          </button>
           <div>{isAuthenticated ? <SignOutButton /> : <SignInButton />}</div>
-        </li>
-        <li>
-          <div style={{ display: "flex", alignItems: "center" }}>
-            <button onClick={handleDarkMode} style={{ marginRight: "10px" }}>
-              {darkMode ? "Light Mode" : "Dark Mode"}
-            </button>
-            <button onClick={handleLoginClick}>Login</button>
-          </div>
         </li>
       </ul>
     </nav>
