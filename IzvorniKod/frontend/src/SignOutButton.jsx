@@ -8,7 +8,7 @@ import Button from "react-bootstrap/Button";
 export const SignOutButton = () => {
   const { instance } = useMsal();
 
-  const handleLogout = (logoutType) => {
+  const handleLogout = () => {
       instance.logoutRedirect({
         postLogoutRedirectUri: "/",
       });

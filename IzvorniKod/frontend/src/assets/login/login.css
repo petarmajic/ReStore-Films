@@ -1,71 +1,125 @@
+/* Import fonta */
 @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&display=swap');
 
-.center-container {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  width: 100%;
-  height: 100%;
+/* Slika pozadine */
+.background-image {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;      
+  height: 100vh;    
+  object-fit: cover;
+  z-index: -1;
 }
 
-.center-container .button-container {
-  padding: 20px;
-  background-color: #3a3a3a;
-  color: #D4A373;
-  box-shadow: 5px 5px 5px hsla(0, 0%, 0%, 0.1);
-  width: 60%;
-  max-width: 600px;
-  height: 600px;
-  border-radius: 10px;
-  margin: 64px;
-  }
+/* Glavni kontejner */
+.center-container {
+  display: flex; 
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+  height: 100vh;
+}
 
-  .center-container .background-image {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;      
-    height: 100vh;    
-    object-fit: cover;
-    z-index: -1;
-  }
-
-  .button-container .title {
-    font-family: 'Cinzel', serif;
-    font-size: 3rem;
-    text-align: center;
-    margin-top: 40px;
-    width: 100%;
-    height: 15%;
-  }
-
-  .button-container .subtitle {
-    font-family: 'Cinzel', serif;
-    color: #ededed;
-    font-size: 1rem;
-    text-align: center;
-    width: 100%;
-  }
-
-.sign-in {
+/* Kontejner za gumb */
+.button-container {
   display: flex;
   justify-content: center;
-  width: 50%;
-  margin: auto;
-  margin-top: 120px;
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
-  transition: background-color 0.3s ease; 
+  align-items: center;
+  flex-wrap: wrap;
+  background-color: #3a3a3a;
+  color: #D4A373;
+  box-shadow: 0.5rem 0.5rem 1rem rgba(0, 0, 0, 0.2);
+  width: 60vw;
+  height: 80vh;
+  max-width: 29rem;
+  max-height: 38rem;
+  border-radius: 0.625rem;
+  padding: 2rem;
+  text-align: center;
+  }
+
+/* Naslov i podnaslov */
+.title {
+  font-family: 'Cinzel', serif;
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
 }
 
-.app-footer{
+.subtitle {
+  font-family: 'Cinzel', serif;
   color: #ededed;
+  font-size: 1rem;
+  margin-bottom: 2rem;
+  line-height: 1.4;
+}
+
+/* Sign in gumb */
+.sign-in-wrap {
+  font-family: 'Cinzel', serif;
+  margin-top: 1.5rem;
+  width: 50%;
+  max-width: 12rem;
+}
+
+/* Footer kartice */
+.app-footer{
   font-family: 'Cinzel', serif;
   font-size: 0.8rem;
+  color: #ededed;
   text-align: center;
-  margin-top: 200px;
-  
+  margin-top: 5rem;
+}
+
+/*----------------------Responzivnost---------------------------*/
+@media (max-width: 768px) {
+    .button-container {
+      width: 85vw;
+      padding: 1.5rem;
+    }
+
+    .title {
+      font-size: 2rem;
+    }
+
+    .subtitle {
+      font-size: 0.9rem;
+    }
+
+    .sign-in-wrap {
+      width: 70%;
+      font-size: 0.9rem;
+    }
+
+    .app-footer {
+      font-size: 0.75rem;
+    }
+}
+
+/*--------------------Responzivnost-------------------*/
+@media (max-width: 480px) {
+    .button-container {
+      width: 90vw;
+      padding: 1.25rem;
+    }
+
+    .title {
+      font-size: 1.75rem;
+    }
+
+    .subtitle {
+      font-size: 0.85rem;
+    }
+
+    .sign-in-wrap {
+      width: 80%;
+      font-size: 0.85rem;
+      padding: 0.65rem;
+    }
+
+    .app-footer {
+      font-size: 0.7rem;
+    }
 }
 
 

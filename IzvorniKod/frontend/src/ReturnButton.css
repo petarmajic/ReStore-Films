@@ -1,0 +1,18 @@
+/* Gumb za povratak */
+.return-button {
+    background-color: #6c757d !important;
+    color: #ededed;
+    width: 100%;
+    height: 100%;
+    border: none !important;
+    cursor: pointer;
+    border-radius: 0.5rem;
+    font-size: 1.15rem;
+    transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+/* Prelazak mišom preko gumba */
+.return-button:hover {
+    transform: scale(1.1);
+    background-color: #5a6268;
+}

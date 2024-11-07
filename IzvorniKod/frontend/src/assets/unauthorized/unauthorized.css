@@ -1,0 +1,93 @@
+/* Import fonta */
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&display=swap');
+
+/* Slika pozadine */
+.unauth-bg-image {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;      
+    height: 100vh;    
+    object-fit: cover;
+    z-index: -1;
+  }
+
+  /* Glavni kontejner */
+.main-div {
+    display: flex; 
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+    height: 100vh;
+}
+
+/* Kartica */
+.sub-div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    background-color: #3a3a3a;
+    color: #D4A373;
+    box-shadow: 0.5rem 0.5rem 1rem rgba(0, 0, 0, 0.2);
+    width: 40vw;
+    height: 40vh;
+    max-width: 31rem;
+    max-height: 17rem;
+    border-radius: 0.625rem;
+    padding: 2rem;
+    text-align: center;
+    font-family: 'Cinzel', serif;
+    font-size: 2rem;
+}
+
+/* Poruka upozorenja */
+.unauth-para {
+    color: #ff6b35;
+    font-weight: bold;
+    font-size: 1rem;
+}
+
+/* Gumb za povratak na početnu */
+.back-to-login {
+    margin-top: 1.5rem;
+    width: 50%;
+    max-width: 8rem;
+    height: 17%;
+    max-height: 3rem;
+}
+
+/*----------------------Responzivnost---------------------------*/
+@media (max-width: 768px) {
+    .sub-div {
+        width: 65vw;
+        padding: 1.5rem;
+        font-size: 1.5rem;
+    }
+
+    .unauth-para {
+        font-size: 0.9rem;
+    }
+
+    .back-to-login {
+        width: 70%;
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .sub-div {
+        width: 70vw;
+        padding: 1.25rem;
+        font-size: 1.25rem;
+    }
+
+    .unauth-para {
+        font-size: 0.85rem;
+    }
+
+    .back-to-login {
+        width: 80%;
+        font-size: 0.85rem;
+    }
+}

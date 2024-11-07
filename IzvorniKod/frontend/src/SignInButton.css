@@ -1,8 +1,11 @@
 @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&display=swap');
 
-.ml-auto{
-    font-family: 'Cinzel', serif;
-    font-size: 1rem;
+.sign-in{
     width: 100%;
-    color: #ededed;
+    height: 100%;
 }
+
+
+
+
+

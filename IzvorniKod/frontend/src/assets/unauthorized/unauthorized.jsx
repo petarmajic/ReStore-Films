@@ -1,24 +1,17 @@
-import { Link } from "react-router-dom";
+import pozadina from '../images/filmskaVrpca.jpg';
+import { ReturnButton } from "../../ReturnButton.jsx";
+import "./unauthorized.css";
+
 
 const Unauthorized = () => {
   return (
-    <div>
-      <h1>Unauthorized</h1>
-      <p>You do not have permission to access this page.</p>
-      <Link
-        to="/"
-        style={{
-          padding: "10px 20px",
-          fontSize: "18px",
-          backgroundColor: "#4CAF50",
-          color: "#fff",
-          border: "none",
-          borderRadius: "5px",
-          cursor: "pointer",
-        }}
-      >
-        Login
-      </Link>
+    <div className="main-div">
+        <img className="unauth-bg-image" src={pozadina} alt="background picture"></img>
+        <div className="sub-div">
+            <h1 clasName="unauth-title">Unauthorized</h1>
+            <p className="unauth-para">You do not have permission to access this page.</p>
+            <div className="back-to-login"><ReturnButton/></div>
+        </div>
     </div>
   );
 };

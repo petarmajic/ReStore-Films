@@ -5,14 +5,14 @@ import Button from "react-bootstrap/Button";
 import "./SignInButton.css";
 
 /**
- * Renders a drop down button with child buttons for logging in with a popup or redirect
+ * Renders a button for logging in with redirect
  * Note the [useMsal] package
  */
 
 export const SignInButton = () => {
   const { instance } = useMsal();
 
-  const handleLogin = (loginType) => {
+  const handleLogin = () => {
       instance.loginRedirect(loginRequest).catch((e) => {
         console.log(e);
       });
@@ -20,7 +20,7 @@ export const SignInButton = () => {
   return (
     <Button  as="button" onClick={() => handleLogin("redirect")}
       variant="secondary"
-      className="ml-auto">
+      className="sign-in">
       SIGN IN
     </Button>
   );
