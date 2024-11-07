@@ -468,3 +468,158 @@ SET AUTO_SERVER true #previous: jdbc:h2:file:./db/testdb [42000-224]
 	at org.h2.message.DbException.getJdbcSQLException(DbException.java:514)
 	at org.h2.message.DbException.getJdbcSQLException(DbException.java:489)
 	... 62 more
+2024-11-07 11:30:11.150082+01:00 jdbc[14]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "FILMSKATRAKA" not found; SQL statement:
+INSERT INTO FilmskaTraka (
+  IDEmisije, 
+  OriginalniNaslov, 
+  RadniNaslov, 
+  JezikOriginala, 
+  Ton, 
+  Emisija, 
+  Porijeklo_ZemljaProizvodnje, 
+  Licenca, 
+  GodinaProizvodnje, 
+  MarkIN, 
+  MarkOUT, 
+  Duration, 
+  BrojMedija
+) VALUES (
+  1,               -- IDEmisije
+  12345,           -- OriginalniNaslov (assuming it is stored as an integer ID)
+  67890,           -- RadniNaslov (assuming it is stored as an integer ID)
+  1,               -- JezikOriginala (e.g., 1 for a specific language code)
+  1,               -- Ton (e.g., 1 for "Stereo" or another value for sound type)
+  101,             -- Emisija (program ID, assuming it’s an integer)
+  44,              -- Porijeklo_ZemljaProizvodnje (e.g., country ID for production)
+  555,             -- Licenca (e.g., license ID)
+  2023,            -- GodinaProizvodnje (year of production)
+  100,             -- MarkIN (start marker)
+  200,             -- MarkOUT (end marker)
+  120,             -- Duration (e.g., duration in minutes or seconds)
+  2                -- BrojMedija (e.g., media count)
+) [42102-224]
+2024-11-07 11:30:23.256222+01:00 jdbc[14]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Column "ORIGINALNINASLOV" not found; SQL statement:
+INSERT INTO Filmska_Traka (
+  IDEmisije, 
+  OriginalniNaslov, 
+  RadniNaslov, 
+  JezikOriginala, 
+  Ton, 
+  Emisija, 
+  Porijeklo_ZemljaProizvodnje, 
+  Licenca, 
+  GodinaProizvodnje, 
+  MarkIN, 
+  MarkOUT, 
+  Duration, 
+  BrojMedija
+) VALUES (
+  1,               -- IDEmisije
+  12345,           -- OriginalniNaslov (assuming it is stored as an integer ID)
+  67890,           -- RadniNaslov (assuming it is stored as an integer ID)
+  1,               -- JezikOriginala (e.g., 1 for a specific language code)
+  1,               -- Ton (e.g., 1 for "Stereo" or another value for sound type)
+  101,             -- Emisija (program ID, assuming it’s an integer)
+  44,              -- Porijeklo_ZemljaProizvodnje (e.g., country ID for production)
+  555,             -- Licenca (e.g., license ID)
+  2023,            -- GodinaProizvodnje (year of production)
+  100,             -- MarkIN (start marker)
+  200,             -- MarkOUT (end marker)
+  120,             -- Duration (e.g., duration in minutes or seconds)
+  2                -- BrojMedija (e.g., media count)
+) [42122-224]
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:514)
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:489)
+	at org.h2.message.DbException.get(DbException.java:223)
+	at org.h2.message.DbException.get(DbException.java:199)
+	at org.h2.table.Table.getColumn(Table.java:759)
+	at org.h2.command.Parser.parseColumn(Parser.java:1190)
+	at org.h2.command.Parser.parseColumnList(Parser.java:1175)
+	at org.h2.command.Parser.parseInsert(Parser.java:1549)
+	at org.h2.command.Parser.parsePrepared(Parser.java:719)
+	at org.h2.command.Parser.parse(Parser.java:592)
+	at org.h2.command.Parser.parse(Parser.java:564)
+	at org.h2.command.Parser.prepareCommand(Parser.java:483)
+	at org.h2.engine.SessionLocal.prepareLocal(SessionLocal.java:639)
+	at org.h2.engine.SessionLocal.prepareCommand(SessionLocal.java:559)
+	at org.h2.jdbc.JdbcConnection.prepareCommand(JdbcConnection.java:1166)
+	at org.h2.jdbc.JdbcStatement.executeInternal(JdbcStatement.java:245)
+	at org.h2.jdbc.JdbcStatement.execute(JdbcStatement.java:231)
+	at org.h2.server.web.WebApp.getResult(WebApp.java:1345)
+	at org.h2.server.web.WebApp.query(WebApp.java:1143)
+	at org.h2.server.web.WebApp.query(WebApp.java:1119)
+	at org.h2.server.web.WebApp.process(WebApp.java:245)
+	at org.h2.server.web.WebApp.processRequest(WebApp.java:177)
+	at org.h2.server.web.JakartaWebServlet.doGet(JakartaWebServlet.java:129)
+	at org.h2.server.web.JakartaWebServlet.doPost(JakartaWebServlet.java:166)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:590)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:658)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:195)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:51)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:167)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:483)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:344)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:384)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:905)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1741)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1190)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63)
+	at java.base/java.lang.Thread.run(Thread.java:1575)
+2024-11-07 11:32:01.745947+01:00 jdbc[14]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "FILMSKATRAKA" not found; SQL statement:
+INSERT INTO FilmskaTraka (
+  IDEmisije, 
+  Originalni_Naslov, 
+  Radni_Naslov, 
+  Jezik_Originala, 
+  Ton, 
+  Emisija, 
+  Porijeklo_Zemlja_Proizvodnje, 
+  Licenca, 
+  Godina_Proizvodnje, 
+  MarkIN, 
+  MarkOUT, 
+  Duration, 
+  Broj_Medija
+) VALUES (
+  1,               -- IDEmisije
+  12345,           -- OriginalniNaslov (assuming it is stored as an integer ID)
+  67890,           -- RadniNaslov (assuming it is stored as an integer ID)
+  1,               -- JezikOriginala (e.g., 1 for a specific language code)
+  1,               -- Ton (e.g., 1 for "Stereo" or another value for sound type)
+  101,             -- Emisija (program ID, assuming it’s an integer)
+  44,              -- Porijeklo_ZemljaProizvodnje (e.g., country ID for production)
+  555,             -- Licenca (e.g., license ID)
+  2023,            -- GodinaProizvodnje (year of production)
+  100,             -- MarkIN (start marker)
+  200,             -- MarkOUT (end marker)
+  120,             -- Duration (e.g., duration in minutes or seconds)
+  2                -- BrojMedija (e.g., media count)
+) [42102-224]
+2024-11-07 12:56:24.484630+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "[*]IDEMISIJE"; expected "INSERT"; SQL statement:
+IDEMISIJE [42001-224]

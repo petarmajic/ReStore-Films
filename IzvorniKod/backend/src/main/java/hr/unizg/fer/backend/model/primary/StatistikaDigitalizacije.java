@@ -1,4 +1,4 @@
-package hr.unizg.fer.backend.model;
+package hr.unizg.fer.backend.model.primary;
 
 import jakarta.persistence.*;
 
