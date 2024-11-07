@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
+import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
@@ -26,7 +27,7 @@ public class PrimaryDatabaseConfig {
     @Bean(name = "primaryDataSource")
     public DataSource primaryDataSource() {
         return DataSourceBuilder.create()
-                .url("jdbc:h2:file:./db/testdb;auto_server=true")
+                .url("jdbc:h2:file:./db/primarydb;auto_server=true")
                 .username("sa")
                 .password("")
                 .driverClassName("org.h2.Driver")
@@ -39,7 +40,13 @@ public class PrimaryDatabaseConfig {
         LocalContainerEntityManagerFactoryBean factoryBean = new LocalContainerEntityManagerFactoryBean();
         factoryBean.setDataSource(primaryDataSource);
         factoryBean.setPackagesToScan("hr.unizg.fer.backend.model.primary");
+        // factoryBean.setJpaPropertyMap(jpaProperties());
+
+        // Specify Hibernate as the JPA provider
+        factoryBean.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
         factoryBean.setJpaPropertyMap(jpaProperties());
+
+
         return factoryBean;
     }
 

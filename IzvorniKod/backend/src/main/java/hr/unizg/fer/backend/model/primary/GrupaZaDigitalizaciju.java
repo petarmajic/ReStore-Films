@@ -2,6 +2,9 @@ package hr.unizg.fer.backend.model.primary;
 
 import jakarta.persistence.*;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Entity
 @Table(name = "GRUPA_ZA_DIGITALIZACIJU")
 public class GrupaZaDigitalizaciju {
@@ -27,16 +30,22 @@ public class GrupaZaDigitalizaciju {
     @JoinColumn(name = "vratioUSkladisteIDKorisnika", nullable = false)
     private Korisnik vratioUSkladisteKorisnik;
 
+    @OneToMany(mappedBy = "grupaZaDigitalizaciju")
+    private Set<FilmskaTraka> filmskeTrake = new HashSet<>();
+
+
     public GrupaZaDigitalizaciju() {
     }
 
-    public GrupaZaDigitalizaciju(int idGrupe, int statusDigitalizacije, int vrijemePocetka, int vrijemeZavrsetka, Korisnik korisnik, Korisnik vratioUSkladisteKorisnik) {
+    public GrupaZaDigitalizaciju(int idGrupe, int statusDigitalizacije, int vrijemePocetka, int vrijemeZavrsetka,
+                                 Korisnik korisnik, Korisnik vratioUSkladisteKorisnik, Set<FilmskaTraka> filmskeTrake) {
         this.idGrupe = idGrupe;
         this.statusDigitalizacije = statusDigitalizacije;
         this.vrijemePocetka = vrijemePocetka;
         this.vrijemeZavrsetka = vrijemeZavrsetka;
         this.korisnik = korisnik;
         this.vratioUSkladisteKorisnik = vratioUSkladisteKorisnik;
+        this.filmskeTrake = filmskeTrake;
     }
 
     public int getIdGrupe() {
@@ -85,5 +94,13 @@ public class GrupaZaDigitalizaciju {
 
     public void setVratioUSkladisteKorisnik(Korisnik vratioUSkladisteKorisnik) {
         this.vratioUSkladisteKorisnik = vratioUSkladisteKorisnik;
+    }
+
+    public Set<FilmskaTraka> getFilmskeTrake() {
+        return filmskeTrake;
+    }
+
+    public void setFilmskeTrake(Set<FilmskaTraka> filmskeTrake) {
+        this.filmskeTrake = filmskeTrake;
     }
 }

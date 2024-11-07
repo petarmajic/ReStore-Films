@@ -3,7 +3,7 @@ package hr.unizg.fer.backend.model.primary;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "FilmskaTraka")
+//@Table(name = "FILMSKA_TRAKA")
 public class FilmskaTraka {
 
     @Id
@@ -46,10 +46,17 @@ public class FilmskaTraka {
     @Column(name = "BrojMedija", nullable = false)
     private int brojMedija;
 
+    @ManyToOne
+    @JoinColumn(name = "IDGrupeZaDigitalizaciju", nullable = false)
+    private GrupaZaDigitalizaciju grupaZaDigitalizaciju;
+
     public FilmskaTraka() {
     }
 
-    public FilmskaTraka(int idEmisije, int originalniNaslov, int radniNaslov, int jezikOriginala, int ton, int emisija, int porijekloZemljaProizvodnje, int licenca, int godinaProizvodnje, int markIN, int markOUT, int duration, int brojMedija) {
+    public FilmskaTraka(int idEmisije, int originalniNaslov, int radniNaslov, int jezikOriginala,
+                        int ton, int emisija, int porijekloZemljaProizvodnje, int licenca,
+                        int godinaProizvodnje, int markIN, int markOUT, int duration,
+                        int brojMedija, GrupaZaDigitalizaciju grupaZaDigitalizaciju) {
         this.idEmisije = idEmisije;
         this.originalniNaslov = originalniNaslov;
         this.radniNaslov = radniNaslov;
@@ -63,6 +70,7 @@ public class FilmskaTraka {
         this.markOUT = markOUT;
         this.duration = duration;
         this.brojMedija = brojMedija;
+        this.grupaZaDigitalizaciju = grupaZaDigitalizaciju;
     }
 
     public int getIdEmisije() {
@@ -167,5 +175,13 @@ public class FilmskaTraka {
 
     public void setBrojMedija(int brojMedija) {
         this.brojMedija = brojMedija;
+    }
+
+    public GrupaZaDigitalizaciju getGrupaZaDigitalizaciju() {
+        return grupaZaDigitalizaciju;
+    }
+
+    public void setGrupaZaDigitalizaciju(GrupaZaDigitalizaciju grupaZaDigitalizaciju) {
+        this.grupaZaDigitalizaciju = grupaZaDigitalizaciju;
     }
 }
