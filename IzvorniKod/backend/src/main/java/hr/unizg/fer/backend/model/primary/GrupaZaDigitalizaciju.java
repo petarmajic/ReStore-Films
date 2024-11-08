@@ -2,6 +2,9 @@ package hr.unizg.fer.backend.model.primary;
 
 import jakarta.persistence.*;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -10,24 +13,25 @@ import java.util.Set;
 public class GrupaZaDigitalizaciju {
 
     @Id
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column(name = "IDGrupe", nullable = false)
-    private int idGrupe;
+    private Long idGrupe;
 
     @Column(name = "StatusDigitalizacije", nullable = false)
-    private int statusDigitalizacije;
+    private StatusDigitalizacije statusDigitalizacije;
 
     @Column(name = "VrijemePocetka", nullable = false)
-    private int vrijemePocetka;
+    private LocalDateTime vrijemePocetka;
 
     @Column(name = "VrijemeZavrsetka", nullable = false)
-    private int vrijemeZavrsetka;
+    private LocalDateTime vrijemeZavrsetka;
 
     @ManyToOne
-    @JoinColumn(name = "IDKorisnika", nullable = false)
+    @JoinColumn(name = "IDDjelatnikaIznio", nullable = false)
     private Korisnik korisnik;
 
     @ManyToOne
-    @JoinColumn(name = "vratioUSkladisteIDKorisnika", nullable = false)
+    @JoinColumn(name = "IDDjelatnikaVratio", nullable = false)
     private Korisnik vratioUSkladisteKorisnik;
 
     @OneToMany(mappedBy = "grupaZaDigitalizaciju")
@@ -37,8 +41,7 @@ public class GrupaZaDigitalizaciju {
     public GrupaZaDigitalizaciju() {
     }
 
-    public GrupaZaDigitalizaciju(int idGrupe, int statusDigitalizacije, int vrijemePocetka, int vrijemeZavrsetka,
-                                 Korisnik korisnik, Korisnik vratioUSkladisteKorisnik, Set<FilmskaTraka> filmskeTrake) {
+    public GrupaZaDigitalizaciju(Long idGrupe, StatusDigitalizacije statusDigitalizacije, LocalDateTime vrijemePocetka, LocalDateTime vrijemeZavrsetka, Korisnik korisnik, Korisnik vratioUSkladisteKorisnik, Set<FilmskaTraka> filmskeTrake) {
         this.idGrupe = idGrupe;
         this.statusDigitalizacije = statusDigitalizacije;
         this.vrijemePocetka = vrijemePocetka;
@@ -48,35 +51,35 @@ public class GrupaZaDigitalizaciju {
         this.filmskeTrake = filmskeTrake;
     }
 
-    public int getIdGrupe() {
+    public Long getIdGrupe() {
         return idGrupe;
     }
 
-    public void setIdGrupe(int idGrupe) {
+    public void setIdGrupe(Long idGrupe) {
         this.idGrupe = idGrupe;
     }
 
-    public int getStatusDigitalizacije() {
+    public StatusDigitalizacije getStatusDigitalizacije() {
         return statusDigitalizacije;
     }
 
-    public void setStatusDigitalizacije(int statusDigitalizacije) {
+    public void setStatusDigitalizacije(StatusDigitalizacije statusDigitalizacije) {
         this.statusDigitalizacije = statusDigitalizacije;
     }
 
-    public int getVrijemePocetka() {
+    public LocalDateTime getVrijemePocetka() {
         return vrijemePocetka;
     }
 
-    public void setVrijemePocetka(int vrijemePocetka) {
+    public void setVrijemePocetka(LocalDateTime vrijemePocetka) {
         this.vrijemePocetka = vrijemePocetka;
     }
 
-    public int getVrijemeZavrsetka() {
+    public LocalDateTime getVrijemeZavrsetka() {
         return vrijemeZavrsetka;
     }
 
-    public void setVrijemeZavrsetka(int vrijemeZavrsetka) {
+    public void setVrijemeZavrsetka(LocalDateTime vrijemeZavrsetka) {
         this.vrijemeZavrsetka = vrijemeZavrsetka;
     }
 

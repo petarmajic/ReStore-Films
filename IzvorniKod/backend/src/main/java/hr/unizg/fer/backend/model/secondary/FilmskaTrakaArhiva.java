@@ -1,166 +1,185 @@
 package hr.unizg.fer.backend.model.secondary;
 
 import jakarta.persistence.*;
+import org.springframework.cglib.core.Local;
+
+import java.time.LocalTime;
 
 @Entity
-@Table(name = "FilmskaTrakaArhiva")
 public class FilmskaTrakaArhiva {
 
     @Id
-    @Column(name = "IDEmisije", nullable = false)
-    private int idEmisije;
+    @Column(name = "BarKod", nullable = false)
+    private String barKod;
 
-    @Column(name = "OriginalniNaslov", nullable = false)
-    private int originalniNaslov;
+    @Column(name = "OriginalniNaslov",nullable = false)
+    private String originalniNaslov;
 
-    @Column(name = "RadniNaslov", nullable = false)
-    private int radniNaslov;
+    @Column(name = "RadniNaslov")
+    private String radniNaslov;
 
     @Column(name = "JezikOriginala", nullable = false)
-    private int jezikOriginala;
+    private String jezikOriginala;
 
     @Column(name = "Ton", nullable = false)
-    private int ton;
+    private String ton;
 
-    @Column(name = "Emisija", nullable = false)
-    private int emisija;
+    @Column(name = "Emisija")
+    private String emisija;
+
+    @Column(name = "VrstaSadrzaja")
+    private String vrstaSadrzaja;
 
     @Column(name = "Porijeklo_ZemljaProizvodnje", nullable = false)
-    private int porijekloZemljaProizvodnje;
+    private String porijekloZemljaProizvodnje;
 
-    @Column(name = "Licenca", nullable = false)
-    private int licenca;
+    @Column(name = "Licenca")
+    private String licenca;
 
     @Column(name = "GodinaProizvodnje", nullable = false)
-    private int godinaProizvodnje;
+    private Integer godinaProizvodnje;
 
     @Column(name = "MarkIN", nullable = false)
-    private int markIN;
+    private LocalTime markIN;
 
     @Column(name = "MarkOUT", nullable = false)
-    private int markOUT;
+    private LocalTime markOUT;
 
     @Column(name = "Duration", nullable = false)
-    private int duration;
+    private LocalTime duration;
 
     @Column(name = "BrojMedija", nullable = false)
-    private int brojMedija;
+    private String brojMedija;
 
-    @Column(name = "BarKod", nullable = false)
-    private int barKod;
-
-    // Getters and Setters
-
-    public int getIdEmisije() {
-        return idEmisije;
+    public FilmskaTrakaArhiva() {
     }
 
-    public void setIdEmisije(int idEmisije) {
-        this.idEmisije = idEmisije;
-    }
-
-    public int getOriginalniNaslov() {
-        return originalniNaslov;
-    }
-
-    public void setOriginalniNaslov(int originalniNaslov) {
+    public FilmskaTrakaArhiva(String barKod, String originalniNaslov, String radniNaslov, String jezikOriginala, String ton, String emisija, String vrstaSadrzaja, String porijekloZemljaProizvodnje, String licenca, Integer godinaProizvodnje, LocalTime markIN, LocalTime markOUT, LocalTime duration, String brojMedija) {
+        this.barKod = barKod;
         this.originalniNaslov = originalniNaslov;
-    }
-
-    public int getRadniNaslov() {
-        return radniNaslov;
-    }
-
-    public void setRadniNaslov(int radniNaslov) {
         this.radniNaslov = radniNaslov;
-    }
-
-    public int getJezikOriginala() {
-        return jezikOriginala;
-    }
-
-    public void setJezikOriginala(int jezikOriginala) {
         this.jezikOriginala = jezikOriginala;
-    }
-
-    public int getTon() {
-        return ton;
-    }
-
-    public void setTon(int ton) {
         this.ton = ton;
-    }
-
-    public int getEmisija() {
-        return emisija;
-    }
-
-    public void setEmisija(int emisija) {
         this.emisija = emisija;
-    }
-
-    public int getPorijekloZemljaProizvodnje() {
-        return porijekloZemljaProizvodnje;
-    }
-
-    public void setPorijekloZemljaProizvodnje(int porijekloZemljaProizvodnje) {
+        this.vrstaSadrzaja = vrstaSadrzaja;
         this.porijekloZemljaProizvodnje = porijekloZemljaProizvodnje;
-    }
-
-    public int getLicenca() {
-        return licenca;
-    }
-
-    public void setLicenca(int licenca) {
         this.licenca = licenca;
-    }
-
-    public int getGodinaProizvodnje() {
-        return godinaProizvodnje;
-    }
-
-    public void setGodinaProizvodnje(int godinaProizvodnje) {
         this.godinaProizvodnje = godinaProizvodnje;
-    }
-
-    public int getMarkIN() {
-        return markIN;
-    }
-
-    public void setMarkIN(int markIN) {
         this.markIN = markIN;
-    }
-
-    public int getMarkOUT() {
-        return markOUT;
-    }
-
-    public void setMarkOUT(int markOUT) {
         this.markOUT = markOUT;
-    }
-
-    public int getDuration() {
-        return duration;
-    }
-
-    public void setDuration(int duration) {
         this.duration = duration;
-    }
-
-    public int getBrojMedija() {
-        return brojMedija;
-    }
-
-    public void setBrojMedija(int brojMedija) {
         this.brojMedija = brojMedija;
     }
 
-    public int getBarKod() {
+    public String getBarKod() {
         return barKod;
     }
 
-    public void setBarKod(int barKod) {
+    public void setBarKod(String barKod) {
         this.barKod = barKod;
     }
-}
 
+    public String getOriginalniNaslov() {
+        return originalniNaslov;
+    }
+
+    public void setOriginalniNaslov(String originalniNaslov) {
+        this.originalniNaslov = originalniNaslov;
+    }
+
+    public String getRadniNaslov() {
+        return radniNaslov;
+    }
+
+    public void setRadniNaslov(String radniNaslov) {
+        this.radniNaslov = radniNaslov;
+    }
+
+    public String getJezikOriginala() {
+        return jezikOriginala;
+    }
+
+    public void setJezikOriginala(String jezikOriginala) {
+        this.jezikOriginala = jezikOriginala;
+    }
+
+    public String getTon() {
+        return ton;
+    }
+
+    public void setTon(String ton) {
+        this.ton = ton;
+    }
+
+    public String getEmisija() {
+        return emisija;
+    }
+
+    public void setEmisija(String emisija) {
+        this.emisija = emisija;
+    }
+
+    public String getVrstaSadrzaja() {
+        return vrstaSadrzaja;
+    }
+
+    public void setVrstaSadrzaja(String vrstaSadrzaja) {
+        this.vrstaSadrzaja = vrstaSadrzaja;
+    }
+
+    public String getPorijekloZemljaProizvodnje() {
+        return porijekloZemljaProizvodnje;
+    }
+
+    public void setPorijekloZemljaProizvodnje(String porijekloZemljaProizvodnje) {
+        this.porijekloZemljaProizvodnje = porijekloZemljaProizvodnje;
+    }
+
+    public String getLicenca() {
+        return licenca;
+    }
+
+    public void setLicenca(String licenca) {
+        this.licenca = licenca;
+    }
+
+    public Integer getGodinaProizvodnje() {
+        return godinaProizvodnje;
+    }
+
+    public void setGodinaProizvodnje(Integer godinaProizvodnje) {
+        this.godinaProizvodnje = godinaProizvodnje;
+    }
+
+    public LocalTime getMarkIN() {
+        return markIN;
+    }
+
+    public void setMarkIN(LocalTime markIN) {
+        this.markIN = markIN;
+    }
+
+    public LocalTime getMarkOUT() {
+        return markOUT;
+    }
+
+    public void setMarkOUT(LocalTime markOUT) {
+        this.markOUT = markOUT;
+    }
+
+    public LocalTime getDuration() {
+        return duration;
+    }
+
+    public void setDuration(LocalTime duration) {
+        this.duration = duration;
+    }
+
+    public String getBrojMedija() {
+        return brojMedija;
+    }
+
+    public void setBrojMedija(String brojMedija) {
+        this.brojMedija = brojMedija;
+    }
+}

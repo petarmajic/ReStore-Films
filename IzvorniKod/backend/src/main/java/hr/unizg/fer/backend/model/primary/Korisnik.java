@@ -7,26 +7,27 @@ import jakarta.persistence.*;
 public class Korisnik {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "IDKorisnika", nullable = false)
-    private int idKorisnika;
+    private Long idKorisnika;
 
     @Column(name = "Ime", nullable = false)
-    private int ime;
+    private String ime;
 
     @Column(name = "Prezime", nullable = false)
-    private int prezime;
+    private String prezime;
 
     @Column(name = "KorisnickoIme", nullable = false)
-    private int korisnickoIme;
+    private String korisnickoIme;
 
     @Column(name = "Email", nullable = false)
-    private int email;
+    private String email;
 
     @Column(name = "Lozinka", nullable = false)
-    private int lozinka;
+    private String lozinka;
 
     @Column(name = "Uloga", nullable = false)
-    private int uloga;
+    private UlogaKorisnika uloga;
 
     @ManyToOne
     @JoinColumn(name = "IDStatistike")
@@ -35,7 +36,7 @@ public class Korisnik {
     public Korisnik() {
     }
 
-    public Korisnik(int idKorisnika, int ime, int prezime, int korisnickoIme, int email, int lozinka, int uloga, StatistikaDigitalizacije statistikaDigitalizacije) {
+    public Korisnik(Long idKorisnika, String ime, String prezime, String korisnickoIme, String email, String lozinka, UlogaKorisnika uloga, StatistikaDigitalizacije statistikaDigitalizacije) {
         this.idKorisnika = idKorisnika;
         this.ime = ime;
         this.prezime = prezime;
@@ -46,59 +47,59 @@ public class Korisnik {
         this.statistikaDigitalizacije = statistikaDigitalizacije;
     }
 
-    public int getIdKorisnika() {
+    public Long getIdKorisnika() {
         return idKorisnika;
     }
 
-    public void setIdKorisnika(int idKorisnika) {
+    public void setIdKorisnika(Long idKorisnika) {
         this.idKorisnika = idKorisnika;
     }
 
-    public int getIme() {
+    public String getIme() {
         return ime;
     }
 
-    public void setIme(int ime) {
+    public void setIme(String ime) {
         this.ime = ime;
     }
 
-    public int getPrezime() {
+    public String getPrezime() {
         return prezime;
     }
 
-    public void setPrezime(int prezime) {
+    public void setPrezime(String prezime) {
         this.prezime = prezime;
     }
 
-    public int getKorisnickoIme() {
+    public String getKorisnickoIme() {
         return korisnickoIme;
     }
 
-    public void setKorisnickoIme(int korisnickoIme) {
+    public void setKorisnickoIme(String korisnickoIme) {
         this.korisnickoIme = korisnickoIme;
     }
 
-    public int getEmail() {
+    public String getEmail() {
         return email;
     }
 
-    public void setEmail(int email) {
+    public void setEmail(String email) {
         this.email = email;
     }
 
-    public int getLozinka() {
+    public String getLozinka() {
         return lozinka;
     }
 
-    public void setLozinka(int lozinka) {
+    public void setLozinka(String lozinka) {
         this.lozinka = lozinka;
     }
 
-    public int getUloga() {
+    public UlogaKorisnika getUloga() {
         return uloga;
     }
 
-    public void setUloga(int uloga) {
+    public void setUloga(UlogaKorisnika uloga) {
         this.uloga = uloga;
     }
 

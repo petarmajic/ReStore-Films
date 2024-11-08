@@ -1,50 +1,57 @@
 package hr.unizg.fer.backend.model.primary;
 
 import jakarta.persistence.*;
+import org.springframework.cglib.core.Local;
+
+import java.time.LocalTime;
 
 @Entity
 //@Table(name = "FILMSKA_TRAKA")
 public class FilmskaTraka {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "IDEmisije", nullable = false)
-    private int idEmisije;
+    private Long idEmisije;
 
-    @Column(name = "OriginalniNaslov", nullable = false)
-    private int originalniNaslov;
+    @Column(name = "OriginalniNaslov",nullable = false)
+    private String originalniNaslov;
 
-    @Column(name = "RadniNaslov", nullable = false)
-    private int radniNaslov;
+    @Column(name = "RadniNaslov")
+    private String radniNaslov;
 
     @Column(name = "JezikOriginala", nullable = false)
-    private int jezikOriginala;
+    private String jezikOriginala;
 
     @Column(name = "Ton", nullable = false)
-    private int ton;
+    private String ton;
 
-    @Column(name = "Emisija", nullable = false)
-    private int emisija;
+    @Column(name = "Emisija")
+    private String emisija;
+
+    @Column(name = "VrstaSadrzaja")
+    private String vrstaSadrzaja;
 
     @Column(name = "Porijeklo_ZemljaProizvodnje", nullable = false)
-    private int porijekloZemljaProizvodnje;
+    private String porijekloZemljaProizvodnje;
 
-    @Column(name = "Licenca", nullable = false)
-    private int licenca;
+    @Column(name = "Licenca")
+    private String licenca;
 
     @Column(name = "GodinaProizvodnje", nullable = false)
-    private int godinaProizvodnje;
+    private Integer godinaProizvodnje;
 
     @Column(name = "MarkIN", nullable = false)
-    private int markIN;
+    private LocalTime markIN;
 
     @Column(name = "MarkOUT", nullable = false)
-    private int markOUT;
+    private LocalTime markOUT;
 
     @Column(name = "Duration", nullable = false)
-    private int duration;
+    private LocalTime duration;
 
     @Column(name = "BrojMedija", nullable = false)
-    private int brojMedija;
+    private String brojMedija;
 
     @ManyToOne
     @JoinColumn(name = "IDGrupeZaDigitalizaciju", nullable = false)
@@ -53,16 +60,14 @@ public class FilmskaTraka {
     public FilmskaTraka() {
     }
 
-    public FilmskaTraka(int idEmisije, int originalniNaslov, int radniNaslov, int jezikOriginala,
-                        int ton, int emisija, int porijekloZemljaProizvodnje, int licenca,
-                        int godinaProizvodnje, int markIN, int markOUT, int duration,
-                        int brojMedija, GrupaZaDigitalizaciju grupaZaDigitalizaciju) {
+    public FilmskaTraka(Long idEmisije, String originalniNaslov, String radniNaslov, String jezikOriginala, String ton, String emisija, String vrstaSadrzaja, String porijekloZemljaProizvodnje, String licenca, Integer godinaProizvodnje, LocalTime markIN, LocalTime markOUT, LocalTime duration, String brojMedija, GrupaZaDigitalizaciju grupaZaDigitalizaciju) {
         this.idEmisije = idEmisije;
         this.originalniNaslov = originalniNaslov;
         this.radniNaslov = radniNaslov;
         this.jezikOriginala = jezikOriginala;
         this.ton = ton;
         this.emisija = emisija;
+        this.vrstaSadrzaja = vrstaSadrzaja;
         this.porijekloZemljaProizvodnje = porijekloZemljaProizvodnje;
         this.licenca = licenca;
         this.godinaProizvodnje = godinaProizvodnje;
@@ -73,107 +78,115 @@ public class FilmskaTraka {
         this.grupaZaDigitalizaciju = grupaZaDigitalizaciju;
     }
 
-    public int getIdEmisije() {
+    public Long getIdEmisije() {
         return idEmisije;
     }
 
-    public void setIdEmisije(int idEmisije) {
+    public void setIdEmisije(Long idEmisije) {
         this.idEmisije = idEmisije;
     }
 
-    public int getOriginalniNaslov() {
+    public String getOriginalniNaslov() {
         return originalniNaslov;
     }
 
-    public void setOriginalniNaslov(int originalniNaslov) {
+    public void setOriginalniNaslov(String originalniNaslov) {
         this.originalniNaslov = originalniNaslov;
     }
 
-    public int getRadniNaslov() {
+    public String getRadniNaslov() {
         return radniNaslov;
     }
 
-    public void setRadniNaslov(int radniNaslov) {
+    public void setRadniNaslov(String radniNaslov) {
         this.radniNaslov = radniNaslov;
     }
 
-    public int getJezikOriginala() {
+    public String getJezikOriginala() {
         return jezikOriginala;
     }
 
-    public void setJezikOriginala(int jezikOriginala) {
+    public void setJezikOriginala(String jezikOriginala) {
         this.jezikOriginala = jezikOriginala;
     }
 
-    public int getTon() {
+    public String getTon() {
         return ton;
     }
 
-    public void setTon(int ton) {
+    public void setTon(String ton) {
         this.ton = ton;
     }
 
-    public int getEmisija() {
+    public String getEmisija() {
         return emisija;
     }
 
-    public void setEmisija(int emisija) {
+    public void setEmisija(String emisija) {
         this.emisija = emisija;
     }
 
-    public int getPorijekloZemljaProizvodnje() {
+    public String getVrstaSadrzaja() {
+        return vrstaSadrzaja;
+    }
+
+    public void setVrstaSadrzaja(String vrstaSadrzaja) {
+        this.vrstaSadrzaja = vrstaSadrzaja;
+    }
+
+    public String getPorijekloZemljaProizvodnje() {
         return porijekloZemljaProizvodnje;
     }
 
-    public void setPorijekloZemljaProizvodnje(int porijekloZemljaProizvodnje) {
+    public void setPorijekloZemljaProizvodnje(String porijekloZemljaProizvodnje) {
         this.porijekloZemljaProizvodnje = porijekloZemljaProizvodnje;
     }
 
-    public int getLicenca() {
+    public String getLicenca() {
         return licenca;
     }
 
-    public void setLicenca(int licenca) {
+    public void setLicenca(String licenca) {
         this.licenca = licenca;
     }
 
-    public int getGodinaProizvodnje() {
+    public Integer getGodinaProizvodnje() {
         return godinaProizvodnje;
     }
 
-    public void setGodinaProizvodnje(int godinaProizvodnje) {
+    public void setGodinaProizvodnje(Integer godinaProizvodnje) {
         this.godinaProizvodnje = godinaProizvodnje;
     }
 
-    public int getMarkIN() {
+    public LocalTime getMarkIN() {
         return markIN;
     }
 
-    public void setMarkIN(int markIN) {
+    public void setMarkIN(LocalTime markIN) {
         this.markIN = markIN;
     }
 
-    public int getMarkOUT() {
+    public LocalTime getMarkOUT() {
         return markOUT;
     }
 
-    public void setMarkOUT(int markOUT) {
+    public void setMarkOUT(LocalTime markOUT) {
         this.markOUT = markOUT;
     }
 
-    public int getDuration() {
+    public LocalTime getDuration() {
         return duration;
     }
 
-    public void setDuration(int duration) {
+    public void setDuration(LocalTime duration) {
         this.duration = duration;
     }
 
-    public int getBrojMedija() {
+    public String getBrojMedija() {
         return brojMedija;
     }
 
-    public void setBrojMedija(int brojMedija) {
+    public void setBrojMedija(String brojMedija) {
         this.brojMedija = brojMedija;
     }
 
