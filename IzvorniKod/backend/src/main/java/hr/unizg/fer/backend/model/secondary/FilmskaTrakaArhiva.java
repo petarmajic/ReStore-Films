@@ -15,7 +15,7 @@ public class FilmskaTrakaArhiva {
     @Column(name = "OriginalniNaslov",nullable = false)
     private String originalniNaslov;
 
-    @Column(name = "RadniNaslov")
+    @Column(name = "RadniNaslov", nullable = true)
     private String radniNaslov;
 
     @Column(name = "JezikOriginala", nullable = false)
@@ -24,7 +24,7 @@ public class FilmskaTrakaArhiva {
     @Column(name = "Ton", nullable = false)
     private String ton;
 
-    @Column(name = "Emisija")
+    @Column(name = "Emisija", nullable = true)
     private String emisija;
 
     @Column(name = "VrstaSadrzaja")
@@ -33,7 +33,7 @@ public class FilmskaTrakaArhiva {
     @Column(name = "Porijeklo_ZemljaProizvodnje", nullable = false)
     private String porijekloZemljaProizvodnje;
 
-    @Column(name = "Licenca")
+    @Column(name = "Licenca", nullable = true)
     private String licenca;
 
     @Column(name = "GodinaProizvodnje", nullable = false)
