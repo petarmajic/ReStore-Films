@@ -1,7 +1,18 @@
 package hr.unizg.fer.backend.model.primary;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+import java.util.HashSet;
+import java.util.Set;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "KORISNIK")
 public class Korisnik {
@@ -30,85 +41,14 @@ public class Korisnik {
     private UlogaKorisnika uloga;
 
     @ManyToOne
-    @JoinColumn(name = "IDStatistike")
+    @JoinColumn(name = "IDStatistike", nullable = false)
     private StatistikaDigitalizacije statistikaDigitalizacije;
 
-    public Korisnik() {
-    }
+    @OneToMany(mappedBy = "iznioIzSkladistaKorisnik")
+    private Set<GrupaZaDigitalizaciju> iznioIzSkladistaGrupeZaDigitalizaciju = new HashSet<>();
 
-    public Korisnik(Long idKorisnika, String ime, String prezime, String korisnickoIme, String email, String lozinka, UlogaKorisnika uloga, StatistikaDigitalizacije statistikaDigitalizacije) {
-        this.idKorisnika = idKorisnika;
-        this.ime = ime;
-        this.prezime = prezime;
-        this.korisnickoIme = korisnickoIme;
-        this.email = email;
-        this.lozinka = lozinka;
-        this.uloga = uloga;
-        this.statistikaDigitalizacije = statistikaDigitalizacije;
-    }
+    @OneToMany(mappedBy = "vratioUSkladisteKorisnik")
+    private Set<GrupaZaDigitalizaciju> vratioUSkladisteGrupeZaDigitalizaciju = new HashSet<>();
 
-    public Long getIdKorisnika() {
-        return idKorisnika;
-    }
-
-    public void setIdKorisnika(Long idKorisnika) {
-        this.idKorisnika = idKorisnika;
-    }
-
-    public String getIme() {
-        return ime;
-    }
-
-    public void setIme(String ime) {
-        this.ime = ime;
-    }
-
-    public String getPrezime() {
-        return prezime;
-    }
-
-    public void setPrezime(String prezime) {
-        this.prezime = prezime;
-    }
-
-    public String getKorisnickoIme() {
-        return korisnickoIme;
-    }
-
-    public void setKorisnickoIme(String korisnickoIme) {
-        this.korisnickoIme = korisnickoIme;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getLozinka() {
-        return lozinka;
-    }
-
-    public void setLozinka(String lozinka) {
-        this.lozinka = lozinka;
-    }
-
-    public UlogaKorisnika getUloga() {
-        return uloga;
-    }
-
-    public void setUloga(UlogaKorisnika uloga) {
-        this.uloga = uloga;
-    }
-
-    public StatistikaDigitalizacije getStatistikaDigitalizacije() {
-        return statistikaDigitalizacije;
-    }
-
-    public void setStatistikaDigitalizacije(StatistikaDigitalizacije statistikaDigitalizacije) {
-        this.statistikaDigitalizacije = statistikaDigitalizacije;
-    }
 }
 
