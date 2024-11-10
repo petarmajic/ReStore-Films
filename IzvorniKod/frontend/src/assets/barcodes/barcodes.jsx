@@ -1,20 +1,12 @@
 import { useRef, useState, useContext } from "react";
-import BarcodeScannerComponent from "react-qr-barcode-scanner";
 import "./barcodes.css";
 import Layout from "../layout/layout";
 import { LayoutContext } from "../layout/layoutcontext";
 
-const BarcodeScanner = () => {
-  const [scannedData, setScannedData] = useState(null);
+const Barcodes = () => {
   const { scannedBarcodes, setScannedBarcodes } = useContext(LayoutContext);
-  const scannedBarcodesRef = useRef(new Set());
+  const scannedBarcodesRef = useRef(new Set(scannedBarcodes));
   const { darkMode } = useContext(LayoutContext);
-
-  const handleFetchFilmData = () => {
-    if (scannedData) {
-      window.location.href = `/api/filmovi/qr/${scannedData}`;
-    }
-  };
 
   const handleClearBarcodes = () => {
     setScannedBarcodes([]);
@@ -28,6 +20,73 @@ const BarcodeScanner = () => {
     }
   };
 
+  const calculateTotalDuration = () => {
+    const totalDuration = scannedBarcodes.reduce((acc, barcode) => {
+      if (typeof barcode === "object" && barcode.duration) {
+        const [hours, minutes, seconds] = barcode.duration
+          .split(":")
+          .map(Number);
+        const durationInSeconds = hours * 3600 + minutes * 60 + seconds;
+        return acc + durationInSeconds;
+      }
+      return acc;
+    }, 0);
+
+    const hours = Math.floor(totalDuration / 3600);
+    const minutes = Math.floor((totalDuration % 3600) / 60);
+    const seconds = totalDuration % 60;
+
+    return `${hours.toString().padStart(2, "0")}:${minutes
+      .toString()
+      .padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
+  };
+  const groupBarcodesByDuration = (barcodes) => {
+    const sortedBarcodes = barcodes.sort((a, b) => {
+      const durationA = a.duration
+        .split(":")
+        .map(Number)
+        .reduce((acc, val) => acc * 60 + val, 0);
+      const durationB = b.duration
+        .split(":")
+        .map(Number)
+        .reduce((acc, val) => acc * 60 + val, 0);
+      return durationA - durationB;
+    });
+
+    const groupedBarcodes = {};
+    let currentTime = 0;
+    let currentGroup = [];
+
+    for (const barcode of sortedBarcodes) {
+      const duration = barcode.duration
+        .split(":")
+        .map(Number)
+        .reduce((acc, val) => acc * 60 + val, 0);
+      if (currentTime + duration <= 45 * 60) {
+        currentGroup.push(barcode);
+        currentTime += duration;
+      } else {
+        const title = `${Math.floor(currentTime / 60)}:${(currentTime % 60)
+          .toString()
+          .padStart(2, "0")}`;
+        groupedBarcodes[title] = currentGroup;
+        currentGroup = [barcode];
+        currentTime = duration;
+      }
+    }
+
+    if (currentGroup.length > 0) {
+      const title = `${Math.floor(currentTime / 60)}:${(currentTime % 60)
+        .toString()
+        .padStart(2, "0")}`;
+      groupedBarcodes[title] = currentGroup;
+    }
+
+    return groupedBarcodes;
+  };
+
+  const groupedBarcodes = groupBarcodesByDuration(scannedBarcodes);
+
   return (
     <Layout>
       <div className={`center-container ${darkMode ? "dark-mode" : ""}`}>
@@ -40,7 +99,10 @@ const BarcodeScanner = () => {
             {scannedBarcodes.map((barcode, index) => (
               <li key={index}>
                 <span style={{ fontSize: "16px" }}>
-                  {index + 1}. {barcode}
+                  {index + 1}.{" "}
+                  {typeof barcode === "object"
+                    ? `${barcode.barcode} - ${barcode.filmTitle} - ${barcode.duration}`
+                    : barcode}
                 </span>
                 <button
                   style={{
@@ -57,13 +119,29 @@ const BarcodeScanner = () => {
               </li>
             ))}
           </ul>
-          <button className="button" onClick={handleFetchFilmData}>
-            Fetch barcodes
-          </button>
+          <p>Total duration: {calculateTotalDuration()}</p>
+          <h3>Grouped Barcodes:</h3>
+          {Object.keys(groupedBarcodes).map((groupKey) => (
+            <div key={groupKey}>
+              <h4>{groupKey}</h4>
+              <ul>
+                {groupedBarcodes[groupKey].map((barcode, index) => (
+                  <li key={index}>
+                    <span style={{ fontSize: "16px" }}>
+                      {index + 1}.{" "}
+                      {typeof barcode === "object"
+                        ? `${barcode.barcode} - ${barcode.filmTitle} - ${barcode.duration}`
+                        : barcode}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
         </div>
       </div>
     </Layout>
   );
 };
 
-export default BarcodeScanner;
+export default Barcodes;
