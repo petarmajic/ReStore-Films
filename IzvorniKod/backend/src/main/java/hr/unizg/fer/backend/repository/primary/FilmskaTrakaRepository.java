@@ -5,4 +5,4 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface FilmskaTrakaRepository extends JpaRepository<FilmskaTraka, Integer> { }
+public interface FilmskaTrakaRepository extends JpaRepository<FilmskaTraka, Long> { }
