@@ -5,7 +5,6 @@ import { SignInButton } from "../../SignInButton";
 import { SignOutButton } from "../../SignOutButton";
 
 import "./login.css";
-import "../../SignInButton.css";
 import pozadina from "../images/filmskaVrpca.jpg";
 
 function LoginSignUp() {

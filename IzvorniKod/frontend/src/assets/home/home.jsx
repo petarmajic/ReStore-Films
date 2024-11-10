@@ -14,8 +14,6 @@ import {
   useMsal,
 } from "@azure/msal-react";
 
-import "../../App.css";
-
 import Button from "react-bootstrap/Button";
 
 export default function Microsoft() {
