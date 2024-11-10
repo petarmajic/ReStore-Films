@@ -3,6 +3,7 @@ package hr.unizg.fer.backend.controller;
 import hr.unizg.fer.backend.model.secondary.FilmskaTrakaArhiva;
 import hr.unizg.fer.backend.service.FilmskaTrakaArhivaService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
