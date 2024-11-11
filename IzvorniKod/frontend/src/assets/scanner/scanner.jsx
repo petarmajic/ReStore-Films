@@ -4,6 +4,7 @@ import BarcodeScannerComponent from "react-qr-barcode-scanner";
 import "./scanner.css";
 import Layout from "../layout/layout";
 import { LayoutContext } from "../layout/layoutcontext";
+import { useNavigate } from "react-router-dom";
 
 const BarcodeScanner = () => {
   const [scannedData, setScannedData] = useState(null);
@@ -11,6 +12,7 @@ const BarcodeScanner = () => {
   const { scannedBarcodes, setScannedBarcodes } = useContext(LayoutContext);
   const { darkMode } = useContext(LayoutContext);
   const scannedBarcodesRef = useRef(new Set(scannedBarcodes));
+  const navigate = useNavigate();
 
   useEffect(() => {
     scannedBarcodesRef.current = new Set(scannedBarcodes);
@@ -25,6 +27,10 @@ const BarcodeScanner = () => {
         handleFetchFilmData();
       }
     }
+  };
+
+  const handleBarcodesClick = () => {
+    navigate("/barcodes");
   };
 
   useEffect(() => {
@@ -99,6 +105,9 @@ const BarcodeScanner = () => {
               </li>
             ))}
           </ul>
+        </div>
+        <div>
+          <button onClick={handleBarcodesClick}>Barcodes</button>
         </div>
       </div>
     </Layout>

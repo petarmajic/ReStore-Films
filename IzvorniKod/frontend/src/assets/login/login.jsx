@@ -18,7 +18,7 @@ function LoginSignUp() {
   }, [isAuthenticated, navigate]);
 
   return (
-    <div className="center-container">
+    <div className="container">
       <img
         className="background-image"
         src={pozadina}

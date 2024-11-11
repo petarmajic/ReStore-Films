@@ -2,11 +2,17 @@ import { useRef, useState, useContext } from "react";
 import "./barcodes.css";
 import Layout from "../layout/layout";
 import { LayoutContext } from "../layout/layoutcontext";
+import { useNavigate } from "react-router-dom";
 
 const Barcodes = () => {
   const { scannedBarcodes, setScannedBarcodes } = useContext(LayoutContext);
   const scannedBarcodesRef = useRef(new Set(scannedBarcodes));
   const { darkMode } = useContext(LayoutContext);
+  const navigate = useNavigate();
+
+  const handleScannerClick = () => {
+    navigate("/scanner");
+  };
 
   const handleClearBarcodes = () => {
     setScannedBarcodes([]);
@@ -93,6 +99,9 @@ const Barcodes = () => {
         <div className="barcode-list-container">
           <button className="button" onClick={handleClearBarcodes}>
             Clear barcodes
+          </button>
+          <button onClick={handleScannerClick} style={{ marginRight: "10px" }}>
+                    Scanner
           </button>
           <h3>Scanned Barcodes:</h3>
           <ul>

@@ -1,8 +1,10 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&display=swap');
+
 .navbar {
   position: fixed;
   top: 0;
   left: 0;
-  background-color: #ffffff;
+  background-color: #3a3a3a;
   color: #fff;
   padding: 1em;
   display: flex;
@@ -10,12 +12,10 @@
   justify-content: space-between;
   align-items: center;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  font-family: 'Cinzel', serif;
 
 }
 
-.navbar .dark-mode{
-  background-color: #333;
-}
 .navbar ul {
   list-style: none;
   margin: 0;
@@ -53,7 +53,7 @@
 }
 
 .navbar button {
-      background-color: #4CAF50;
+      background-color: #3a3a3a;
       color: #fff;
       padding: 10px 20px;
       border: none;
@@ -61,11 +61,12 @@
       cursor: pointer;
       transition: background-color 0.3s ease;
       margin: 5px auto; 
-      display: block; 
+      display: block;
+
 }
 
 .navbar button:hover {
-      background-color: #3e8e41;
+  background-color: #464646;
 }
 .dark-mode {
   background-color: #333;

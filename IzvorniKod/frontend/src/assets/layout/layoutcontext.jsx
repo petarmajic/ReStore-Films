@@ -3,7 +3,7 @@ import { createContext, useState } from "react";
 const LayoutContext = createContext();
 
 function LayoutProvider({ children }) {
-  const [darkMode, setDarkMode] = useState(true);
+  const [darkMode, setDarkMode] = useState(false);
   const [scannedBarcodes, setScannedBarcodes] = useState([]);
 
   const handleDarkMode = () => {
