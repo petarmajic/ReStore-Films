@@ -1,1 +1,5 @@
 **/.idea
+
+### baze podataka ###
+/db/*.mv.db
+/db/*.trace.db
