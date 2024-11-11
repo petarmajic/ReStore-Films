@@ -31,7 +31,3 @@ build/
 
 ### VS Code ###
 .vscode/
-
-### baze podataka ###
-/db/*.mv.db
-/db/*.trace.db
