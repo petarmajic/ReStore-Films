@@ -47,7 +47,7 @@ public class Korisnik {
      */
 
     @OneToOne //nova veza
-    @JoinColumn(name = "IDStatistike")  // Naziv stupca u bazi koji povezuje ove entitete
+    @JoinColumn(name = "IDStatistike", nullable = false)
     private StatistikaDigitalizacije statistikaDigitalizacije;
 
     @OneToMany(mappedBy = "iznioIzSkladistaKorisnik")

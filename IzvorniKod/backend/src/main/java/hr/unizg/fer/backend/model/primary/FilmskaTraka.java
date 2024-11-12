@@ -8,6 +8,8 @@ import lombok.Setter;
 import org.springframework.cglib.core.Local;
 
 import java.time.LocalTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -60,7 +62,17 @@ public class FilmskaTraka {
     @Column(name = "BrojMedija", nullable = false)
     private String brojMedija;
 
+    /*
     @ManyToOne
     @JoinColumn(name = "IDGrupeZaDigitalizaciju", nullable = false)
     private GrupaZaDigitalizaciju grupaZaDigitalizaciju;
+     */
+
+    @ManyToMany
+    @JoinTable(
+            name = "Grupiranje",
+            joinColumns = @JoinColumn(name="FilmskaTraka_IDEmisije"),
+            inverseJoinColumns = @JoinColumn(name="GrupaZaDigitalizaciju_IDGrupe")
+    )
+    private Set<GrupaZaDigitalizaciju> grupeZaDigitalizaciju = new HashSet<>();
 }
