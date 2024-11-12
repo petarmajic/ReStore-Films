@@ -29,7 +29,12 @@ public class StatistikaDigitalizacije {
     private Integer brojNaDigitalizaciji;
 
     //naknadno dodano
+    /*
     @OneToMany(mappedBy = "statistikaDigitalizacije")
     private Set<Korisnik> korisnici = new HashSet<>();
+    */
 
+
+    @OneToOne(mappedBy = "statistikaDigitalizacije") //nova veza
+    private Korisnik korisnik;
 }
