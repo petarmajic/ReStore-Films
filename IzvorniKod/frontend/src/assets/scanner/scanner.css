@@ -1,32 +1,237 @@
-.center-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
-  height: 100%;
-}
-.scanner-container {
-  width: 50%;
-  float: left;
-}
-  
-.barcode-list-container {
-  width: 50%;
-  float: right;
-}
-  
-.button {
-  background-color: #4CAF50;
-  color: #fff;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  margin: 5px auto; 
-  display: block; 
+/* Import fonta */
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&display=swap');
+
+/* Slika pozadine */
+.scan-bg-image {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw; 
+  height: 100vh;         
+  object-fit: cover;
+  z-index: -1;
 }
 
-.button:hover {
-  background-color: #3e8e41;
+/* Glavni omotač */
+.scan-layout {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+  font-family: 'Cinzel', serif;
+}
+
+/* Omotač */
+.scan-container {
+  background-color: #3a3a3a;
+  color: #ededed;
+  display: flex;
+  flex-direction: row;
+  width: 85vw;
+  height: 75vh;
+  margin-top: 5vh;
+  border-radius: 0.5rem;
+  font-family: 'Cinzel', serif;
+}
+
+/* Omotač kamere */
+.scanner-wrapper {
+  width: 50%;
+  text-align: center;
+  font-size: 1.5rem;
+}
+
+/* Naslov skenera */
+.sc-title {
+  padding: 0.75rem;
+  height: 10%;
+}
+
+/* Kontejner kamere */
+.cam-dim {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 40%;
+  padding: 1rem;
+}
+
+/* Dimenzije kamere */
+.scan-container video {
+  width: 70%;
+  height: 80%;
+  border-radius: 0.5rem;
+  object-fit: fill !important;
+}
+
+/* Kontejner za dohvat */
+.fetch-div {
+  display: flex;
+  flex-direction: column;
+  height: 50%;
+  width: 100%;
+  font-size: 1.25rem;
+}
+
+/* Gumbi u fetchu */
+.fetch-btn {
+  display: flex;
+  justify-content: space-evenly;
+  height: 40%;
+}
+
+/* Dizajn gumba */ 
+.fetch-btn button {
+  width: 30%;
+  border-radius: 0.5rem;
+  background-color: #6c757d;
+  color: #ededed;
+  border: none;
+}
+
+/* Prijelaz miša preko gumba */
+.fetch-btn button:hover {
+  background-color: #5a6268;
+}
+
+/* Kontejner za skenirane bar kodove */
+.brc-list-container {
+  width: 70%;
+  overflow-y: auto;
+}
+
+/* Naslov skeniranih bar kodova */
+.scanned-title {
+  height: 10%;
+  padding: 0.75rem;
+  text-align: center;
+  font-size: 1.5rem;
+}
+
+/* Lista skeniranih bar kodova */
+.scan-br-list {
+  height: 90%;
+  overflow-y: auto;
+  text-align: center;
+  padding: 1rem;
+  font-size: 0.8rem;
+}
+
+/*----------------------Responzivnost---------------------------*/
+@media (max-width: 1024px){
+  .scan-container {
+    flex-direction: column;
+    padding: 1.5rem;
+  }
+
+  .scanner-wrapper {
+    font-size: 2rem;
+    height: 70%;
+  }
+
+  .fetch-div {
+    font-size: 1.5rem;
+    height: 30%;
+  }
+
+  .scanner-wrapper, .brc-list-container {
+    width: 100%;
+  }
+
+  .scan-container video {
+    width: 80%;
+    height: 100%;
+  }
+
+  .scanned-title {
+    font-size: 2rem;
+  }
+
+  .fetch-btn button {
+    width: 30%;
+    font-size: 1.5rem;
+  }
+
+  .scan-br-list {
+    font-size: 1rem;
+    height: 50%;
+  }
+}
+
+@media (min-width: 1024px) and (max-height: 900px){
+  .scan-container {
+    flex-direction: row;
+    padding: 1rem;
+  }
+
+  .scanner-wrapper {
+    font-size: 1.5rem;
+    height: 100%;
+  }
+
+  .fetch-div {
+    font-size: 1rem;
+  }
+
+  .scanner-wrapper, .brc-list-container {
+    width: 100%;
+  }
+
+  .scan-container video {
+    width: 70%;
+    height: 100%;
+  }
+
+  .scanned-title {
+    font-size: 1.5rem;
+  }
+
+  .fetch-btn button {
+    width: 30%;
+    font-size: 0.85rem;
+  }
+
+  .scan-br-list {
+    font-size: 0.8rem;
+    height: 90%;
+  }
+}
+
+@media (max-width: 480px) {
+  .scan-container {
+    flex-direction: column;
+    padding: 1.25rem;
+  }
+
+  .scanner-wrapper {
+    font-size: 1.25rem;
+  }
+
+  .fetch-div {
+    font-size: 1rem;
+  }
+
+  .scanner-wrapper, .brc-list-container {
+    width: 100%;
+  }
+
+  .scan-container video {
+    width: 90%;
+    height: 90%;
+  }
+
+  .scanned-title {
+    font-size: 1.25rem;
+  }
+
+  .fetch-btn button {
+    width: 40%;
+    font-size: 0.85rem;
+  }
+
+  .scan-br-list {
+    font-size: 0.75rem;
+    height: 50%;
+  }
 }

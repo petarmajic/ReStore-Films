@@ -71,8 +71,7 @@
     
 /* Prelazak mišom preko gumba */
 .return-button:hover {
-    transform: scale(1.1);
-    background-color: #5a6268;
+    background-color: #5a6268 !important;
 }
 
 /*----------------------Responzivnost---------------------------*/

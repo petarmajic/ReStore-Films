@@ -5,12 +5,12 @@ import "./scanner.css";
 import Layout from "../layout/layout";
 import { LayoutContext } from "../layout/layoutcontext";
 import { useNavigate } from "react-router-dom";
+import pozadina from "../images/filmskaVrpca.jpg";
 
 const BarcodeScanner = () => {
   const [scannedData, setScannedData] = useState(null);
   const [error, setError] = useState(null);
   const { scannedBarcodes, setScannedBarcodes } = useContext(LayoutContext);
-  const { darkMode } = useContext(LayoutContext);
   const scannedBarcodesRef = useRef(new Set(scannedBarcodes));
   const navigate = useNavigate();
 
@@ -18,7 +18,7 @@ const BarcodeScanner = () => {
     scannedBarcodesRef.current = new Set(scannedBarcodes);
   }, [scannedBarcodes]);
 
-  const handleScan = (err, result) => {
+  const handleScan = (_err, result) => {
     if (result) {
       const newBarcode = result.text;
       setScannedData(newBarcode);
@@ -77,27 +77,37 @@ const BarcodeScanner = () => {
   };
   return (
     <Layout>
-      <div className={`center-container ${darkMode ? "dark-mode" : ""}`}>
-        <div className="scanner-container">
-          <h3>Barcode scanner</h3>
-          <BarcodeScannerComponent
-            onUpdate={handleScan}
-            width={500}
-            height={300}
-          />
+    <div className="scan-layout">
+    <img className="scan-bg-image" src={pozadina} alt="background picture"></img>
+      <div className="scan-container">
+        <div className="scanner-wrapper">
+          <div className="sc-title">
+          Barcode scanner
+          </div>
+          <div className="cam-dim">
+          <BarcodeScannerComponent onUpdate={handleScan}/>
+          </div>
           {scannedData && (
+          <div className="fetch-div">
             <div>
+              <div className="fetch-text">
               <p>Barcode: {scannedData}</p>
-              <button className="button" onClick={handleFetchFilmData}>
-                Fetch Film Data
-              </button>
               {error && <p style={{ color: "red" }}>{error}</p>}
+              </div>
+              <div className="fetch-btn">
+              <button className="button-film" onClick={handleFetchFilmData}>
+                Fetch
+              </button>
+              <button onClick={handleBarcodesClick}>List</button>
+              </div>
             </div>
+        </div>
           )}
         </div>
 
-        <div className="barcode-list-container">
-          <h3>Scanned Barcodes:</h3>
+        <div className="brc-list-container">
+          <div className="scanned-title">Scanned barcodes</div>
+          <div className="scan-br-list">
           <ul>
             {scannedBarcodes.map((barcode, index) => (
               <li key={index}>
@@ -105,10 +115,9 @@ const BarcodeScanner = () => {
               </li>
             ))}
           </ul>
+          </div>
         </div>
-        <div>
-          <button onClick={handleBarcodesClick}>Barcodes</button>
-        </div>
+      </div>
       </div>
     </Layout>
   );
