@@ -40,7 +40,13 @@ public class Korisnik {
     @Column(name = "Uloga", nullable = false)
     private UlogaKorisnika uloga;
 
+    /*
     @ManyToOne
+    @JoinColumn(name = "IDStatistike", nullable = false)
+    private StatistikaDigitalizacije statistikaDigitalizacije;
+     */
+
+    @OneToOne //nova veza
     @JoinColumn(name = "IDStatistike", nullable = false)
     private StatistikaDigitalizacije statistikaDigitalizacije;
 

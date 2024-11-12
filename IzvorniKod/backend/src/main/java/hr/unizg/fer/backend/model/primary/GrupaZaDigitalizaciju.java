@@ -42,7 +42,16 @@ public class GrupaZaDigitalizaciju {
     @JoinColumn(name = "IDDjelatnikaVratio", nullable = false)
     private Korisnik vratioUSkladisteKorisnik;
 
+
+    /*
     @OneToMany(mappedBy = "grupaZaDigitalizaciju")
     private Set<FilmskaTraka> filmskeTrake = new HashSet<>();
+     */
+
+    @ManyToMany(mappedBy = "grupeZaDigitalizaciju")
+    private Set<FilmskaTraka> filmskeTrake = new HashSet<>();
+
+
+
 
 }
