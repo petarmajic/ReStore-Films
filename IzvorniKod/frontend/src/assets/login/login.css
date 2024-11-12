@@ -96,7 +96,6 @@
     }
 }
 
-/*--------------------Responzivnost-------------------*/
 @media (max-width: 480px) {
     .button-container {
       width: 90vw;

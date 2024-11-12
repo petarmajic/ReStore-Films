@@ -1,5 +1,7 @@
+/* Import fonta */
 @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&display=swap');
 
+/* Footer aplikacije */
 .f-footer {
     display: flex;
     justify-content: center;
@@ -7,7 +9,7 @@
     position: fixed;
     bottom: 0;
     width: 100vw;
-    height: 7vh;
+    height: 5vh;
     background-color: #3a3a3a;
     color: #ededed;
     font-family: 'Cinzel', serif;
