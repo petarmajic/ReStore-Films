@@ -17,20 +17,15 @@ const Navigation = () => {
 
   return (
     <nav className="navbar">
-        <div className="nav-homebtn">
-          <button onClick={handleHomeClick}>
-              Home
-          </button>
-        </div>
-        <div className="nav-title">
-              ReStore-Films
-        </div>
-        <div className="nav-signout"> 
-              {isAuthenticated ? <SignOutButton /> : <SignInButton />}
-        </div>
+      <div className="nav-homebtn">
+        <button onClick={handleHomeClick}>Home</button>
+      </div>
+      <div className="nav-title">ReStore-Films</div>
+      <div className="nav-signout">
+        {isAuthenticated ? <SignOutButton /> : <SignInButton />}
+      </div>
     </nav>
   );
 };
 
 export default Navigation;
-

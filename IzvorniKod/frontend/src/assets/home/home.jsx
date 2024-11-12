@@ -22,21 +22,36 @@ export default function Microsoft() {
     <>
       <Layout>
         <div className="home-container">
-            <img className="home-bg-image" src={pozadina} alt="background picture"></img>
-                <div className="btn-home">
-                  <div className="scanner-list">
-                    <button onClick={handleScannerClick} style={{ marginRight: "10px" }}>
-                    <img className="scan-img" src={barcodeScanner} alt="barcode scanner"></img>
-                      Scan Barcode
-                    </button>
-                  </div>
-                  <div className="scanner-list">
-                    <button onClick={handleBarcodesClick}>
-                    <img className="scan-img" src={barcodeList} alt="barcode list"></img>
-                      Barcode List
-                    </button>
-                  </div>
-                </div>
+          <img
+            className="home-bg-image"
+            src={pozadina}
+            alt="background picture"
+          ></img>
+          <div className="btn-home">
+            <div className="scanner-list">
+              <button
+                onClick={handleScannerClick}
+                style={{ marginRight: "10px" }}
+              >
+                <img
+                  className="scan-img"
+                  src={barcodeScanner}
+                  alt="barcode scanner"
+                ></img>
+                Scan Barcode
+              </button>
+            </div>
+            <div className="scanner-list">
+              <button onClick={handleBarcodesClick}>
+                <img
+                  className="scan-img"
+                  src={barcodeList}
+                  alt="barcode list"
+                ></img>
+                Barcode List
+              </button>
+            </div>
+          </div>
         </div>
       </Layout>
     </>

@@ -77,47 +77,47 @@ const BarcodeScanner = () => {
   };
   return (
     <Layout>
-    <div className="scan-layout">
-    <img className="scan-bg-image" src={pozadina} alt="background picture"></img>
-      <div className="scan-container">
-        <div className="scanner-wrapper">
-          <div className="sc-title">
-          Barcode scanner
-          </div>
-          <div className="cam-dim">
-          <BarcodeScannerComponent onUpdate={handleScan}/>
-          </div>
-          {scannedData && (
-          <div className="fetch-div">
-            <div>
-              <div className="fetch-text">
-              <p>Barcode: {scannedData}</p>
-              {error && <p style={{ color: "red" }}>{error}</p>}
-              </div>
-              <div className="fetch-btn">
-              <button className="button-film" onClick={handleFetchFilmData}>
-                Fetch
-              </button>
-              <button onClick={handleBarcodesClick}>List</button>
+      <div className="scan-layout">
+        <img
+          className="scan-bg-image"
+          src={pozadina}
+          alt="background picture"
+        ></img>
+        <div className="scan-container">
+          <div className="scanner-wrapper">
+            <div className="sc-title">Barcode scanner</div>
+            <div className="cam-dim">
+              <BarcodeScannerComponent onUpdate={handleScan} />
+            </div>
+            <div className="fetch-div">
+              <div>
+                <div className="fetch-text">
+                  <p>Barcode: {scannedData}</p>
+                  {error && <p style={{ color: "red" }}>{error}</p>}
+                </div>
+                <div className="fetch-btn">
+                  <button className="button-film" onClick={handleFetchFilmData}>
+                    Fetch
+                  </button>
+                  <button onClick={handleBarcodesClick}>List</button>
+                </div>
               </div>
             </div>
-        </div>
-          )}
-        </div>
+          </div>
 
-        <div className="brc-list-container">
-          <div className="scanned-title">Scanned barcodes</div>
-          <div className="scan-br-list">
-          <ul>
-            {scannedBarcodes.map((barcode, index) => (
-              <li key={index}>
-                {barcode.barcode} - {barcode.filmTitle} ({barcode.duration})
-              </li>
-            ))}
-          </ul>
+          <div className="brc-list-container">
+            <div className="scanned-title">Scanned barcodes</div>
+            <div className="scan-br-list">
+              <ul>
+                {scannedBarcodes.map((barcode, index) => (
+                  <li key={index}>
+                    {barcode.barcode} - {barcode.filmTitle} ({barcode.duration})
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
         </div>
-      </div>
       </div>
     </Layout>
   );

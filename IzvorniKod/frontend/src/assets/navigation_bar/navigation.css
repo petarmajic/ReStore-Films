@@ -1,5 +1,5 @@
 /* Import fonta */
-@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&display=swap");
 
 /* Navigacijska traka */
 .navbar {
@@ -13,7 +13,7 @@
   justify-content: center !important;
   align-items: center !important;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  font-family: 'Cinzel', serif;
+  font-family: "Cinzel", serif;
 }
 
 /* Home gumb */
@@ -24,7 +24,7 @@
 /* Naslov navigacije */
 .nav-title {
   font-size: 1.75rem;
-  color: #D4A373;
+  color: #d4a373;
   width: 60vw;
   text-align: center;
 }
@@ -36,16 +36,16 @@
 
 /* Navigacijski gumb */
 .navbar button {
-      background-color: #3a3a3a;
-      color: #ededed;
-      padding: 0.5rem 1rem;
-      border: none;
-      border-radius: 0.5rem;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-      margin: 0.25rem auto; 
-      display: block;
-      font-size: 1.25rem;
+  background-color: #3a3a3a;
+  color: #ededed;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin: 0.25rem auto;
+  display: block;
+  font-size: 1.25rem;
 }
 
 /* Prijelaz mišom preko gumba */
@@ -57,7 +57,7 @@
 
 @media (max-width: 768px) {
   .nav-title {
-     font-size: 1.5rem;
+    font-size: 1.5rem;
   }
 
   .navbar button {
@@ -68,7 +68,7 @@
 
 @media (max-width: 480px) {
   .nav-title {
-     font-size: 1.25rem;
+    font-size: 1.25rem;
   }
 
   .navbar button {
@@ -76,4 +76,3 @@
     font-size: 0.75rem;
   }
 }
-

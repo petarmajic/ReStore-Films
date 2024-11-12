@@ -6,9 +6,7 @@ function LayoutProvider({ children }) {
   const [scannedBarcodes, setScannedBarcodes] = useState([]);
 
   return (
-    <LayoutContext.Provider
-      value={{scannedBarcodes, setScannedBarcodes }}
-    >
+    <LayoutContext.Provider value={{ scannedBarcodes, setScannedBarcodes }}>
       {children}
     </LayoutContext.Provider>
   );

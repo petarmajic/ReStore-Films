@@ -9,16 +9,19 @@ export const SignOutButton = () => {
   const { instance } = useMsal();
 
   const handleLogout = () => {
-      instance.logoutRedirect({
-        postLogoutRedirectUri: "/",
-      });
-    }
+    instance.logoutRedirect({
+      postLogoutRedirectUri: "/",
+    });
+  };
 
   return (
-    <Button as="button" onClick={() => handleLogout("redirect")}
+    <Button
+      as="button"
+      onClick={() => handleLogout("redirect")}
       variant="secondary"
-      className="ml-auto">
-     Sign out
+      className="ml-auto"
+    >
+      Sign out
     </Button>
   );
 };

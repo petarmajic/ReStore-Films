@@ -3,11 +3,11 @@ import "./barcodes.css";
 import Layout from "../layout/layout";
 import { LayoutContext } from "../layout/layoutcontext";
 import { useNavigate } from "react-router-dom";
+import pozadina from "../images/filmskaVrpca.jpg";
 
 const Barcodes = () => {
   const { scannedBarcodes, setScannedBarcodes } = useContext(LayoutContext);
   const scannedBarcodesRef = useRef(new Set(scannedBarcodes));
-  const { darkMode } = useContext(LayoutContext);
   const navigate = useNavigate();
 
   const handleScannerClick = () => {
@@ -95,46 +95,18 @@ const Barcodes = () => {
 
   return (
     <Layout>
-      <div className={`center-container ${darkMode ? "dark-mode" : ""}`}>
+      <div className="barcode-main">
+        <img
+          className="barcode-bg-image"
+          src={pozadina}
+          alt="background picture"
+        ></img>
         <div className="barcode-list-container">
-          <button className="button" onClick={handleClearBarcodes}>
-            Clear barcodes
-          </button>
-          <button onClick={handleScannerClick} style={{ marginRight: "10px" }}>
-                    Scanner
-          </button>
-          <h3>Scanned Barcodes:</h3>
-          <ul>
-            {scannedBarcodes.map((barcode, index) => (
-              <li key={index}>
-                <span style={{ fontSize: "16px" }}>
-                  {index + 1}.{" "}
-                  {typeof barcode === "object"
-                    ? `${barcode.barcode} - ${barcode.filmTitle} - ${barcode.duration}`
-                    : barcode}
-                </span>
-                <button
-                  style={{
-                    fontSize: "16px",
-                    padding: "0 5px",
-                    border: "none",
-                    backgroundColor: "transparent",
-                    cursor: "pointer",
-                  }}
-                  onClick={() => handleRemoveBarcode(index)}
-                >
-                  ❌
-                </button>
-              </li>
-            ))}
-          </ul>
-          <p>Total duration: {calculateTotalDuration()}</p>
-          <h3>Grouped Barcodes:</h3>
-          {Object.keys(groupedBarcodes).map((groupKey) => (
-            <div key={groupKey}>
-              <h4>{groupKey}</h4>
+          <div className="barcode-scanned">
+            <div className="left-title">Scanned barcodes</div>
+            <div className="left-list">
               <ul>
-                {groupedBarcodes[groupKey].map((barcode, index) => (
+                {scannedBarcodes.map((barcode, index) => (
                   <li key={index}>
                     <span style={{ fontSize: "16px" }}>
                       {index + 1}.{" "}
@@ -142,11 +114,51 @@ const Barcodes = () => {
                         ? `${barcode.barcode} - ${barcode.filmTitle} - ${barcode.duration}`
                         : barcode}
                     </span>
+                    <button
+                      style={{
+                        fontSize: "16px",
+                        padding: "0 5px",
+                        border: "none",
+                        backgroundColor: "transparent",
+                        cursor: "pointer",
+                      }}
+                      onClick={() => handleRemoveBarcode(index)}
+                    >
+                      ❌
+                    </button>
                   </li>
                 ))}
               </ul>
             </div>
-          ))}
+            <p className="total-duration">
+              Total duration: {calculateTotalDuration()}
+            </p>
+            <div className="barcode-btns">
+              <button onClick={handleClearBarcodes}>Clear</button>
+              <button onClick={handleScannerClick}>Scan</button>
+            </div>
+          </div>
+
+          <div className="barcode-grouped">
+            <div className="right-title">Grouped barcodes</div>
+            {Object.keys(groupedBarcodes).map((groupKey) => (
+              <div key={groupKey} className="wrap-group">
+                <p className="group-key">Duration: {groupKey}</p>
+                <ul className="grouped-list">
+                  {groupedBarcodes[groupKey].map((barcode, index) => (
+                    <li key={index}>
+                      <span style={{ fontSize: "16px" }}>
+                        {index + 1}.{" "}
+                        {typeof barcode === "object"
+                          ? `${barcode.barcode} - ${barcode.filmTitle} - ${barcode.duration}`
+                          : barcode}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </Layout>
