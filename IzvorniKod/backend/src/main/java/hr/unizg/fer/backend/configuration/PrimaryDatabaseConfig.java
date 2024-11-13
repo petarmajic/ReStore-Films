@@ -1,6 +1,7 @@
 package hr.unizg.fer.backend.configuration;
 
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -25,11 +26,12 @@ import java.util.Map;
 public class PrimaryDatabaseConfig {
 
     @Bean(name = "primaryDataSource")
+    @ConfigurationProperties(prefix = "spring.datasource.primary")
     public DataSource primaryDataSource() {
         return DataSourceBuilder.create()
-                .url("jdbc:postgres://localhost:5432/primarydb;")
+                .url("jdbc:postgresql://localhost:5432/primarydb")
                 .username("sa")
-                .password("")
+                .password("sa")
                 .driverClassName("org.postgresql.Driver")
                 .build();
     }
