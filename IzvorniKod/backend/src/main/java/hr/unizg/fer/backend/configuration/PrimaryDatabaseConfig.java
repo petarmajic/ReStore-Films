@@ -27,10 +27,10 @@ public class PrimaryDatabaseConfig {
     @Bean(name = "primaryDataSource")
     public DataSource primaryDataSource() {
         return DataSourceBuilder.create()
-                .url("jdbc:h2:file:./db/primarydb;auto_server=true")
+                .url("jdbc:postgres://localhost:5432/primarydb;")
                 .username("sa")
                 .password("")
-                .driverClassName("org.h2.Driver")
+                .driverClassName("org.postgresql.Driver")
                 .build();
     }
 
@@ -59,7 +59,7 @@ public class PrimaryDatabaseConfig {
     private Map<String, Object> jpaProperties() {
         Map<String, Object> properties = new HashMap<>();
         properties.put("hibernate.hbm2ddl.auto", "update");
-        properties.put("hibernate.dialect", "org.hibernate.dialect.H2Dialect");
+        properties.put("hibernate.dialect", "org.hibernate.dialect.PostgreSQLDialect");
         return properties;
     }
 }

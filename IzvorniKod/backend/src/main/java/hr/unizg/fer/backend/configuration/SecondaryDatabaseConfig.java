@@ -28,10 +28,10 @@ public class SecondaryDatabaseConfig {
     public DataSource secondaryDataSource() {
         return DataSourceBuilder.create()
                 //.url("jdbc:h2:file:./db/arhivskaBaza;auto_server=true")
-                .url("jdbc:h2:file:./db/secondarydb;auto_server=true")
-                .username("sa")
+                .url("jdbc:postgres://localhost:5432/secondarydb;")
+                .username("svi")
                 .password("")
-                .driverClassName("org.h2.Driver")
+                .driverClassName("org.postgresql.Driver")
                 .build();
     }
 
@@ -59,7 +59,7 @@ public class SecondaryDatabaseConfig {
     private Map<String, Object> jpaProperties() {
         Map<String, Object> properties = new HashMap<>();
         properties.put("hibernate.hbm2ddl.auto", "update");
-        properties.put("hibernate.dialect", "org.hibernate.dialect.H2Dialect");
+        properties.put("hibernate.dialect", "org.hibernate.dialect.PostgreSQLDialect");
         return properties;
     }
 }
