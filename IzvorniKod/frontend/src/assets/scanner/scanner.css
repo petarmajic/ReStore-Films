@@ -98,8 +98,8 @@
 
 /* Kontejner za skenirane bar kodove */
 .brc-list-container {
+  overflow-y: hidden;
   width: 70%;
-  overflow-y: auto;
 }
 
 /* Naslov skeniranih bar kodova */
