@@ -1,6 +1,7 @@
 package hr.unizg.fer.backend.configuration;
 
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -25,13 +26,14 @@ import java.util.Map;
 public class SecondaryDatabaseConfig {
 
     @Bean(name = "secondaryDataSource")
+    @ConfigurationProperties(prefix = "spring.datasource.secondary")
     public DataSource secondaryDataSource() {
         return DataSourceBuilder.create()
                 //.url("jdbc:h2:file:./db/arhivskaBaza;auto_server=true")
-                .url("jdbc:h2:file:./db/secondarydb;auto_server=true")
-                .username("sa")
-                .password("")
-                .driverClassName("org.h2.Driver")
+                .url("jdbc:postgresql://localhost:5432/secondarydb")
+                .username("svi")
+                .password("svi")
+                .driverClassName("org.postgresql.Driver")
                 .build();
     }
 
@@ -59,7 +61,7 @@ public class SecondaryDatabaseConfig {
     private Map<String, Object> jpaProperties() {
         Map<String, Object> properties = new HashMap<>();
         properties.put("hibernate.hbm2ddl.auto", "update");
-        properties.put("hibernate.dialect", "org.hibernate.dialect.H2Dialect");
+        properties.put("hibernate.dialect", "org.hibernate.dialect.PostgreSQLDialect");
         return properties;
     }
 }

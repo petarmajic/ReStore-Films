@@ -1,6 +1,7 @@
 package hr.unizg.fer.backend.configuration;
 
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -25,12 +26,13 @@ import java.util.Map;
 public class PrimaryDatabaseConfig {
 
     @Bean(name = "primaryDataSource")
+    @ConfigurationProperties(prefix = "spring.datasource.primary")
     public DataSource primaryDataSource() {
         return DataSourceBuilder.create()
-                .url("jdbc:h2:file:./db/primarydb;auto_server=true")
+                .url("jdbc:postgresql://localhost:5432/primarydb")
                 .username("sa")
-                .password("")
-                .driverClassName("org.h2.Driver")
+                .password("sa")
+                .driverClassName("org.postgresql.Driver")
                 .build();
     }
 
@@ -59,7 +61,7 @@ public class PrimaryDatabaseConfig {
     private Map<String, Object> jpaProperties() {
         Map<String, Object> properties = new HashMap<>();
         properties.put("hibernate.hbm2ddl.auto", "update");
-        properties.put("hibernate.dialect", "org.hibernate.dialect.H2Dialect");
+        properties.put("hibernate.dialect", "org.hibernate.dialect.PostgreSQLDialect");
         return properties;
     }
 }
