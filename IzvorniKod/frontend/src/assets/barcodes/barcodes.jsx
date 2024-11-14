@@ -141,23 +141,27 @@ const Barcodes = () => {
 
           <div className="barcode-grouped">
             <div className="right-title">Grouped barcodes</div>
-            {Object.keys(groupedBarcodes).map((groupKey) => (
-              <div key={groupKey} className="wrap-group">
-                <p className="group-key">Duration: {groupKey}</p>
-                <ul className="grouped-list">
-                  {groupedBarcodes[groupKey].map((barcode, index) => (
-                    <li key={index}>
-                      <span style={{ fontSize: "16px" }}>
-                        {index + 1}.{" "}
-                        {typeof barcode === "object"
-                          ? `${barcode.barcode} - ${barcode.filmTitle} - ${barcode.duration}`
-                          : barcode}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
+            <div className="grouped-list">
+              {Object.keys(groupedBarcodes).map((groupKey) => (
+                <div key={groupKey} className="wrap-group">
+                  <p className="group-key">Duration: {groupKey}</p>
+                  <div>
+                    <ul>
+                      {groupedBarcodes[groupKey].map((barcode, index) => (
+                        <li key={index}>
+                          <span style={{ fontSize: "16px" }}>
+                            {index + 1}.{" "}
+                            {typeof barcode === "object"
+                              ? `${barcode.barcode} - ${barcode.filmTitle} - ${barcode.duration}`
+                              : barcode}
+                          </span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </div>
