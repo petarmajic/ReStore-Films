@@ -22,7 +22,6 @@
 >6. Aplikacija vodi evidenciju o tome koji su filmski zapisi poslani na digitalizaciju ili vraćeni s iste, kada su poslani/vraćeni i tko ih je iz skladišta iznio/unio  pri čemu se generira PDF dokument. 
 >7. Korisničke uloge:
 >>- Djelatnik: unosi i mijenja podatke te preuzima filmski materijal iz skladišta
->>- Djelatnik: samo pregledava podatke
 >>- Voditelj digitalizacije: pregledava i mijenja sve podatke unutar sustava, generira izvještaje i statistike
 >>- Administrator: upravlja korisnicima i ima potpuni pristup aplikaciji.
 >8. Podaci o filmovima mogu se izvesti u PDF, XML i XLSX formatu, a izvještaji o statistici u PDF ili XLSX format.
