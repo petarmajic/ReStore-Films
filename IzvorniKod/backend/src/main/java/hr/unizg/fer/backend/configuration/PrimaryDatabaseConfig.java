@@ -29,9 +29,9 @@ public class PrimaryDatabaseConfig {
     @ConfigurationProperties(prefix = "spring.datasource.primary")
     public DataSource primaryDataSource() {
         return DataSourceBuilder.create()
-                .url("jdbc:postgresql://localhost:5432/primarydb")
-                .username("sa")
-                .password("sa")
+                .url("jdbc:postgresql://dpg-csrht952ng1s7389ftqg-a.oregon-postgres.render.com/primarydb_e9xm?sslmode=require&charSet=UTF8")
+                .username("primarydb_e9xm_user")
+                .password("qgo7HGZcadzxOs1jKVRas13i5ZUTrqQa")
                 .driverClassName("org.postgresql.Driver")
                 .build();
     }
@@ -42,13 +42,8 @@ public class PrimaryDatabaseConfig {
         LocalContainerEntityManagerFactoryBean factoryBean = new LocalContainerEntityManagerFactoryBean();
         factoryBean.setDataSource(primaryDataSource);
         factoryBean.setPackagesToScan("hr.unizg.fer.backend.model.primary");
-        // factoryBean.setJpaPropertyMap(jpaProperties());
-
-        // Specify Hibernate as the JPA provider
         factoryBean.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
         factoryBean.setJpaPropertyMap(jpaProperties());
-
-
         return factoryBean;
     }
 
