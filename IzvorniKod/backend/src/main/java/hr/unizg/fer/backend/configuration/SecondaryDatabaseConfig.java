@@ -30,9 +30,9 @@ public class SecondaryDatabaseConfig {
     public DataSource secondaryDataSource() {
         return DataSourceBuilder.create()
                 //.url("jdbc:h2:file:./db/arhivskaBaza;auto_server=true")
-                .url("jdbc:postgresql://localhost:5432/secondarydb")
-                .username("svi")
-                .password("svi")
+                .url("jdbc:postgresql://dpg-csrieht2ng1s7389lppg-a.oregon-postgres.render.com/secondarydb?sslmode=require&charSet=UTF8")
+                .username("secondarydb_user")
+                .password("tndoKaPQmIipjwHrkgAGLn0JgH97D4jK")
                 .driverClassName("org.postgresql.Driver")
                 .build();
     }
