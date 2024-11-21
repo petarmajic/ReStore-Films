@@ -7,7 +7,7 @@ export default defineConfig({
   server: {
     proxy: {
       // Proxy API requests to your backend API
-      '/api': 'http://localhost:8080', // Your backend server address
+      '/api': 'https://restore-films-backend.onrender.com', // Your backend server address
     },
   },
 });

@@ -15,7 +15,7 @@ export const msalConfig = {
     auth: {
         clientId: "a2da829f-3876-4d85-a495-0ab0eba09213",
         authority: "https://login.microsoftonline.com/ca71eddc-cc7b-4e5b-95bd-55b658e696be",
-        redirectUri: "http://localhost:5173",
+        redirectUri: "https://restore-films-frontend.onrender.com",
     },
     cache: {
         cacheLocation: "sessionStorage", // This configures where your cache will be stored
