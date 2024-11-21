@@ -1,14 +1,34 @@
-# Koristi službenu JDK sliku kao osnovu
-FROM eclipse-temurin:21-jdk-jammy
+# Koristi Eclipse Temurin JDK 21 sliku
+FROM eclipse-temurin:21-jdk-jammy AS build
 
-# Postavi radni direktorij unutar kontejnera
+# Instaliraj Maven
+RUN apt-get update && apt-get install -y maven
+
+# Postavi radni direktorij
 WORKDIR /app
 
-# Kopiraj .jar datoteku u radni direktorij
-COPY target/backend-0.0.1-SNAPSHOT.jar app.jar
+# Kopiraj pom.xml i preuzmi ovisnosti
+COPY pom.xml .
 
-# Otvori port 8080 za aplikaciju
+RUN mvn dependency:go-offline
+
+# Kopiraj izvorne datoteke
+COPY src ./src
+
+# Buildaj aplikaciju
+RUN mvn clean install
+
+# Koristi JDK sliku za pokretanje aplikacije
+FROM eclipse-temurin:21-jdk-jammy
+
+# Postavi radni direktorij
+WORKDIR /app
+
+# Kopiraj buildani .jar iz prethodnog koraka
+COPY --from=build /app/target/backend-0.0.1-SNAPSHOT.jar app.jar
+
+# Otvori port 8080
 EXPOSE 8080
 
-# Definiraj naredbu za pokretanje aplikacije
+# Pokreni aplikaciju
 ENTRYPOINT ["java", "-jar", "app.jar"]
