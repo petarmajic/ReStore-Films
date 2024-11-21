@@ -8,12 +8,12 @@ RUN apt-get update && apt-get install -y maven
 WORKDIR /app
 
 # Kopiraj pom.xml i preuzmi ovisnosti
-COPY pom.xml .
+COPY IzvorniKod/backend/pom.xml .
 
 RUN mvn dependency:go-offline
 
 # Kopiraj izvorne datoteke
-COPY src ./src
+COPY IzvorniKod/backend/src ./src
 
 # Buildaj aplikaciju
 RUN mvn clean install
