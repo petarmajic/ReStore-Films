@@ -10,23 +10,24 @@ import { LogLevel } from "@azure/msal-browser";
  * For a full list of MSAL.js configuration parameters, visit:
  * https://github.com/AzureAD/microsoft-authentication-library-for-js/blob/dev/lib/msal-browser/docs/configuration.md 
  */
+const API_URL = import.meta.env.VITE_APP_API_URL;
 
 export const msalConfig = {
     auth: {
         clientId: "a2da829f-3876-4d85-a495-0ab0eba09213",
         authority: "https://login.microsoftonline.com/ca71eddc-cc7b-4e5b-95bd-55b658e696be",
-        redirectUri: "https://restore-films-frontend.onrender.com",
+        redirectUri: import.meta.env.VITE_APP_API_URL,  // Make sure this is available
     },
     cache: {
-        cacheLocation: "sessionStorage", // This configures where your cache will be stored
-        storeAuthStateInCookie: false, // Set this to "true" if you are having issues on IE11 or Edge
+        cacheLocation: "sessionStorage", 
+        storeAuthStateInCookie: false, 
     },
-    system: {	
-        loggerOptions: {	
-            loggerCallback: (level, message, containsPii) => {	
-                if (containsPii) {		
-                    return;		
-                }		
+    system: {    
+        loggerOptions: {    
+            loggerCallback: (level, message, containsPii) => {    
+                if (containsPii) {        
+                    return;        
+                }        
                 switch (level) {
                     case LogLevel.Error:
                         console.error(message);
@@ -42,11 +43,12 @@ export const msalConfig = {
                         return;
                     default:
                         return;
-                }	
-            }	
-        }	
+                }    
+            }    
+        }    
     }
 };
+
 
 /**
  * Scopes you add here will be prompted for user consent during sign-in.

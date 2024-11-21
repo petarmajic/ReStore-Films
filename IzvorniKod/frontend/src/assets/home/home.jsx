@@ -7,7 +7,7 @@ import barcodeScanner from "../images/barcodeScanner.png";
 import barcodeList from "../images/barcodeList.png";
 import { useMsal } from "@azure/msal-react";
 
-export default function Microsoft() {
+export default function Home() {
   const { accounts } = useMsal();
   const navigate = useNavigate();
 
@@ -17,6 +17,12 @@ export default function Microsoft() {
   const handleBarcodesClick = () => {
     navigate("/barcodes");
   };
+
+  const apiUrl = import.meta.env.VITE_APP_API_URL;
+  const backendUrl = import.meta.env.VITE_BACKEND_API_URL;
+
+  console.log("API URL:", apiUrl);
+  console.log("Backend API URL:", backendUrl);
 
   return (
     <>

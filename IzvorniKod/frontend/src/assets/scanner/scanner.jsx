@@ -7,8 +7,6 @@ import { LayoutContext } from "../layout/layoutcontext";
 import { useNavigate } from "react-router-dom";
 import pozadina from "../images/filmskaVrpca.jpg";
 
-const API_URL = "https://restore-films-backend.onrender.com"; // Backend URL
-
 const BarcodeScanner = () => {
   const [scannedData, setScannedData] = useState(null);
   const [error, setError] = useState(null);
@@ -44,8 +42,8 @@ const BarcodeScanner = () => {
   const handleFetchFilmData = async () => {
     if (scannedData) {
       try {
-        // Dodan puni URL za backend
-        const url = `${API_URL}/api/filmskaTrakaArhiva/${scannedData}`;
+        const BACKEND_API_URL = import.meta.env.VITE_BACKEND_API_URL;
+        const url = `${BACKEND_API_URL}/api/filmskaTrakaArhiva/${scannedData}`;
         const response = await axios.get(url, {
           headers: { "Content-Type": "application/json" },
         });
