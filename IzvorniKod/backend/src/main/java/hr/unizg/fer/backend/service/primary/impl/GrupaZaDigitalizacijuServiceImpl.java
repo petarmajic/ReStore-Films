@@ -1,8 +1,8 @@
-package hr.unizg.fer.backend.service.impl;
+package hr.unizg.fer.backend.service.primary.impl;
 
 import hr.unizg.fer.backend.model.primary.StatusDigitalizacije;
 import hr.unizg.fer.backend.repository.primary.GrupaZaDigitalizacijuRepository;
-import hr.unizg.fer.backend.service.GrupaZaDigitalizacijuService;
+import hr.unizg.fer.backend.service.primary.GrupaZaDigitalizacijuService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,12 +20,21 @@ public class GrupaZaDigitalizacijuServiceImpl implements GrupaZaDigitalizacijuSe
         this.repository = repository;
     }
 
-    public Map<StatusDigitalizacije, Long> getFilmCountByStatus() {
+    public Map<StatusDigitalizacije, Integer> getFilmCountByStatus() {
         List<Object[]> results = repository.countFilmsByStatus();
-        Map<StatusDigitalizacije, Long> statusCounts = new HashMap<>();
+        Map<StatusDigitalizacije, Integer> statusCounts = new HashMap<>();
         for (Object[] result : results) {
-            statusCounts.put((StatusDigitalizacije) result[0], (Long) result[1]);
+            statusCounts.put((StatusDigitalizacije) result[0], (Integer) result[1]);
         }
         return statusCounts;
+    }
+    @Override
+    public List<Object[]> countGroupsTakenOutByUser() {
+        return repository.countGroupsTakenOutByUser();
+    }
+
+    @Override
+    public List<Object[]> countGroupsReturnedByUser() {
+        return repository.countGroupsReturnedByUser();
     }
 }
