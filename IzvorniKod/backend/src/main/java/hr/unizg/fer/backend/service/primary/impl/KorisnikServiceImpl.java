@@ -22,4 +22,17 @@ public class KorisnikServiceImpl implements KorisnikService {
         Optional<Korisnik> korisnik = korisnikRepository.findKorisnikByEmail(email);
         return korisnik.orElse(null);
     }
+
+    // by default je djelatnik
+    @Override
+    public Korisnik saveKorisnik(Korisnik korisnik) {
+        System.out.println(korisnik);
+        if(korisnik.getEmail() == null){
+            throw new IllegalArgumentException("Email ne smije biti null!!!");
+        }
+        else if(korisnikRepository.findKorisnikByEmail(korisnik.getEmail()).isPresent()){
+            throw new IllegalArgumentException("Vec postoji korisnik s tim emailom!!!");
+        }
+        return korisnikRepository.save(korisnik);
+    }
 }
