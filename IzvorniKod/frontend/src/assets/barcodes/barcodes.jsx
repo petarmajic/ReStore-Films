@@ -16,8 +16,10 @@ const Barcodes = () => {
   const { instance, accounts } = useMsal();
 
   const account = accounts[0];
-  const userName = account?.name ?? null;
-  const userEmail = account?.username ?? null;
+  let userName = account?.name ?? null;
+  let userEmail = account?.username ?? null;
+  userName = userName.replace(/č/g, "c").replace(/ć/g, "c");
+  userEmail = userEmail.replace(/č/g, "c").replace(/ć/g, "c");
 
   const handleScannerClick = () => {
     navigate("/scanner");
@@ -82,6 +84,7 @@ const Barcodes = () => {
         }`;
         pdfDoc.text(text, 10, 30 + barcodeIndex * 10, null, null, "left", true);
       });
+      pdfDoc.text(`Potpis: ___________`, 180, 280, null, null, "right");
     });
     const pdfBlob = new Blob([pdfDoc.output("blob")], {
       type: "application/pdf",
