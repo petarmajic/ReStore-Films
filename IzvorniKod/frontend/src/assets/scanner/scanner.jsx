@@ -13,6 +13,7 @@ const BarcodeScanner = () => {
   const { scannedBarcodes, setScannedBarcodes } = useContext(LayoutContext);
   const scannedBarcodesRef = useRef(new Set(scannedBarcodes));
   const navigate = useNavigate();
+  const [displayInputFile, setDisplayInputFile] = useState(false);
 
   useEffect(() => {
     scannedBarcodesRef.current = new Set(scannedBarcodes);
@@ -68,13 +69,95 @@ const BarcodeScanner = () => {
           scannedBarcodesRef.current.add(scannedData);
         } else {
           console.log("Barcode already exists with title:", existingBarcode);
+          setError(
+            `Barcode ${scannedData} already exists with title: ${existingBarcode.filmTitle}`
+          );
+          setTimeout(() => {
+            setError(null);
+          }, 7000);
         }
 
         setError(null);
       } catch (error) {
         console.error("Error fetching film data:", error);
-        setError("Error fetching film data");
+        setError("Error fetching film data from server");
+        setDisplayInputFile(true);
       }
+    }
+  };
+  const handleXmlFileChange = (event) => {
+    try {
+      try {
+        const xmlFile = event.target.files[0];
+        const reader = new FileReader();
+
+        reader.onload = (event) => {
+          try {
+            const xmlData = event.target.result;
+            const parser = new DOMParser();
+            const xmlDoc = parser.parseFromString(xmlData, "text/xml");
+            const filmTitle =
+              xmlDoc.getElementsByTagName("OriginalniNaslov")[0].childNodes[0]
+                .nodeValue;
+            const duration =
+              xmlDoc.getElementsByTagName("Duration")[0].childNodes[0]
+                .nodeValue;
+
+            const existingBarcode = scannedBarcodes.find((barcode) => {
+              return (
+                typeof barcode === "object" && barcode.barcode === scannedData
+              );
+            });
+
+            if (!existingBarcode) {
+              const updatedBarcodes = [
+                ...scannedBarcodes,
+                {
+                  barcode: scannedData,
+                  filmTitle,
+                  duration,
+                },
+              ];
+
+              setScannedBarcodes(updatedBarcodes);
+              scannedBarcodesRef.current.add(scannedData);
+            } else {
+              setError(
+                "Barcode already exists with title: " +
+                  existingBarcode.filmTitle
+              );
+              setTimeout(() => {
+                setError(null);
+              }, 7000);
+            }
+          } catch (error) {
+            console.error("Error parsing XML:", error);
+            setError("Error parsing XML");
+            setTimeout(() => {
+              setError(null);
+            }, 7000);
+          }
+        };
+
+        reader.readAsText(xmlFile);
+      } catch (error) {
+        console.error("Error reading XML file:", error);
+        setError("Error reading XML file");
+        setTimeout(() => {
+          setError(null);
+        }, 7000);
+      }
+    } catch (error) {
+      console.error("Unknown error:", error);
+      setError("Unknown error");
+      setTimeout(() => {
+        setError(null);
+      }, 7000);
+    } finally {
+      setTimeout(() => {
+        setError(null);
+      }, 7000);
+      setDisplayInputFile(false);
     }
   };
 
@@ -103,6 +186,16 @@ const BarcodeScanner = () => {
                     Fetch
                   </button>
                   <button onClick={handleBarcodesClick}>List</button>
+                  {displayInputFile && (
+                    <div>
+                      <input
+                        type="file"
+                        accept=".xml"
+                        onChange={handleXmlFileChange}
+                      />
+                      <p>XML file</p>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
