@@ -18,7 +18,7 @@ public class KorisnikController {
         this.korisnikService = korisnikService;
     }
 
-    @GetMapping(path = "/get/{email}")
+    @GetMapping(path = "/{email}")
     public ResponseEntity<Korisnik> getKorisnikByEmail(@PathVariable String email) {
         Korisnik korisnik = korisnikService.getKorisnikByEmail(email);
         if (korisnik != null) {

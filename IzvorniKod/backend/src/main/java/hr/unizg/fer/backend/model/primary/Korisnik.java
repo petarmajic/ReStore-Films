@@ -1,5 +1,6 @@
 package hr.unizg.fer.backend.model.primary;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -46,14 +47,15 @@ public class Korisnik {
     private StatistikaDigitalizacije statistikaDigitalizacije;
      */
 
-    @OneToOne //nova veza
+    @OneToOne(cascade = CascadeType.ALL) // cascadeType.ALL da se u bazi automatski handla i stvaranje, brisanje.. staDig
     @JoinColumn(name = "IDStatistike", nullable = false)
+    @JsonManagedReference // za sprječavanje beskonačne petlje
     private StatistikaDigitalizacije statistikaDigitalizacije;
 
-    @OneToMany(mappedBy = "iznioIzSkladistaKorisnik")
+    @OneToMany(mappedBy = "iznioIzSkladistaKorisnik", fetch = FetchType.EAGER)
     private Set<GrupaZaDigitalizaciju> iznioIzSkladistaGrupeZaDigitalizaciju = new HashSet<>();
 
-    @OneToMany(mappedBy = "vratioUSkladisteKorisnik")
+    @OneToMany(mappedBy = "vratioUSkladisteKorisnik", fetch = FetchType.EAGER)
     private Set<GrupaZaDigitalizaciju> vratioUSkladisteGrupeZaDigitalizaciju = new HashSet<>();
 
 }

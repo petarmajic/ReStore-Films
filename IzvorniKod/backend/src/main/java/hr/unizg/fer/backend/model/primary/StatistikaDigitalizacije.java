@@ -1,5 +1,6 @@
 package hr.unizg.fer.backend.model.primary;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -36,5 +37,6 @@ public class StatistikaDigitalizacije {
 
 
     @OneToOne(mappedBy = "statistikaDigitalizacije") //nova veza
+    @JsonBackReference //za sprečavanje beskonačne petlje
     private Korisnik korisnik;
 }

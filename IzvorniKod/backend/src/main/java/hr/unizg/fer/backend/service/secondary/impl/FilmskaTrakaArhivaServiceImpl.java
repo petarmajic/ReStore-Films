@@ -24,10 +24,6 @@ public class FilmskaTrakaArhivaServiceImpl implements FilmskaTrakaArhivaService 
     public FilmskaTrakaArhiva getFilmskaTrakaArhivaByBarKod(String barKod) {
         Optional<FilmskaTrakaArhiva> filmskaTrakaArhiva =
                 filmskaTrakaArhivaRepository.findFilmskaTrakaArhivaByBarKod(barKod);
-        if (filmskaTrakaArhiva.isPresent()) {
-            return filmskaTrakaArhiva.get();
-        }else{
-            throw new NoSuchElementException("U arhivi nema filma s ID = " + barKod + " !");
-        }
+        return filmskaTrakaArhiva.orElse(null);
     }
 }
