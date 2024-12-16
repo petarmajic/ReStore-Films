@@ -5,5 +5,5 @@ import hr.unizg.fer.backend.model.primary.Korisnik;
 public interface KorisnikService {
     Korisnik getKorisnikByEmail(String email);
 
-    Korisnik saveKorisnik(Korisnik korisnik);
+    Korisnik addKorisnik(Korisnik korisnik);
 }

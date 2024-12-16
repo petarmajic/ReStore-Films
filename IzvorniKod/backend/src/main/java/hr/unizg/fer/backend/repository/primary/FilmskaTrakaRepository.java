@@ -11,9 +11,9 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 @Repository
 public interface FilmskaTrakaRepository extends JpaRepository<FilmskaTraka, Long> {
-    // Pronalazi sve FilmskeTrake
-    @Query("SELECT f FROM FilmskaTraka f")
-    List<FilmskaTraka> findAllFilmskeTrake();
+//    // Pronalazi sve FilmskeTrake
+//    @Query("SELECT f FROM FilmskaTraka f")
+//    List<FilmskaTraka> findAllFilmskeTrake();
 
     // Pronalazi FilmskuTraku po ID-u
     @Query("SELECT f FROM FilmskaTraka f WHERE f.idEmisije = :id")

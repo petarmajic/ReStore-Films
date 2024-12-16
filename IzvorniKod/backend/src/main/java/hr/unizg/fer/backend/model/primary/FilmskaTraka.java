@@ -69,7 +69,7 @@ public class FilmskaTraka {
     private GrupaZaDigitalizaciju grupaZaDigitalizaciju;
      */
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "Grupiranje",
             joinColumns = @JoinColumn(name="FilmskaTraka_IDEmisije"),

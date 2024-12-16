@@ -25,7 +25,7 @@ public class KorisnikServiceImpl implements KorisnikService {
 
     // by default je djelatnik
     @Override
-    public Korisnik saveKorisnik(Korisnik korisnik) {
+    public Korisnik addKorisnik(Korisnik korisnik) {
         System.out.println(korisnik);
         if(korisnik.getEmail() == null){
             throw new IllegalArgumentException("Email ne smije biti null!!!");

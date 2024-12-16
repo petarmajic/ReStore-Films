@@ -31,7 +31,7 @@ public class KorisnikController {
     @PostMapping(path = "/add")
     public ResponseEntity<Korisnik> addKorisnik(@RequestBody Korisnik korisnik) {
         try {
-            Korisnik savedKorisnik = korisnikService.saveKorisnik(korisnik);
+            Korisnik savedKorisnik = korisnikService.addKorisnik(korisnik);
             return ResponseEntity.status(HttpStatus.CREATED).body(savedKorisnik);
         } catch (IllegalArgumentException e){
             System.out.println(e.getMessage());     // ispis na konzolu "GREŠKA"

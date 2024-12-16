@@ -1,6 +1,7 @@
 package hr.unizg.fer.backend.service.primary.impl;
 
 import hr.unizg.fer.backend.model.primary.FilmskaTraka;
+import hr.unizg.fer.backend.model.secondary.FilmskaTrakaArhiva;
 import hr.unizg.fer.backend.repository.primary.FilmskaTrakaRepository;
 import hr.unizg.fer.backend.service.primary.FilmskaTrakaService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,5 +52,32 @@ public class FilmskaTrakaServiceImpl implements FilmskaTrakaService {
 
         // Spremanje ažurirane filmske trake u bazu podataka
         return filmskaTrakaRepository.save(existingTraka);
+    }
+
+    @Override
+    public FilmskaTraka addFilmskaTraka(FilmskaTrakaArhiva newTraka) {
+        if (newTraka.getOriginalniNaslov() == null || newTraka.getJezikOriginala() == null || newTraka.getTon() == null
+            || newTraka.getPorijekloZemljaProizvodnje() == null || newTraka.getGodinaProizvodnje() == null
+            || newTraka.getMarkIN() == null || newTraka.getMarkOUT() == null || newTraka.getDuration() == null
+            || newTraka.getBrojMedija() == null){
+                throw new IllegalArgumentException("Jedan/vise argumenata -> NEDOZVOLJENA NULL vrijednost");
+        }
+        FilmskaTraka filmskaTraka = new FilmskaTraka();
+
+        filmskaTraka.setOriginalniNaslov(newTraka.getOriginalniNaslov());
+        filmskaTraka.setRadniNaslov(newTraka.getRadniNaslov());
+        filmskaTraka.setJezikOriginala(newTraka.getJezikOriginala());
+        filmskaTraka.setTon(newTraka.getTon());
+        filmskaTraka.setEmisija(newTraka.getEmisija());
+        filmskaTraka.setVrstaSadrzaja(newTraka.getVrstaSadrzaja());
+        filmskaTraka.setPorijekloZemljaProizvodnje(newTraka.getPorijekloZemljaProizvodnje());
+        filmskaTraka.setLicenca(newTraka.getLicenca());
+        filmskaTraka.setGodinaProizvodnje(newTraka.getGodinaProizvodnje());
+        filmskaTraka.setMarkIN(newTraka.getMarkIN());
+        filmskaTraka.setMarkOUT(newTraka.getMarkOUT());
+        filmskaTraka.setDuration(newTraka.getDuration());
+        filmskaTraka.setBrojMedija(newTraka.getBrojMedija());
+
+        return filmskaTrakaRepository.save(filmskaTraka);
     }
 }
