@@ -18,8 +18,16 @@ const Barcodes = () => {
   const account = accounts[0];
   let userName = account?.name ?? null;
   let userEmail = account?.username ?? null;
-  userName = userName.replace(/č/g, "c").replace(/ć/g, "c");
-  userEmail = userEmail.replace(/č/g, "c").replace(/ć/g, "c");
+  userName = userName
+    .replace(/č/g, "C")
+    .replace(/ć/g, "C")
+    .replace(/Č/g, "C")
+    .replace(/Ć/g, "C");
+  userEmail = userEmail
+    .replace(/č/g, "C")
+    .replace(/ć/g, "C")
+    .replace(/Č/g, "C")
+    .replace(/Ć/g, "C");
 
   const handleScannerClick = () => {
     navigate("/scanner");
@@ -63,6 +71,14 @@ const Barcodes = () => {
         date.toLocaleDateString() + " " + date.toLocaleTimeString();
       pdfDoc.text(`${userName} (${userEmail})`, 10, 10, null, null, "left");
       pdfDoc.text(dateString, 180, 10, null, null, "right");
+      pdfDoc.text(
+        "Popis filmova na digitalizaciji:",
+        10,
+        20,
+        null,
+        null,
+        "left"
+      );
       const groupDuration = selectedBarcodes[groupKey].reduce(
         (acc, barcode) => {
           const durationInSeconds = durationToSeconds(barcode.duration);
@@ -74,7 +90,7 @@ const Barcodes = () => {
       pdfDoc.text(
         `Grupa ${index + 1} (Ukupno trajanje: ${groupDurationText})`,
         10,
-        20
+        30
       );
       selectedBarcodes[groupKey].forEach((barcode, barcodeIndex) => {
         const text = `${barcodeIndex + 1}. ${
@@ -82,7 +98,7 @@ const Barcodes = () => {
         } - ${barcode.filmTitle.replace(/č/g, "c").replace(/ć/g, "c")} - ${
           barcode.duration
         }`;
-        pdfDoc.text(text, 10, 30 + barcodeIndex * 10, null, null, "left", true);
+        pdfDoc.text(text, 10, 40 + barcodeIndex * 10, null, null, "left", true);
       });
       pdfDoc.text(`Potpis: ___________`, 180, 280, null, null, "right");
     });

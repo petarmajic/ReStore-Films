@@ -10,11 +10,12 @@
     "preview": "vite preview"
   },
   "dependencies": {
-      "jspdf": "^2.5.0",
     "@azure/msal-browser": "^3.26.1",
     "@azure/msal-react": "^2.1.1",
     "axios": "^1.7.7",
     "bootstrap": "^5.3.3",
+    "jspdf": "^2.5.0",
+    "pdfjs-dist": "^4.9.155",
     "react": "^18.3.1",
     "react-bootstrap": "^2.10.5",
     "react-dom": "^18.3.1",

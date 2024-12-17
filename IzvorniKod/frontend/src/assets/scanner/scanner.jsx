@@ -76,7 +76,7 @@ const BarcodeScanner = () => {
             setError(null);
           }, 7000);
         }
-
+        setDisplayInputFile(false);
         setError(null);
       } catch (error) {
         console.error("Error fetching film data:", error);

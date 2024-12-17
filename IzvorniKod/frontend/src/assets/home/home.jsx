@@ -17,6 +17,9 @@ export default function Home() {
   const handleBarcodesClick = () => {
     navigate("/barcodes");
   };
+  const handleArhivaClick = () => {
+    navigate("/arhiva");
+  };
 
   const apiUrl = import.meta.env.VITE_APP_API_URL;
   const backendUrl = import.meta.env.VITE_BACKEND_API_URL;
@@ -56,6 +59,9 @@ export default function Home() {
                 ></img>
                 Barcode List
               </button>
+            </div>
+            <div className="scanner-list">
+              <button onClick={handleArhivaClick}>Arhiva</button>
             </div>
           </div>
         </div>
