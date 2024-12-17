@@ -4,10 +4,9 @@ import Layout from "../layout/layout";
 import { LayoutContext } from "../layout/layoutcontext";
 import { useNavigate } from "react-router-dom";
 import pozadina from "../images/filmskaVrpca.jpg";
-import * as pdfjsLib from "pdfjs-dist";
-pdfjsLib.GlobalWorkerOptions.workerSrc =
-  "../../../node_modules/pdfjs-dist/build/pdf.worker.mjs";
 import jsPDF from "jspdf";
+import { getDocument, GlobalWorkerOptions } from "pdfjs-dist";
+GlobalWorkerOptions.workerSrc = "/assets/pdf.worker.min.mjs";
 import { useMsal } from "@azure/msal-react";
 
 const Arhiva = () => {
