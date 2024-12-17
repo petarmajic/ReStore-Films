@@ -297,7 +297,9 @@ const Barcodes = () => {
                     <span style={{ fontSize: "16px" }}>
                       {index + 1}.{" "}
                       {typeof barcode === "object"
-                        ? `${barcode.barcode} - ${barcode.filmTitle} - ${barcode.duration}`
+                        ? `${barcode.database ? "✅" : "◼️"} ${
+                            barcode.barcode
+                          } - ${barcode.filmTitle} - ${barcode.duration}`
                         : barcode}
                     </span>
                     <button

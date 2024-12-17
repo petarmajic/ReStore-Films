@@ -14,6 +14,8 @@ const BarcodeScanner = () => {
   const scannedBarcodesRef = useRef(new Set(scannedBarcodes));
   const navigate = useNavigate();
   const [displayInputFile, setDisplayInputFile] = useState(false);
+  const [displayForm, setDisplayForm] = useState(false);
+  const [database, setDatabase] = useState(false);
 
   useEffect(() => {
     scannedBarcodesRef.current = new Set(scannedBarcodes);
@@ -62,6 +64,7 @@ const BarcodeScanner = () => {
               barcode: scannedData,
               filmTitle: response.data.originalniNaslov,
               duration: response.data.duration,
+              database: true,
             },
           ];
 
@@ -116,6 +119,7 @@ const BarcodeScanner = () => {
                   barcode: scannedData,
                   filmTitle,
                   duration,
+                  database: false,
                 },
               ];
 
@@ -161,6 +165,35 @@ const BarcodeScanner = () => {
     }
   };
 
+  const [idEmisije, setIdEmisije] = useState("");
+  const [filmTitle, setFilmTitle] = useState("");
+  const [duration, setDuration] = useState("");
+  const [year, setYear] = useState("");
+
+  const handleManualEntry = () => {
+    setDisplayForm(!displayForm);
+    setDisplayInputFile(false);
+  };
+  const [isValid, setIsValid] = useState(false);
+
+  useEffect(() => {
+    if (
+      filmTitle !== "" &&
+      duration !== "" &&
+      year !== "" &&
+      /^\d{2}:\d{2}:\d{2}$/.test(duration) &&
+      /^\d{4}$/.test(year) &&
+      idEmisije !== "" &&
+      /^\d{4,5}-\d{1,2}$/.test(idEmisije)
+    ) {
+      setIsValid(true);
+    } else {
+      setIsValid(false);
+    }
+  }, [filmTitle, duration, year, idEmisije]);
+
+  const currentYear = new Date().getFullYear();
+
   return (
     <Layout>
       <div className="scan-layout">
@@ -196,23 +229,110 @@ const BarcodeScanner = () => {
                       <p>XML file</p>
                     </div>
                   )}
+                  <button onClick={handleManualEntry}>Manual input</button>
                 </div>
               </div>
             </div>
           </div>
-
-          <div className="brc-list-container">
-            <div className="scanned-title">Scanned barcodes</div>
-            <div className="scan-br-list">
-              <ul>
-                {scannedBarcodes.map((barcode, index) => (
-                  <li key={index}>
-                    {barcode.barcode} - {barcode.filmTitle} ({barcode.duration})
-                  </li>
-                ))}
-              </ul>
+          {!displayForm && (
+            <div className="brc-list-container">
+              <div className="scanned-title">Scanned barcodes</div>
+              <div className="scan-br-list">
+                <ul>
+                  {scannedBarcodes.map((barcode, index) => (
+                    <li key={index}>
+                      {barcode.barcode} - {barcode.filmTitle} (
+                      {barcode.duration})
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </div>
-          </div>
+          )}
+
+          {displayForm && (
+            <form>
+              <label>
+                ID emisije:
+                <input
+                  type="text"
+                  value={idEmisije}
+                  onChange={(e) => setIdEmisije(e.target.value)}
+                  placeholder="1234-12 ili 12345-1"
+                />
+              </label>
+              <label>
+                Film title:
+                <input
+                  type="text"
+                  value={filmTitle}
+                  onChange={(e) => setFilmTitle(e.target.value)}
+                />
+              </label>
+              <label>
+                Duration:
+                <input
+                  type="text"
+                  value={duration}
+                  onChange={(e) => {
+                    let inputValue = e.target.value.replace(/[^0-9]/g, "");
+                    if (inputValue.length > 2) {
+                      inputValue = inputValue.replace(/(\d{2})(?=\d)/g, "$1:");
+                    }
+                    if (inputValue.length > 8) {
+                      inputValue = inputValue.slice(0, 8);
+                    }
+                    setDuration(inputValue);
+                  }}
+                  placeholder="Format: hh:mm:ss"
+                />
+              </label>
+
+              <label>
+                Year:
+                <input
+                  type="number"
+                  value={year}
+                  onChange={(e) => {
+                    let yearValue = e.target.value;
+                    if (yearValue.length === 4) {
+                      if (yearValue >= 1900 && yearValue <= currentYear) {
+                        setYear(yearValue);
+                      } else {
+                        setYear(currentYear);
+                      }
+                    } else {
+                      setYear(yearValue);
+                    }
+                  }}
+                  placeholder={`1900-${currentYear}`}
+                />
+              </label>
+
+              <button
+                onClick={(e) => {
+                  e.preventDefault();
+                  if (isValid) {
+                    const newBarcode = Math.random()
+                      .toString(36)
+                      .substr(2, Math.floor(Math.random() * 2) + 9);
+                    const newFilm = {
+                      barcode: newBarcode,
+                      filmTitle,
+                      duration,
+                      year,
+                      database: false,
+                    };
+                    setScannedBarcodes([...scannedBarcodes, newFilm]);
+                    setDisplayForm(false);
+                  }
+                }}
+                disabled={!isValid}
+              >
+                Add film
+              </button>
+            </form>
+          )}
         </div>
       </div>
     </Layout>
