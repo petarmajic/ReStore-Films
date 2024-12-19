@@ -9,5 +9,5 @@ public interface KorisnikService {
 
     Korisnik addKorisnik(Korisnik korisnik);
 
-    Void deleteKorisnik(String ulogaKorisnika, String email) throws AccessDeniedException;
+    void deleteKorisnik(String ulogaKorisnika, String email) throws AccessDeniedException;
 }

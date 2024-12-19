@@ -56,7 +56,7 @@ public class KorisnikServiceImpl implements KorisnikService {
     }
 
     @Override
-    public Void deleteKorisnik(String ulogaKorisnika, String email) throws AccessDeniedException {
+    public void deleteKorisnik(String ulogaKorisnika, String email) throws AccessDeniedException {
         if(!ulogaKorisnika.equals("ADMINISTRATOR")){
             throw new AccessDeniedException("AKCIJA ODBIJENA -> Brisanje provodi samo ADMINISTRATOR !!!");
         }
@@ -66,6 +66,5 @@ public class KorisnikServiceImpl implements KorisnikService {
 
         korisnikRepository.delete(korisnikRepository.findKorisnikByEmail(email).get());
 
-        return null;
     }
 }

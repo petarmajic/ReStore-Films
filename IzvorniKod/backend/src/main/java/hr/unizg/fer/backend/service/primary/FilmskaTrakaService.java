@@ -8,6 +8,7 @@ import java.util.List;
 public interface FilmskaTrakaService {
     List<FilmskaTraka> getAllFilmskeTrake();
     FilmskaTraka getFilmskaTrakaById(Long id);
+    FilmskaTraka getFilmskaTrakaByNaslov(String naslov);
     FilmskaTraka updateFilmskaTraka(Long id, FilmskaTraka updatedTraka);
     FilmskaTraka addFilmskaTraka(FilmskaTrakaArhiva newTraka);
 }

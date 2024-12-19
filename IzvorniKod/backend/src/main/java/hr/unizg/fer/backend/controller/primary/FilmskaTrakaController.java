@@ -27,10 +27,21 @@ public class FilmskaTrakaController {
     }
 
     // Endpoint za dohvat filmske trake po ID-u
-    @GetMapping("/{id}")
+    @GetMapping("/id/{id}")
     public ResponseEntity<FilmskaTraka> getFilmskaTrakaById(@PathVariable Long id) {
         try {
             FilmskaTraka filmskaTraka = filmskaTrakaService.getFilmskaTrakaById(id);
+            return ResponseEntity.ok(filmskaTraka);
+        } catch (IllegalArgumentException ex) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
+    }
+
+    // Endpoint za dohvat filmske trake po naslovu
+    @GetMapping("/naslov/{originalniNaslov}")
+    public ResponseEntity<FilmskaTraka> getFilmskaTrakaByNaslov(@PathVariable String originalniNaslov) {
+        try {
+            FilmskaTraka filmskaTraka = filmskaTrakaService.getFilmskaTrakaByNaslov(originalniNaslov);
             return ResponseEntity.ok(filmskaTraka);
         } catch (IllegalArgumentException ex) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);

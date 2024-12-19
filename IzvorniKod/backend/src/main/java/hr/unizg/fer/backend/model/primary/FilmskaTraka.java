@@ -24,7 +24,7 @@ public class FilmskaTraka {
     @Column(name = "IDEmisije", nullable = false)
     private Long idEmisije;
 
-    @Column(name = "OriginalniNaslov",nullable = false)
+    @Column(name = "OriginalniNaslov",nullable = false, unique = true)
     private String originalniNaslov;
 
     @Column(name = "RadniNaslov")

@@ -31,6 +31,12 @@ public class FilmskaTrakaServiceImpl implements FilmskaTrakaService {
     }
 
     @Override
+    public FilmskaTraka getFilmskaTrakaByNaslov(String naslov) {
+        return filmskaTrakaRepository.findFilmskaTrakaByNaslov(naslov)
+                .orElseThrow(() -> new IllegalArgumentException("Filmska traka s naslovom-om " + naslov + " ne postoji."));
+    }
+
+    @Override
     public FilmskaTraka updateFilmskaTraka(Long id, FilmskaTraka updatedTraka) {
         // Provjera postoji li filmska traka s tim id-em
         FilmskaTraka existingTraka = filmskaTrakaRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Filmska traka s ID-om " + id + " ne postoji."));
