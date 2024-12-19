@@ -15,7 +15,7 @@ public class WebConfig {
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
                         .allowedOrigins("http://localhost:5173/",
-                                "https://restore-films-backend.onrender.com")
+                                "https://restore-films-frontend.onrender.com")
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowedHeaders("*");
             }
