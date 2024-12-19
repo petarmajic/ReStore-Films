@@ -1,4 +1,4 @@
-import React from "react";
+import { useRef, useState, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./home.css";
 import Layout from "../layout/layout";
@@ -6,8 +6,9 @@ import pozadina from "../images/filmskaVrpca.jpg";
 import barcodeScanner from "../images/barcodeScanner.png";
 import barcodeList from "../images/barcodeList.png";
 import { useMsal } from "@azure/msal-react";
+import { LayoutContext } from "../layout/layoutcontext";
 
-export default function Microsoft() {
+export default function Home() {
   const { accounts } = useMsal();
   const navigate = useNavigate();
 
@@ -17,6 +18,15 @@ export default function Microsoft() {
   const handleBarcodesClick = () => {
     navigate("/barcodes");
   };
+  const handleArhivaClick = () => {
+    navigate("/arhiva");
+  };
+
+  const apiUrl = import.meta.env.VITE_APP_API_URL;
+  const backendUrl = import.meta.env.VITE_BACKEND_API_URL;
+
+  console.log("API URL:", apiUrl);
+  console.log("Backend API URL:", backendUrl);
 
   return (
     <>
@@ -50,6 +60,9 @@ export default function Microsoft() {
                 ></img>
                 Barcode List
               </button>
+            </div>
+            <div className="scanner-list">
+              <button onClick={handleArhivaClick}>Arhiva</button>
             </div>
           </div>
         </div>
