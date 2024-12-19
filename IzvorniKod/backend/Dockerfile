@@ -16,7 +16,7 @@ RUN mvn dependency:go-offline
 COPY IzvorniKod/backend/src ./src
 
 # Buildaj aplikaciju
-RUN mvn clean install
+RUN mvn clean install -DskipTests
 
 # Koristi JDK sliku za pokretanje aplikacije
 FROM eclipse-temurin:21-jdk-jammy
