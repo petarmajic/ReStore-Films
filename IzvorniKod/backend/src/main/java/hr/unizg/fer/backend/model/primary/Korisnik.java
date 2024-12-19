@@ -29,26 +29,14 @@ public class Korisnik {
     @Column(name = "Prezime", nullable = false)
     private String prezime;
 
-    @Column(name = "KorisnickoIme", nullable = false)
-    private String korisnickoIme;
-
-    @Column(name = "Email", nullable = false)
+    @Column(name = "Email", nullable = false, unique = true)
     private String email;
 
-    @Column(name = "Lozinka", nullable = false)
-    private String lozinka;
-
-    @Column(name = "Uloga", nullable = false)
+    @Column(name = "Uloga", nullable = true)
     private UlogaKorisnika uloga;
 
-    /*
-    @ManyToOne
-    @JoinColumn(name = "IDStatistike", nullable = false)
-    private StatistikaDigitalizacije statistikaDigitalizacije;
-     */
-
     @OneToOne(cascade = CascadeType.ALL) // cascadeType.ALL da se u bazi automatski handla i stvaranje, brisanje.. staDig
-    @JoinColumn(name = "IDStatistike", nullable = false)
+    @JoinColumn(name = "IDStatistike", nullable = true)
     @JsonManagedReference // za sprječavanje beskonačne petlje
     private StatistikaDigitalizacije statistikaDigitalizacije;
 
