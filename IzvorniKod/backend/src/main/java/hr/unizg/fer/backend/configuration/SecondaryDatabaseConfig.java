@@ -1,7 +1,7 @@
 package hr.unizg.fer.backend.configuration;
 
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,20 +19,27 @@ import java.util.Map;
 @Configuration
 @EnableTransactionManagement
 @EnableJpaRepositories(
-        basePackages = "hr.unizg.fer.backend.repository.secondary", // Secondary repositories
+        basePackages = "hr.unizg.fer.backend.repository.secondary",
         entityManagerFactoryRef = "secondaryEntityManagerFactory",
         transactionManagerRef = "secondaryTransactionManager"
 )
 public class SecondaryDatabaseConfig {
 
+    @Value("${spring.datasource.secondary.url}")
+    private String dbUrl;
+
+    @Value("${spring.datasource.secondary.username}")
+    private String dbUsername;
+
+    @Value("${spring.datasource.secondary.password}")
+    private String dbPassword;
+
     @Bean(name = "secondaryDataSource")
-    @ConfigurationProperties(prefix = "spring.datasource.secondary")
     public DataSource secondaryDataSource() {
         return DataSourceBuilder.create()
-                //.url("jdbc:h2:file:./db/arhivskaBaza;auto_server=true")
-                .url("jdbc:postgresql://dpg-csrieht2ng1s7389lppg-a.oregon-postgres.render.com/secondarydb?sslmode=require&charSet=UTF8")
-                .username("secondarydb_user")
-                .password("tndoKaPQmIipjwHrkgAGLn0JgH97D4jK")
+                .url(dbUrl)
+                .username(dbUsername)
+                .password(dbPassword)
                 .driverClassName("org.postgresql.Driver")
                 .build();
     }
@@ -43,12 +50,8 @@ public class SecondaryDatabaseConfig {
         LocalContainerEntityManagerFactoryBean factoryBean = new LocalContainerEntityManagerFactoryBean();
         factoryBean.setDataSource(secondaryDataSource);
         factoryBean.setPackagesToScan("hr.unizg.fer.backend.model.secondary");
-        // factoryBean.setJpaPropertyMap(jpaProperties());
-
-        // Specify Hibernate as the JPA provider
         factoryBean.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
         factoryBean.setJpaPropertyMap(jpaProperties());
-
         return factoryBean;
     }
 

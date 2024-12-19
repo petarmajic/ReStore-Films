@@ -1,6 +1,6 @@
 package hr.unizg.fer.backend.configuration;
 
-import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
@@ -11,6 +11,8 @@ import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.beans.factory.annotation.Qualifier;
+
 
 import javax.sql.DataSource;
 import java.util.HashMap;
@@ -25,20 +27,29 @@ import java.util.Map;
 )
 public class PrimaryDatabaseConfig {
 
+    @Value("${spring.datasource.primary.url}")
+    private String dbUrl;
+
+    @Value("${spring.datasource.primary.username}")
+    private String dbUsername;
+
+    @Value("${spring.datasource.primary.password}")
+    private String dbPassword;
+
     @Bean(name = "primaryDataSource")
     @ConfigurationProperties(prefix = "spring.datasource.primary")
     public DataSource primaryDataSource() {
         return DataSourceBuilder.create()
-                .url("jdbc:postgresql://dpg-csrht952ng1s7389ftqg-a.oregon-postgres.render.com/primarydb_e9xm?sslmode=require&charSet=UTF8")
-                .username("primarydb_e9xm_user")
-                .password("qgo7HGZcadzxOs1jKVRas13i5ZUTrqQa")
+                .url(dbUrl)  // Koristi varijable umjesto hardkodiranih vrijednosti
+                .username(dbUsername)
+                .password(dbPassword)
                 .driverClassName("org.postgresql.Driver")
                 .build();
     }
 
     @Bean(name = "primaryEntityManagerFactory")
     public LocalContainerEntityManagerFactoryBean primaryEntityManagerFactory(
-            @Qualifier("primaryDataSource") DataSource primaryDataSource) {
+            DataSource primaryDataSource) {
         LocalContainerEntityManagerFactoryBean factoryBean = new LocalContainerEntityManagerFactoryBean();
         factoryBean.setDataSource(primaryDataSource);
         factoryBean.setPackagesToScan("hr.unizg.fer.backend.model.primary");
@@ -52,7 +63,6 @@ public class PrimaryDatabaseConfig {
             @Qualifier("primaryEntityManagerFactory") LocalContainerEntityManagerFactoryBean entityManagerFactory) {
         return new JpaTransactionManager(entityManagerFactory.getObject());
     }
-
     private Map<String, Object> jpaProperties() {
         Map<String, Object> properties = new HashMap<>();
         properties.put("hibernate.hbm2ddl.auto", "update");
