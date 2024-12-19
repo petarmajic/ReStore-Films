@@ -4,9 +4,17 @@ const LayoutContext = createContext();
 
 function LayoutProvider({ children }) {
   const [scannedBarcodes, setScannedBarcodes] = useState([]);
+  const [korisnikUloga, setKorisnikUloga] = useState(null);
 
   return (
-    <LayoutContext.Provider value={{ scannedBarcodes, setScannedBarcodes }}>
+    <LayoutContext.Provider
+      value={{
+        scannedBarcodes,
+        setScannedBarcodes,
+        korisnikUloga,
+        setKorisnikUloga,
+      }}
+    >
       {children}
     </LayoutContext.Provider>
   );

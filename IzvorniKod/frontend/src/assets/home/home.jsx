@@ -1,4 +1,4 @@
-import React from "react";
+import { useRef, useState, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./home.css";
 import Layout from "../layout/layout";
@@ -6,6 +6,7 @@ import pozadina from "../images/filmskaVrpca.jpg";
 import barcodeScanner from "../images/barcodeScanner.png";
 import barcodeList from "../images/barcodeList.png";
 import { useMsal } from "@azure/msal-react";
+import { LayoutContext } from "../layout/layoutcontext";
 
 export default function Home() {
   const { accounts } = useMsal();
