@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.nio.file.AccessDeniedException;
 import java.util.HashSet;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
@@ -66,5 +67,9 @@ public class KorisnikServiceImpl implements KorisnikService {
 
         korisnikRepository.delete(korisnikRepository.findKorisnikByEmail(email).get());
 
+    }
+    @Override
+    public List<Korisnik> getAllKorisnici() {
+        return korisnikRepository.findAll();
     }
 }

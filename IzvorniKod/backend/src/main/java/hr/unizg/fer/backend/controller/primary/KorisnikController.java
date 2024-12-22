@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.nio.file.AccessDeniedException;
 import java.util.NoSuchElementException;
+import java.util.List;
 
 @RestController
 @RequestMapping(path = "api/korisnik")
@@ -56,4 +57,11 @@ public class KorisnikController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
     }
+    // Endpoint za dohvaćanje svih korisnika
+    @GetMapping("/all")
+    public ResponseEntity<List<Korisnik>> getAllKorisnici() {
+        List<Korisnik> korisnici = korisnikService.getAllKorisnici();
+        return ResponseEntity.ok(korisnici);
+    }
+
 }
