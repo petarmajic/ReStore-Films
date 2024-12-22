@@ -30,6 +30,7 @@ const Navigation = () => {
             `${BACKEND_API_URL}/api/korisnik/${userEmail}`
           );
           setKorisnikUloga(response.data.uloga);
+          setKorisnikUloga("VODITELJ");
           console.log(
             `Korisnik: ${userEmail} postoji, uloga: ${korisnikUloga}`
           );
