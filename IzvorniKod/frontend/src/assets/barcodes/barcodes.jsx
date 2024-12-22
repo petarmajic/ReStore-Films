@@ -1,14 +1,33 @@
-import { useRef, useState, useContext } from "react";
+import { useState, useEffect, useMemo, useContext } from "react";
 import "./barcodes.css";
 import Layout from "../layout/layout";
 import { LayoutContext } from "../layout/layoutcontext";
 import { useNavigate } from "react-router-dom";
 import pozadina from "../images/filmskaVrpca.jpg";
+import jsPDF from "jspdf";
+import { useMsal } from "@azure/msal-react";
 
 const Barcodes = () => {
   const { scannedBarcodes, setScannedBarcodes } = useContext(LayoutContext);
-  const scannedBarcodesRef = useRef(new Set(scannedBarcodes));
+  const [selectedBarcodes, setSelectedBarcodes] = useState({});
+
   const navigate = useNavigate();
+  const [selectedGroups, setSelectedGroups] = useState({});
+  const { instance, accounts } = useMsal();
+
+  const account = accounts[0];
+  let userName = account?.name ?? null;
+  let userEmail = account?.username ?? null;
+  userName = userName
+    .replace(/č/g, "C")
+    .replace(/ć/g, "C")
+    .replace(/Č/g, "C")
+    .replace(/Ć/g, "C");
+  userEmail = userEmail
+    .replace(/č/g, "C")
+    .replace(/ć/g, "C")
+    .replace(/Č/g, "C")
+    .replace(/Ć/g, "C");
 
   const handleScannerClick = () => {
     navigate("/scanner");
@@ -25,7 +44,86 @@ const Barcodes = () => {
       setScannedBarcodes(newBarcodes);
     }
   };
+  const handleSelectGroup = (groupKey) => {
+    const newSelectedGroups = { ...selectedGroups };
+    if (newSelectedGroups[groupKey]) {
+      delete newSelectedGroups[groupKey];
+    } else {
+      newSelectedGroups[groupKey] = true;
+    }
+    setSelectedGroups(newSelectedGroups);
+  };
 
+  const handleDigitalizacijaClick = () => {
+    console.log("Ime i email korisnika:", userName, userEmail);
+    setSelectedBarcodes({});
+    Object.keys(selectedGroups).forEach((groupKey) => {
+      selectedBarcodes[groupKey] = groupedBarcodes[groupKey];
+    });
+    // Generirajte PDF dokument sa odabranim filmovima
+    const pdfDoc = new jsPDF();
+    Object.keys(selectedBarcodes).forEach((groupKey, index) => {
+      if (index > 0) {
+        pdfDoc.addPage();
+      }
+      const date = new Date();
+      const dateString =
+        date.toLocaleDateString() + " " + date.toLocaleTimeString();
+      pdfDoc.text(`${userName} (${userEmail})`, 10, 10, null, null, "left");
+      pdfDoc.text(dateString, 180, 10, null, null, "right");
+      pdfDoc.text(
+        "Popis filmova na digitalizaciji:",
+        10,
+        20,
+        null,
+        null,
+        "left"
+      );
+      const groupDuration = selectedBarcodes[groupKey].reduce(
+        (acc, barcode) => {
+          const durationInSeconds = durationToSeconds(barcode.duration);
+          return acc + durationInSeconds;
+        },
+        0
+      );
+      const groupDurationText = secondsToDuration(groupDuration);
+      pdfDoc.text(
+        `Grupa ${index + 1} (Ukupno trajanje: ${groupDurationText})`,
+        10,
+        30
+      );
+      selectedBarcodes[groupKey].forEach((barcode, barcodeIndex) => {
+        const text = `${barcodeIndex + 1}. ${
+          barcode.barcode
+        } - ${barcode.filmTitle.replace(/č/g, "c").replace(/ć/g, "c")} - ${
+          barcode.duration
+        }`;
+        pdfDoc.text(text, 10, 40 + barcodeIndex * 10, null, null, "left", true);
+      });
+      pdfDoc.text(`Potpis: ___________`, 180, 280, null, null, "right");
+    });
+    const pdfBlob = new Blob([pdfDoc.output("blob")], {
+      type: "application/pdf",
+    });
+    const pdfUrl = URL.createObjectURL(pdfBlob);
+    const link = document.createElement("a");
+    link.href = pdfUrl;
+    link.download = "digitalizacija.pdf";
+    link.click();
+    URL.revokeObjectURL(pdfUrl);
+
+    const selectedBarcodesArray = Object.values(selectedBarcodes);
+    const newScannedBarcodes = scannedBarcodes.filter((barcode) => {
+      return !selectedBarcodesArray.some((group) => {
+        return group.some((selectedBarcode) => {
+          return selectedBarcode.barcode === barcode.barcode;
+        });
+      });
+    });
+    setScannedBarcodes(newScannedBarcodes);
+    setSelectedBarcodes({});
+    setSelectedGroups({});
+  };
   const calculateTotalDuration = () => {
     const totalDuration = scannedBarcodes.reduce((acc, barcode) => {
       if (typeof barcode === "object" && barcode.duration) {
@@ -46,52 +144,140 @@ const Barcodes = () => {
       .toString()
       .padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
   };
+
+  // Funkcija za konverziju trajanja u sekunde
+  const durationToSeconds = (duration) => {
+    return duration
+      .split(":")
+      .map(Number)
+      .reduce((acc, val) => acc * 60 + val, 0);
+  };
+
+  // Funkcija za konverziju sekundi u "MM:SS" format
+  const secondsToDuration = (seconds) => {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    return `${minutes}:${remainingSeconds.toString().padStart(2, "0")}`;
+  };
+  //
+  //
+  //
+  //
+  //
   const groupBarcodesByDuration = (barcodes) => {
-    const sortedBarcodes = barcodes.sort((a, b) => {
-      const durationA = a.duration
-        .split(":")
-        .map(Number)
-        .reduce((acc, val) => acc * 60 + val, 0);
-      const durationB = b.duration
-        .split(":")
-        .map(Number)
-        .reduce((acc, val) => acc * 60 + val, 0);
-      return durationA - durationB;
+    if (barcodes.length === 0) {
+      return {};
+    }
+    const maxDuration = 45 * 60;
+    const durationToSeconds = (duration) => {
+      const [hours, minutes, seconds] = duration.split(":").map(Number);
+      return (hours || 0) * 3600 + (minutes || 0) * 60 + (seconds || 0);
+    };
+    const secondsToDuration = (seconds) => {
+      const hours = Math.floor(seconds / 3600);
+      const minutes = Math.floor((seconds % 3600) / 60);
+      const remainingSeconds = seconds % 60;
+      return [
+        hours > 0 ? String(hours).padStart(2, "0") : "00",
+        String(minutes).padStart(2, "0"),
+        String(remainingSeconds).padStart(2, "0"),
+      ].join(":");
+    };
+
+    const splitLongBarcodes = (barcode) => {
+      const durationInSeconds = durationToSeconds(barcode.duration);
+      const segments = [];
+      let remainingDuration = durationInSeconds;
+      let partNumber = 1;
+
+      while (remainingDuration > maxDuration) {
+        segments.push({
+          ...barcode,
+          duration: secondsToDuration(maxDuration),
+          filmTitle: `${barcode.filmTitle} - ${partNumber}. dio`,
+        });
+        remainingDuration -= maxDuration;
+        partNumber++;
+      }
+
+      if (remainingDuration > 0) {
+        segments.push({
+          ...barcode,
+          duration: secondsToDuration(remainingDuration),
+          filmTitle: `${barcode.filmTitle} - ${partNumber}. dio`,
+        });
+      }
+      return segments;
+    };
+    const processBarcodes = (barcodes, callback) => {
+      let index = 0;
+      const chunkSize = 50;
+      const processNextChunk = () => {
+        const chunk = barcodes.slice(index, index + chunkSize);
+        callback(chunk);
+        index += chunkSize;
+
+        if (index < barcodes.length) {
+          setTimeout(processNextChunk, 0);
+        }
+      };
+
+      processNextChunk();
+    };
+
+    const preparedBarcodes = [];
+    processBarcodes(barcodes, (chunk) => {
+      chunk.forEach((barcode) => {
+        const durationInSeconds = durationToSeconds(barcode.duration);
+        if (durationInSeconds > maxDuration) {
+          preparedBarcodes.push(...splitLongBarcodes(barcode));
+        } else {
+          preparedBarcodes.push(barcode);
+        }
+      });
+    });
+    preparedBarcodes.sort((a, b) => {
+      return durationToSeconds(b.duration) - durationToSeconds(a.duration);
+    });
+
+    const groups = [];
+    preparedBarcodes.forEach((barcode) => {
+      const duration = durationToSeconds(barcode.duration);
+      let placed = false;
+
+      for (let j = 0; j < groups.length; j++) {
+        const groupDuration = groups[j].reduce(
+          (sum, b) => sum + durationToSeconds(b.duration),
+          0
+        );
+        if (groupDuration + duration <= maxDuration) {
+          groups[j].push(barcode);
+          placed = true;
+          break;
+        }
+      }
+
+      if (!placed) {
+        groups.push([barcode]);
+      }
     });
 
     const groupedBarcodes = {};
-    let currentTime = 0;
-    let currentGroup = [];
+    groups.forEach((group, index) => {
+      const totalDuration = group.reduce(
+        (sum, b) => sum + durationToSeconds(b.duration),
+        0
+      );
+      const title = `Grupa ${index + 1}: ${secondsToDuration(totalDuration)}`;
+      groupedBarcodes[title] = group;
+    });
 
-    for (const barcode of sortedBarcodes) {
-      const duration = barcode.duration
-        .split(":")
-        .map(Number)
-        .reduce((acc, val) => acc * 60 + val, 0);
-      if (currentTime + duration <= 45 * 60) {
-        currentGroup.push(barcode);
-        currentTime += duration;
-      } else {
-        const title = `${Math.floor(currentTime / 60)}:${(currentTime % 60)
-          .toString()
-          .padStart(2, "0")}`;
-        groupedBarcodes[title] = currentGroup;
-        currentGroup = [barcode];
-        currentTime = duration;
-      }
-    }
-
-    if (currentGroup.length > 0) {
-      const title = `${Math.floor(currentTime / 60)}:${(currentTime % 60)
-        .toString()
-        .padStart(2, "0")}`;
-      groupedBarcodes[title] = currentGroup;
-    }
-
+    console.log("Grupe filmova: ", groupedBarcodes);
     return groupedBarcodes;
   };
-
-  const groupedBarcodes = groupBarcodesByDuration(scannedBarcodes);
+  const groupedBarcodes = useMemo(() => {
+    return groupBarcodesByDuration(scannedBarcodes);
+  }, [scannedBarcodes]);
 
   return (
     <Layout>
@@ -111,7 +297,9 @@ const Barcodes = () => {
                     <span style={{ fontSize: "16px" }}>
                       {index + 1}.{" "}
                       {typeof barcode === "object"
-                        ? `${barcode.barcode} - ${barcode.filmTitle} - ${barcode.duration}`
+                        ? `${barcode.database ? "✅" : "◼️"} ${
+                            barcode.barcode
+                          } - ${barcode.filmTitle} - ${barcode.duration}`
                         : barcode}
                     </span>
                     <button
@@ -136,6 +324,9 @@ const Barcodes = () => {
             <div className="barcode-btns">
               <button onClick={handleClearBarcodes}>Clear</button>
               <button onClick={handleScannerClick}>Scan</button>
+              <button onClick={handleDigitalizacijaClick}>
+                Digitalizacija
+              </button>
             </div>
           </div>
 
@@ -143,8 +334,20 @@ const Barcodes = () => {
             <div className="right-title">Grouped barcodes</div>
             <div className="grouped-list">
               {Object.keys(groupedBarcodes).map((groupKey) => (
-                <div key={groupKey} className="wrap-group">
-                  <p className="group-key">Duration: {groupKey}</p>
+                <div className="wrap-group">
+                  <p className="group-key">{groupKey}</p>
+                  <input
+                    type="checkbox"
+                    checked={selectedGroups[groupKey]}
+                    onChange={() => handleSelectGroup(groupKey)}
+                    style={{
+                      fontSize: "16px",
+                      padding: "0 5px",
+                      border: "none",
+                      backgroundColor: "transparent",
+                      cursor: "pointer",
+                    }}
+                  />
                   <div>
                     <ul>
                       {groupedBarcodes[groupKey].map((barcode, index) => (

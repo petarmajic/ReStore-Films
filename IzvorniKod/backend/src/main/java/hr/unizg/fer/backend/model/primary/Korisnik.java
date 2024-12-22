@@ -1,5 +1,6 @@
 package hr.unizg.fer.backend.model.primary;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -28,32 +29,21 @@ public class Korisnik {
     @Column(name = "Prezime", nullable = false)
     private String prezime;
 
-    @Column(name = "KorisnickoIme", nullable = false)
-    private String korisnickoIme;
-
-    @Column(name = "Email", nullable = false)
+    @Column(name = "Email", nullable = false, unique = true)
     private String email;
 
-    @Column(name = "Lozinka", nullable = false)
-    private String lozinka;
-
-    @Column(name = "Uloga", nullable = false)
+    @Column(name = "Uloga", nullable = true)
     private UlogaKorisnika uloga;
 
-    /*
-    @ManyToOne
-    @JoinColumn(name = "IDStatistike", nullable = false)
-    private StatistikaDigitalizacije statistikaDigitalizacije;
-     */
-
-    @OneToOne //nova veza
-    @JoinColumn(name = "IDStatistike", nullable = false)
+    @OneToOne(cascade = CascadeType.ALL) // cascadeType.ALL da se u bazi automatski handla i stvaranje, brisanje.. staDig
+    @JoinColumn(name = "IDStatistike", nullable = true)
+    @JsonManagedReference // za sprječavanje beskonačne petlje
     private StatistikaDigitalizacije statistikaDigitalizacije;
 
-    @OneToMany(mappedBy = "iznioIzSkladistaKorisnik")
+    @OneToMany(mappedBy = "iznioIzSkladistaKorisnik", fetch = FetchType.EAGER)
     private Set<GrupaZaDigitalizaciju> iznioIzSkladistaGrupeZaDigitalizaciju = new HashSet<>();
 
-    @OneToMany(mappedBy = "vratioUSkladisteKorisnik")
+    @OneToMany(mappedBy = "vratioUSkladisteKorisnik", fetch = FetchType.EAGER)
     private Set<GrupaZaDigitalizaciju> vratioUSkladisteGrupeZaDigitalizaciju = new HashSet<>();
 
 }

@@ -1,4 +1,4 @@
-package hr.unizg.fer.backend.service;
+package hr.unizg.fer.backend.service.secondary;
 
 import hr.unizg.fer.backend.model.secondary.FilmskaTrakaArhiva;
 

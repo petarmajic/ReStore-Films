@@ -1,8 +1,8 @@
-package hr.unizg.fer.backend.service.impl;
+package hr.unizg.fer.backend.service.secondary.impl;
 
 import hr.unizg.fer.backend.model.secondary.FilmskaTrakaArhiva;
 import hr.unizg.fer.backend.repository.secondary.FilmskaTrakaArhivaRepository;
-import hr.unizg.fer.backend.service.FilmskaTrakaArhivaService;
+import hr.unizg.fer.backend.service.secondary.FilmskaTrakaArhivaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,10 +24,6 @@ public class FilmskaTrakaArhivaServiceImpl implements FilmskaTrakaArhivaService 
     public FilmskaTrakaArhiva getFilmskaTrakaArhivaByBarKod(String barKod) {
         Optional<FilmskaTrakaArhiva> filmskaTrakaArhiva =
                 filmskaTrakaArhivaRepository.findFilmskaTrakaArhivaByBarKod(barKod);
-        if (filmskaTrakaArhiva.isPresent()) {
-            return filmskaTrakaArhiva.get();
-        }else{
-            throw new NoSuchElementException("U arhivi nema filma s ID = " + barKod + " !");
-        }
+        return filmskaTrakaArhiva.orElse(null);
     }
 }
