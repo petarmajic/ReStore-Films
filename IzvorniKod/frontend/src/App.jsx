@@ -32,7 +32,6 @@ const App = () => {
     { id: 3, naziv: "ADMINISTRATOR" },
   ];
   const { korisnikUloga, setKorisnikUloga } = useContext(LayoutContext);
-  setKorisnikUloga("VODITELJ");
   useEffect(() => {
     if (isAuthenticated) {
       const fetchKorisnik = async () => {
@@ -41,7 +40,6 @@ const App = () => {
             `${BACKEND_API_URL}/api/korisnik/${userEmail}`
           );
           setKorisnikUloga(response.data.uloga);
-          setKorisnikUloga("VODITELJ");
         } catch (error) {
           console.error("Greška pri dohvatu korisnika:", error.response.data);
         }
@@ -82,6 +80,7 @@ const App = () => {
               <Route path="/scanner" element={<Scanner />} />
               <Route path="/barcodes" element={<Barcodes />} />
               <Route path="/arhiva" element={<Arhiva />} />
+              <Route path="/digitalizacija" element={<Digitalizacija />} />
               <Route path="/korisnici" element={<Korisnici />} />
               <Route path="*" element={<Navigate to="/home" replace />} />
             </>
