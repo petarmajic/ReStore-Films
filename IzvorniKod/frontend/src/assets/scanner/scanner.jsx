@@ -17,6 +17,17 @@ const BarcodeScanner = () => {
   const [displayForm, setDisplayForm] = useState(false);
   const [database, setDatabase] = useState(false);
 
+  const [originalniNaslov, setOriginalniNaslov] = useState("");
+  const [jezikOriginala, setJezikOriginala] = useState("");
+  const [ton, setTon] = useState("DA");
+  const [porijekloZemljaProizvodnje, setPorijekloZemljaProizvodnje] =
+    useState("");
+  const [godinaProizvodnje, setGodinaProizvodnje] = useState(
+    new Date().getFullYear()
+  );
+  const [duration, setDuration] = useState("00:00:00");
+  const [isValid, setIsValid] = useState(false);
+
   useEffect(() => {
     scannedBarcodesRef.current = new Set(scannedBarcodes);
   }, [scannedBarcodes]);
@@ -165,34 +176,87 @@ const BarcodeScanner = () => {
     }
   };
 
-  const [idEmisije, setIdEmisije] = useState("");
   const [filmTitle, setFilmTitle] = useState("");
-  const [duration, setDuration] = useState("");
   const [year, setYear] = useState("");
 
   const handleManualEntry = () => {
     setDisplayForm(!displayForm);
     setDisplayInputFile(false);
   };
-  const [isValid, setIsValid] = useState(false);
 
   useEffect(() => {
+    const currentYear = new Date().getFullYear(); // Trenutna godina
+
     if (
-      filmTitle !== "" &&
+      originalniNaslov !== "" &&
+      jezikOriginala !== "" &&
+      ton !== "" &&
+      porijekloZemljaProizvodnje !== "" &&
+      godinaProizvodnje !== "" &&
       duration !== "" &&
-      year !== "" &&
       /^\d{2}:\d{2}:\d{2}$/.test(duration) &&
-      /^\d{4}$/.test(year) &&
-      idEmisije !== "" &&
-      /^\d{4,5}-\d{1,2}$/.test(idEmisije)
+      /^\d{4}$/.test(godinaProizvodnje) &&
+      godinaProizvodnje > 1900 &&
+      godinaProizvodnje < currentYear
     ) {
       setIsValid(true);
     } else {
       setIsValid(false);
     }
-  }, [filmTitle, duration, year, idEmisije]);
+  }, [
+    originalniNaslov,
+    jezikOriginala,
+    ton,
+    porijekloZemljaProizvodnje,
+    godinaProizvodnje,
+    duration,
+  ]);
+  const handleSubmitFilm = async () => {
+    try {
+      const BACKEND_API_URL = import.meta.env.VITE_BACKEND_API_URL;
 
-  const currentYear = new Date().getFullYear();
+      // Priprema podataka za slanje na server
+      const newFilm = {
+        originalniNaslov,
+        jezikOriginala,
+        ton,
+        porijekloZemljaProizvodnje,
+        godinaProizvodnje,
+        duration,
+      };
+
+      const response = await axios.post(
+        `${BACKEND_API_URL}/api/filmskaTraka/add`,
+        newFilm,
+        {
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+
+      console.log("Film successfully added:", response.data);
+
+      const updatedBarcodes = [
+        ...scannedBarcodes,
+        {
+          barcode: "-",
+          filmTitle: originalniNaslov,
+          duration: response.data.duration || duration,
+          database: false,
+        },
+      ];
+
+      setScannedBarcodes(updatedBarcodes);
+
+      setDisplayForm(false);
+    } catch (error) {
+      console.error("Error adding film:", error);
+
+      setError("Failed to add film. Please try again.");
+      setTimeout(() => {
+        setError(null);
+      }, 7000);
+    }
+  };
 
   return (
     <Layout>
@@ -251,86 +315,115 @@ const BarcodeScanner = () => {
           )}
 
           {displayForm && (
-            <form>
-              <label>
-                ID emisije:
-                <input
-                  type="text"
-                  value={idEmisije}
-                  onChange={(e) => setIdEmisije(e.target.value)}
-                  placeholder="1234-12 ili 12345-1"
-                />
-              </label>
-              <label>
-                Film title:
-                <input
-                  type="text"
-                  value={filmTitle}
-                  onChange={(e) => setFilmTitle(e.target.value)}
-                />
-              </label>
-              <label>
-                Duration:
-                <input
-                  type="text"
-                  value={duration}
-                  onChange={(e) => {
-                    let inputValue = e.target.value.replace(/[^0-9]/g, "");
-                    if (inputValue.length > 2) {
-                      inputValue = inputValue.replace(/(\d{2})(?=\d)/g, "$1:");
-                    }
-                    if (inputValue.length > 8) {
-                      inputValue = inputValue.slice(0, 8);
-                    }
-                    setDuration(inputValue);
-                  }}
-                  placeholder="Format: hh:mm:ss"
-                />
-              </label>
-
-              <label>
-                Year:
-                <input
-                  type="number"
-                  value={year}
-                  onChange={(e) => {
-                    let yearValue = e.target.value;
-                    if (yearValue.length === 4) {
-                      if (yearValue >= 1900 && yearValue <= currentYear) {
-                        setYear(yearValue);
-                      } else {
-                        setYear(currentYear);
-                      }
-                    } else {
-                      setYear(yearValue);
-                    }
-                  }}
-                  placeholder={`1900-${currentYear}`}
-                />
-              </label>
-
-              <button
-                onClick={(e) => {
-                  e.preventDefault();
-                  if (isValid) {
-                    const newBarcode = Math.random()
-                      .toString(36)
-                      .substr(2, Math.floor(Math.random() * 2) + 9);
-                    const newFilm = {
-                      barcode: newBarcode,
-                      filmTitle,
-                      duration,
-                      year,
-                      database: false,
-                    };
-                    setScannedBarcodes([...scannedBarcodes, newFilm]);
-                    setDisplayForm(false);
-                  }
+            <form onSubmit={handleSubmitFilm}>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "10px",
                 }}
-                disabled={!isValid}
               >
-                Add film
-              </button>
+                <label>
+                  Originalni naslov:
+                  <input
+                    type="text"
+                    value={originalniNaslov}
+                    onChange={(e) => setOriginalniNaslov(e.target.value)}
+                  />
+                </label>
+                <label>
+                  Jezik originala:
+                  <input
+                    type="text"
+                    value={jezikOriginala}
+                    onChange={(e) => setJezikOriginala(e.target.value)}
+                  />
+                </label>
+                <label>
+                  Ton:
+                  <select value={ton} onChange={(e) => setTon(e.target.value)}>
+                    <option value="DA">DA</option>
+                    <option value="NE">NE</option>
+                  </select>
+                </label>
+                <label>
+                  Porijeklo zemlja proizvodnje:
+                  <input
+                    type="text"
+                    value={porijekloZemljaProizvodnje}
+                    onChange={(e) =>
+                      setPorijekloZemljaProizvodnje(e.target.value)
+                    }
+                  />
+                </label>
+                <label>
+                  Godina proizvodnje:
+                  <input
+                    type="number"
+                    value={godinaProizvodnje}
+                    onChange={(e) => {
+                      const year = e.target.value;
+                      const currentYear = new Date().getFullYear();
+
+                      if (year < 1900 || year > currentYear) {
+                        alert(
+                          `Godina mora biti između 1900. i ${currentYear}.`
+                        );
+                      } else {
+                        setGodinaProizvodnje(year);
+                      }
+                    }}
+                    min="1900"
+                    max={new Date().getFullYear()}
+                    placeholder={`1900-${new Date().getFullYear()}`}
+                  />
+                </label>
+                <label>
+                  Trajanje:
+                  <input
+                    type="text"
+                    value={duration}
+                    onChange={(e) => {
+                      let inputValue = e.target.value.replace(/[^0-9]/g, "");
+                      if (inputValue.length > 2) {
+                        inputValue = inputValue.replace(
+                          /(\d{2})(?=\d)/g,
+                          "$1:"
+                        );
+                      }
+                      if (inputValue.length > 8) {
+                        inputValue = inputValue.slice(0, 8);
+                      }
+                      const timeParts = inputValue.split(":").map(Number);
+                      if (
+                        timeParts.length === 3 &&
+                        (timeParts[0] > 23 ||
+                          timeParts[1] > 59 ||
+                          timeParts[2] > 59)
+                      ) {
+                        alert(
+                          "Neispravno trajanje. Vrijeme mora biti u formatu hh:mm:ss s valjanim vrijednostima."
+                        );
+                        return;
+                      }
+
+                      setDuration(inputValue);
+                    }}
+                    placeholder="Format: hh:mm:ss"
+                  />
+                </label>
+                <button
+                  onClick={(e) => {
+                    e.preventDefault();
+                    if (isValid) {
+                      handleSubmitFilm();
+                    }
+                  }}
+                  disabled={!isValid}
+                >
+                  Dodaj film
+                </button>
+              </div>
             </form>
           )}
         </div>
