@@ -39,17 +39,6 @@ export default function Home() {
   console.log("API URL:", apiUrl);
   console.log("Backend API URL:", backendUrl);
 
-  const handleDeleteUser = async () => {
-    try {
-      const response = await axios.delete(
-        `${backendUrl}/api/korisnik/delete/ADMINISTRATOR/${userEmail}`
-      );
-      console.log("User deleted successfully:", response.data);
-    } catch (error) {
-      console.error("Error deleting user:", error);
-    }
-  };
-
   return (
     <>
       <Layout>
@@ -86,14 +75,18 @@ export default function Home() {
             <div className="scanner-list">
               <button onClick={handleArhivaClick}>Arhiva</button>
             </div>
-            <button onClick={handleDeleteUser}>delete user</button>
-            {korisnikUloga === "VODITELJ" && (
-              <div className="scanner-list">
-                <button onClick={handleDigitalizacijaClick}>
-                  Digitalizacija
-                </button>
-                <button onClick={handleKorisniciClick}>Korisnici</button>
-              </div>
+            {(korisnikUloga === "VODITELJ" ||
+              korisnikUloga === "ADMINISTRATOR") && (
+              <>
+                <div className="scanner-list">
+                  <button onClick={handleDigitalizacijaClick}>
+                    Digitalizacija
+                  </button>
+                </div>
+                <div className="scanner-list">
+                  <button onClick={handleKorisniciClick}>Korisnici</button>
+                </div>
+              </>
             )}
           </div>
         </div>
