@@ -19,7 +19,6 @@ const Barcodes = () => {
     zemlja: "",
     godina: "",
     trajanje: "",
-    brojMedija: "",
   });
 
   const account = accounts[0];
@@ -50,7 +49,6 @@ const Barcodes = () => {
           zemlja: traka.porijekloZemljaProizvodnje,
           godina: traka.godinaProizvodnje,
           trajanje: traka.duration,
-          brojMedija: traka.brojMedija,
         }));
 
         setFilmskeTrake(filtriraneTrake);
@@ -85,7 +83,6 @@ const Barcodes = () => {
       zemlja: film.zemlja,
       godina: film.godina,
       trajanje: film.trajanje,
-      brojMedija: film.brojMedija,
     });
   };
 
@@ -100,7 +97,6 @@ const Barcodes = () => {
       porijekloZemljaProizvodnje: formData.zemlja, // Zemlja proizvodnje
       godinaProizvodnje: formData.godina, // Godina proizvodnje
       duration: formData.trajanje, // Trajanje filma
-      brojMedija: formData.brojMedija, // Broj medija
     };
 
     try {
@@ -118,8 +114,6 @@ const Barcodes = () => {
                 naslov: updatePayload.originalniNaslov,
                 zemlja: updatePayload.porijekloZemljaProizvodnje,
                 godina: updatePayload.godinaProizvodnje,
-                trajanje: updatePayload.duration,
-                brojMedija: updatePayload.brojMedija,
               }
             : film
         )
@@ -137,6 +131,9 @@ const Barcodes = () => {
       ...prev,
       [name]: value,
     }));
+  };
+  const handleHomeClick = () => {
+    navigate("/home");
   };
 
   return (
@@ -157,8 +154,7 @@ const Barcodes = () => {
                     {filmskeTrake.map((film, index) => (
                       <li key={index}>
                         {index + 1}. {film.naslov} - {film.zemlja} -{" "}
-                        {film.godina} - {film.trajanje} - Broj medija:{" "}
-                        {film.brojMedija}
+                        {film.godina} - {film.trajanje}
                         <button onClick={() => handleEditClick(film)}>
                           Edit
                         </button>
@@ -169,7 +165,7 @@ const Barcodes = () => {
               )}
             </div>
             <div className="barcode-btns">
-              <button onClick={handleClearBarcodes}>Clear</button>
+              <button onClick={handleHomeClick}>Home</button>
               <button onClick={handleScannerClick}>Scan</button>
             </div>
           </div>
@@ -210,15 +206,6 @@ const Barcodes = () => {
                     type="text"
                     name="trajanje"
                     value={formData.trajanje}
-                    onChange={handleChange}
-                  />
-                </label>
-                <label>
-                  Broj medija:
-                  <input
-                    type="text"
-                    name="brojMedija"
-                    value={formData.brojMedija}
                     onChange={handleChange}
                   />
                 </label>

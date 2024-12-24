@@ -32,6 +32,9 @@ export default function Home() {
   const handleKorisniciClick = () => {
     navigate("/korisnici");
   };
+  const handleDjelatniciClick = () => {
+    navigate("/djelatnici");
+  };
 
   const apiUrl = import.meta.env.VITE_APP_API_URL;
   const backendUrl = import.meta.env.VITE_BACKEND_API_URL;
@@ -84,8 +87,13 @@ export default function Home() {
                   </button>
                 </div>
                 <div className="scanner-list">
-                  <button onClick={handleKorisniciClick}>Korisnici</button>
+                  <button onClick={handleDjelatniciClick}>Djelatnici</button>
                 </div>
+                {korisnikUloga === "ADMINISTRATOR" && (
+                  <div className="scanner-list">
+                    <button onClick={handleKorisniciClick}>Korisnici</button>
+                  </div>
+                )}
               </>
             )}
           </div>

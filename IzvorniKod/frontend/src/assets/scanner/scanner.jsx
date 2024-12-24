@@ -116,6 +116,34 @@ const BarcodeScanner = () => {
             const duration =
               xmlDoc.getElementsByTagName("Duration")[0].childNodes[0]
                 .nodeValue;
+            const BACKEND_API_URL = import.meta.env.VITE_BACKEND_API_URL;
+
+            const newFilm = {
+              originalniNaslov: filmTitle,
+              jezikOriginala:
+                xmlDoc.getElementsByTagName("JezikOriginala")[0].childNodes[0]
+                  .nodeValue,
+              ton: xmlDoc.getElementsByTagName("Ton")[0].childNodes[0]
+                .nodeValue,
+              porijekloZemljaProizvodnje: xmlDoc.getElementsByTagName(
+                "Porijeklo_ZemljaProizvodnje"
+              )[0].childNodes[0].nodeValue,
+              godinaProizvodnje:
+                xmlDoc.getElementsByTagName("GodinaProizvodnje")[0]
+                  .childNodes[0].nodeValue,
+              duration: duration,
+            };
+
+            axios
+              .post(`${BACKEND_API_URL}/api/filmskaTraka/add`, newFilm, {
+                headers: { "Content-Type": "application/json" },
+              })
+              .then((response) => {
+                console.log("Film successfully added:", response.data);
+              })
+              .catch((error) => {
+                console.error("Error sending data to server:", error);
+              });
 
             const existingBarcode = scannedBarcodes.find((barcode) => {
               return (
@@ -197,7 +225,20 @@ const BarcodeScanner = () => {
       /^\d{2}:\d{2}:\d{2}$/.test(duration) &&
       /^\d{4}$/.test(godinaProizvodnje) &&
       godinaProizvodnje > 1900 &&
-      godinaProizvodnje < currentYear
+      godinaProizvodnje < currentYear + 1 &&
+      (() => {
+        const timeParts = duration.split(":").map(Number);
+        return (
+          timeParts.length === 3 &&
+          timeParts[0] >= 0 &&
+          timeParts[0] <= 23 && // Provjera za sate
+          timeParts[1] >= 0 &&
+          timeParts[1] <= 59 && // Provjera za minute
+          timeParts[2] >= 0 &&
+          timeParts[2] <= 59 && // Provjera za sekunde
+          !(timeParts[0] === 0 && timeParts[1] === 0 && timeParts[2] === 0) // Onemogućuje 00:00:00
+        );
+      })()
     ) {
       setIsValid(true);
     } else {
@@ -363,18 +404,21 @@ const BarcodeScanner = () => {
                     value={godinaProizvodnje}
                     onChange={(e) => {
                       const year = e.target.value;
-                      const currentYear = new Date().getFullYear();
+                      if (year.length === 4) {
+                        const numericYear = parseInt(year, 10);
+                        const currentYear = new Date().getFullYear();
 
-                      if (year < 1900 || year > currentYear) {
-                        alert(
-                          `Godina mora biti između 1900. i ${currentYear}.`
-                        );
+                        if (numericYear < 1900 || numericYear > currentYear) {
+                          alert(
+                            `Godina mora biti između 1900. i ${currentYear}.`
+                          );
+                        } else {
+                          setGodinaProizvodnje(year);
+                        }
                       } else {
                         setGodinaProizvodnje(year);
                       }
                     }}
-                    min="1900"
-                    max={new Date().getFullYear()}
                     placeholder={`1900-${new Date().getFullYear()}`}
                   />
                 </label>
@@ -398,8 +442,11 @@ const BarcodeScanner = () => {
                       if (
                         timeParts.length === 3 &&
                         (timeParts[0] > 23 ||
+                          timeParts[0] < 0 || // Provjera raspona za sate
                           timeParts[1] > 59 ||
-                          timeParts[2] > 59)
+                          timeParts[1] < 0 || // Provjera raspona za minute
+                          timeParts[2] > 59 ||
+                          timeParts[2] < 0) // Provjera za nule
                       ) {
                         alert(
                           "Neispravno trajanje. Vrijeme mora biti u formatu hh:mm:ss s valjanim vrijednostima."
