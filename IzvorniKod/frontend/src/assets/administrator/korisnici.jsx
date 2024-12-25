@@ -37,6 +37,24 @@ const KorisniciList = () => {
       console.error("Error deleting user:", error);
     }
   };
+  const handleRoleChange = async (event, email) => {
+    try {
+      const response = await axios.put(
+        `${BACKEND_API_URL}/api/korisnik/update-uloga/${email}`,
+        { uloga: event.target.value }
+      );
+      console.log("Uloga updated successfully:", response.data);
+      setKorisnici((prevKorisnici) =>
+        prevKorisnici.map((korisnik) =>
+          korisnik.email === email
+            ? { ...korisnik, uloga: event.target.value }
+            : korisnik
+        )
+      );
+    } catch (error) {
+      console.error("Error updating uloga:", error);
+    }
+  };
 
   return (
     <Layout>
@@ -48,7 +66,7 @@ const KorisniciList = () => {
         ></img>
         <div className="barcode-list-container">
           <div className="barcode-scanned">
-            <div className="left-title">Statistika korisnika</div>
+            <div className="left-title">Popis korisnika sustava</div>
             <div className="left-list">
               <div>
                 <ul>
@@ -64,6 +82,18 @@ const KorisniciList = () => {
                       {korisnik.statistikaDigitalizacije
                         ? "Postoji"
                         : "Nema podataka"}
+                      {"   "}
+                      <select
+                        value={korisnik.uloga}
+                        onChange={(event) =>
+                          handleRoleChange(event, korisnik.email)
+                        }
+                      >
+                        <option value="DJELATNIK">DJELATNIK</option>
+                        <option value="VODITELJ">VODITELJ</option>
+                        <option value="ADMINISTRATOR">ADMINISTRATOR</option>
+                      </select>
+                      {"   "}
                       <button
                         onClick={() => handleDeleteUser(korisnik.email)}
                         className="delete-button"

@@ -14,6 +14,7 @@ import axios from "axios";
 import { LayoutContext } from "./assets/layout/layoutcontext";
 import Digitalizacija from "./assets/voditelj/digitalizacija/digitalizacija";
 import Korisnici from "./assets/administrator/korisnici";
+import Djelatnici from "./assets/voditelj/djelatnici/djelatnici";
 
 const App = () => {
   const isAuthenticated = useIsAuthenticated();
@@ -70,7 +71,7 @@ const App = () => {
               <Route path="/barcodes" element={<Barcodes />} />
               <Route path="/arhiva" element={<Arhiva />} />
               <Route path="/digitalizacija" element={<Digitalizacija />} />
-              <Route path="/korisnici" element={<Korisnici />} />
+              <Route path="/djelatnici" element={<Djelatnici />} />
               <Route path="*" element={<Navigate to="/home" replace />} />
             </>
           ) : isAuthenticated && korisnikUloga === "ADMINISTRATOR" ? (
@@ -82,6 +83,7 @@ const App = () => {
               <Route path="/arhiva" element={<Arhiva />} />
               <Route path="/digitalizacija" element={<Digitalizacija />} />
               <Route path="/korisnici" element={<Korisnici />} />
+              <Route path="/djelatnici" element={<Djelatnici />} />
               <Route path="*" element={<Navigate to="/home" replace />} />
             </>
           ) : (
