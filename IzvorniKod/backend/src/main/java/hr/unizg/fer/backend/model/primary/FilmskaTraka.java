@@ -1,5 +1,7 @@
 package hr.unizg.fer.backend.model.primary;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -54,5 +56,6 @@ public class FilmskaTraka {
             joinColumns = @JoinColumn(name="FilmskaTraka_IDEmisije"),
             inverseJoinColumns = @JoinColumn(name="GrupaZaDigitalizaciju_IDGrupe")
     )
-    private Set<GrupaZaDigitalizaciju> grupeZaDigitalizaciju = new HashSet<>();
+    @JsonIgnore //pogledat smeta li ovaj JsonIgnore
+    private Set<GrupaZaDigitalizaciju> grupeZaDigitalizaciju;
 }

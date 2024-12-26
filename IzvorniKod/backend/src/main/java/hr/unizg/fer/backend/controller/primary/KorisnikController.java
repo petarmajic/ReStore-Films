@@ -32,6 +32,12 @@ public class KorisnikController {
             return ResponseEntity.notFound().build();
         }
     }
+    // Endpoint za dohvaćanje svih korisnika
+    @GetMapping("/all")
+    public ResponseEntity<List<Korisnik>> getAllKorisnici() {
+        List<Korisnik> korisnici = korisnikService.getAllKorisnici();
+        return ResponseEntity.ok(korisnici);
+    }
 
     @PostMapping(path = "/add")
     public ResponseEntity<Korisnik> addKorisnik(@RequestBody Korisnik korisnik) {
@@ -57,11 +63,19 @@ public class KorisnikController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
     }
-    // Endpoint za dohvaćanje svih korisnika
-    @GetMapping("/all")
-    public ResponseEntity<List<Korisnik>> getAllKorisnici() {
-        List<Korisnik> korisnici = korisnikService.getAllKorisnici();
-        return ResponseEntity.ok(korisnici);
+    // update korisnika dozvoljen administratoru samo
+    @PatchMapping(path = "/update/{ulogaKorsinika}/{emailZaUpdate}")
+    public ResponseEntity<Korisnik> updateKorisnik(@PathVariable String ulogaKorsinika,
+                                               @PathVariable String emailZaUpdate,
+                                               @RequestBody Korisnik korisnik) {
+        try{
+            Korisnik updatedKorisnik = korisnikService.updateKorisnik(ulogaKorsinika, emailZaUpdate, korisnik);
+            return ResponseEntity.status(HttpStatus.OK).body(updatedKorisnik);
+        } catch (AccessDeniedException ex){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        } catch (NoSuchElementException ex){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
     }
 
 }

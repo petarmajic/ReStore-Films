@@ -13,4 +13,6 @@ public interface KorisnikService {
     void deleteKorisnik(String ulogaKorisnika, String email) throws AccessDeniedException; // Brisanje korisnika
 
     List<Korisnik> getAllKorisnici(); // Dohvaćanje svih korisnika
+
+    Korisnik updateKorisnik(String ulogaKorisnika, String emailZaUpdate, Korisnik korisnik) throws AccessDeniedException;
 }
