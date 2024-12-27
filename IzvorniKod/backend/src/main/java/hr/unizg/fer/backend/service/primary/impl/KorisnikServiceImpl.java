@@ -118,6 +118,7 @@ public class KorisnikServiceImpl implements KorisnikService {
 
             postojeciKorisnik.setStatistikaDigitalizacije(postojecaStatistikaDigitalizacije);
         }
+        // potencijalno treba dodati handlanje ovoga -> ako želimo to ovdje moći
         if(korisnik.getIznioIzSkladistaGrupeZaDigitalizaciju() != null){
             postojeciKorisnik.setIznioIzSkladistaGrupeZaDigitalizaciju(korisnik.getIznioIzSkladistaGrupeZaDigitalizaciju());
         }

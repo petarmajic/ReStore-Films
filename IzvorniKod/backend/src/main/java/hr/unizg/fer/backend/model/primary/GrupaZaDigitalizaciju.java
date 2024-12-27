@@ -49,6 +49,7 @@ public class GrupaZaDigitalizaciju {
 
     //provjerit dal je glavno ova klasa ili filmskaTraka pa oviso o tome okrenut JsonManagedReference i JsonBackReference
     @ManyToMany(mappedBy = "grupeZaDigitalizaciju")
+    @JsonIgnore //ako ne bude radilo maknut
     private Set<FilmskaTraka> filmskeTrake;
 
 
