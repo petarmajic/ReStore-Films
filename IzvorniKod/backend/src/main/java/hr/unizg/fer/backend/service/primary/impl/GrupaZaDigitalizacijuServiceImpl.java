@@ -25,9 +25,9 @@ public class GrupaZaDigitalizacijuServiceImpl implements GrupaZaDigitalizacijuSe
 
     public Map<StatusDigitalizacije, Integer> getFilmCountByStatus() {
         List<Object[]> results = grupaZaDigitalizacijuRepository.countFilmsByStatus();
-        Map<StatusDigitalizacije, Integer> statusCounts = new HashMap<>();
+        Map<StatusDigitalizacije, Integer> statusCounts = new EnumMap<>(StatusDigitalizacije.class);
         for (Object[] result : results) {
-            statusCounts.put((StatusDigitalizacije) result[0], (Integer) result[1]);
+            statusCounts.put((StatusDigitalizacije) result[0], ((Number)result[1]).intValue());
         }
         return statusCounts;
     }
