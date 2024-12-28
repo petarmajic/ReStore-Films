@@ -34,7 +34,7 @@ public class GrupaZaDigitalizaciju {
     @Column(name = "VrijemePocetka", nullable = false)
     private LocalDateTime vrijemePocetka;
 
-    @Column(name = "VrijemeZavrsetka", nullable = false)
+    @Column(name = "VrijemeZavrsetka")
     private LocalDateTime vrijemeZavrsetka;
 
     @ManyToOne
@@ -43,7 +43,7 @@ public class GrupaZaDigitalizaciju {
     private Korisnik iznioIzSkladistaKorisnik;
 
     @ManyToOne
-    @JoinColumn(name = "IDDjelatnikaVratio", nullable = false)
+    @JoinColumn(name = "IDDjelatnikaVratio")
     @JsonBackReference("vratioReference")
     private Korisnik vratioUSkladisteKorisnik;
 
