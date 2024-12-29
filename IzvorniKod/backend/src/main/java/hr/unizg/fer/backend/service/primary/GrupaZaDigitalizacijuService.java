@@ -12,4 +12,5 @@ public interface GrupaZaDigitalizacijuService {
      List<Object[]> countGroupsReturnedByUser();
      GrupaZaDigitalizaciju addFilms(List<String> nasloviFilmova, GrupaZaDigitalizaciju grupaZaDigitalizaciju);
      List<GrupaZaDigitalizaciju> getAll();
+     GrupaZaDigitalizaciju updateGroup(Long idGrupe, String emailDjelatnika);
 }
