@@ -7,11 +7,15 @@ import barcodeScanner from "../images/barcodeScanner.png";
 import barcodeList from "../images/barcodeList.png";
 import { useMsal } from "@azure/msal-react";
 import { LayoutContext } from "../layout/layoutcontext";
+import axios from "axios";
 
 export default function Home() {
   const { accounts } = useMsal();
   const navigate = useNavigate();
-
+  const account = accounts[0];
+  let userName = account?.name ?? null;
+  let userEmail = account?.username ?? null;
+  const { korisnikUloga } = useContext(LayoutContext);
   const handleScannerClick = () => {
     navigate("/scanner");
   };
@@ -20,6 +24,16 @@ export default function Home() {
   };
   const handleArhivaClick = () => {
     navigate("/arhiva");
+  };
+
+  const handleDigitalizacijaClick = () => {
+    navigate("/digitalizacija");
+  };
+  const handleKorisniciClick = () => {
+    navigate("/korisnici");
+  };
+  const handleDjelatniciClick = () => {
+    navigate("/djelatnici");
   };
 
   const apiUrl = import.meta.env.VITE_APP_API_URL;
@@ -64,6 +78,24 @@ export default function Home() {
             <div className="scanner-list">
               <button onClick={handleArhivaClick}>Arhiva</button>
             </div>
+            {(korisnikUloga === "VODITELJ" ||
+              korisnikUloga === "ADMINISTRATOR") && (
+              <>
+                <div className="scanner-list">
+                  <button onClick={handleDigitalizacijaClick}>
+                    Digitalizacija
+                  </button>
+                </div>
+                <div className="scanner-list">
+                  <button onClick={handleDjelatniciClick}>Djelatnici</button>
+                </div>
+                {korisnikUloga === "ADMINISTRATOR" && (
+                  <div className="scanner-list">
+                    <button onClick={handleKorisniciClick}>Korisnici</button>
+                  </div>
+                )}
+              </>
+            )}
           </div>
         </div>
       </Layout>

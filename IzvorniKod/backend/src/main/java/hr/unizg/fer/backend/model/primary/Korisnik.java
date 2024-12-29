@@ -41,10 +41,12 @@ public class Korisnik {
     private StatistikaDigitalizacije statistikaDigitalizacije;
 
     @OneToMany(mappedBy = "iznioIzSkladistaKorisnik", fetch = FetchType.EAGER)
-    private Set<GrupaZaDigitalizaciju> iznioIzSkladistaGrupeZaDigitalizaciju = new HashSet<>();
+    @JsonManagedReference("iznioReference")
+    private Set<GrupaZaDigitalizaciju> iznioIzSkladistaGrupeZaDigitalizaciju;
 
     @OneToMany(mappedBy = "vratioUSkladisteKorisnik", fetch = FetchType.EAGER)
-    private Set<GrupaZaDigitalizaciju> vratioUSkladisteGrupeZaDigitalizaciju = new HashSet<>();
+    @JsonManagedReference("vratioReference")
+    private Set<GrupaZaDigitalizaciju> vratioUSkladisteGrupeZaDigitalizaciju;
 
 }
 

@@ -12,4 +12,8 @@ public interface KorisnikRepository extends JpaRepository<Korisnik, Long> {
 
     @Query(value = "SELECT a FROM Korisnik a where a.email = :email")
     Optional<Korisnik> findKorisnikByEmail(String email);
+
+    // Dohvaćanje svih korisnika pomoću @Query
+    @Query(value = "SELECT a FROM Korisnik a")
+    Optional<Korisnik> findAllKorisnici();
 }

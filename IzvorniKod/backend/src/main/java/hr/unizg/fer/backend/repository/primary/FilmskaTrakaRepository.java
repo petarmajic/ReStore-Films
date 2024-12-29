@@ -13,13 +13,6 @@ import java.util.Optional;
 
 @Repository
 public interface FilmskaTrakaRepository extends JpaRepository<FilmskaTraka, Long> {
-//    // Pronalazi sve FilmskeTrake
-//    @Query("SELECT f FROM FilmskaTraka f")
-//    List<FilmskaTraka> findAllFilmskeTrake();
-
-    // Pronalazi FilmskuTraku po ID-u
-    @Query("SELECT f FROM FilmskaTraka f WHERE f.idEmisije = :id")
-    FilmskaTraka findFilmskaTrakaById(@Param("id") Long id);
 
     @Query("SELECT f FROM FilmskaTraka f WHERE f.originalniNaslov = :naslov")
     Optional<FilmskaTraka> findFilmskaTrakaByNaslov(@Param("naslov") String naslov);
@@ -28,22 +21,17 @@ public interface FilmskaTrakaRepository extends JpaRepository<FilmskaTraka, Long
     @Transactional
     @Query("UPDATE FilmskaTraka f SET " +
             "f.originalniNaslov = :originalniNaslov, " +
-            "f.radniNaslov = :radniNaslov, " +
             "f.jezikOriginala = :jezikOriginala, " +
             "f.ton = :ton, " +
-            "f.emisija = :emisija, " +
             "f.porijekloZemljaProizvodnje = :porijekloZemljaProizvodnje, " +
             "f.licenca = :licenca, " +
             "f.godinaProizvodnje = :godinaProizvodnje, " +
-            "f.markIN = :markIN, " +
-            "f.markOUT = :markOUT, " +
             "f.duration = :duration, " +
-            "f.brojMedija = :brojMedija, " +
             "f.vrstaSadrzaja = :vrstaSadrzaja " +
             "WHERE f.idEmisije = :idEmisije")
-    void updateFilmskaTraka(Long idEmisije, String originalniNaslov, String radniNaslov,
-                            String jezikOriginala, String ton, String emisija,
+    void updateFilmskaTraka(Long idEmisije, String originalniNaslov,
+                            String jezikOriginala, String ton,
                             String porijekloZemljaProizvodnje, String licenca,
-                            Integer godinaProizvodnje, String markIN, String markOUT,
-                            Double duration, Integer brojMedija, String vrstaSadrzaja);
+                            Integer godinaProizvodnje,
+                            Double duration, String vrstaSadrzaja);
 }

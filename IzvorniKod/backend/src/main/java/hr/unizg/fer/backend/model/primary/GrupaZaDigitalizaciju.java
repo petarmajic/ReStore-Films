@@ -1,5 +1,8 @@
 package hr.unizg.fer.backend.model.primary;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -31,25 +34,23 @@ public class GrupaZaDigitalizaciju {
     @Column(name = "VrijemePocetka", nullable = false)
     private LocalDateTime vrijemePocetka;
 
-    @Column(name = "VrijemeZavrsetka", nullable = false)
+    @Column(name = "VrijemeZavrsetka")
     private LocalDateTime vrijemeZavrsetka;
 
     @ManyToOne
     @JoinColumn(name = "IDDjelatnikaIznio", nullable = false)
+    @JsonBackReference("iznioReference")
     private Korisnik iznioIzSkladistaKorisnik;
 
     @ManyToOne
-    @JoinColumn(name = "IDDjelatnikaVratio", nullable = false)
+    @JoinColumn(name = "IDDjelatnikaVratio")
+    @JsonBackReference("vratioReference")
     private Korisnik vratioUSkladisteKorisnik;
 
-
-    /*
-    @OneToMany(mappedBy = "grupaZaDigitalizaciju")
-    private Set<FilmskaTraka> filmskeTrake = new HashSet<>();
-     */
-
+    //provjerit dal je glavno ova klasa ili filmskaTraka pa oviso o tome okrenut JsonManagedReference i JsonBackReference
     @ManyToMany(mappedBy = "grupeZaDigitalizaciju")
-    private Set<FilmskaTraka> filmskeTrake = new HashSet<>();
+    @JsonIgnore //ako ne bude radilo maknut
+    private Set<FilmskaTraka> filmskeTrake;
 
 
 

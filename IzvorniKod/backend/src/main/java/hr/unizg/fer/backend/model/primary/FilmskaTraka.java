@@ -1,5 +1,7 @@
 package hr.unizg.fer.backend.model.primary;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -27,17 +29,11 @@ public class FilmskaTraka {
     @Column(name = "OriginalniNaslov",nullable = false, unique = true)
     private String originalniNaslov;
 
-    @Column(name = "RadniNaslov")
-    private String radniNaslov;
-
     @Column(name = "JezikOriginala", nullable = false)
     private String jezikOriginala;
 
     @Column(name = "Ton", nullable = false)
     private String ton;
-
-    @Column(name = "Emisija")
-    private String emisija;
 
     @Column(name = "VrstaSadrzaja")
     private String vrstaSadrzaja;
@@ -51,23 +47,8 @@ public class FilmskaTraka {
     @Column(name = "GodinaProizvodnje", nullable = false)
     private Integer godinaProizvodnje;
 
-    @Column(name = "MarkIN", nullable = false)
-    private LocalTime markIN;
-
-    @Column(name = "MarkOUT", nullable = false)
-    private LocalTime markOUT;
-
     @Column(name = "Duration", nullable = false)
     private LocalTime duration;
-
-    @Column(name = "BrojMedija", nullable = false)
-    private String brojMedija;
-
-    /*
-    @ManyToOne
-    @JoinColumn(name = "IDGrupeZaDigitalizaciju", nullable = false)
-    private GrupaZaDigitalizaciju grupaZaDigitalizaciju;
-     */
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
@@ -75,5 +56,6 @@ public class FilmskaTraka {
             joinColumns = @JoinColumn(name="FilmskaTraka_IDEmisije"),
             inverseJoinColumns = @JoinColumn(name="GrupaZaDigitalizaciju_IDGrupe")
     )
-    private Set<GrupaZaDigitalizaciju> grupeZaDigitalizaciju = new HashSet<>();
+    @JsonIgnore //pogledat smeta li ovaj JsonIgnore
+    private Set<GrupaZaDigitalizaciju> grupeZaDigitalizaciju;
 }

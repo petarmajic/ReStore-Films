@@ -12,6 +12,9 @@ import Unauthorized from "./assets/unauthorized/unauthorized";
 import { useMsal } from "@azure/msal-react";
 import axios from "axios";
 import { LayoutContext } from "./assets/layout/layoutcontext";
+import Digitalizacija from "./assets/voditelj/digitalizacija/digitalizacija";
+import Korisnici from "./assets/administrator/korisnici";
+import Djelatnici from "./assets/voditelj/djelatnici/djelatnici";
 
 const App = () => {
   const isAuthenticated = useIsAuthenticated();
@@ -30,7 +33,6 @@ const App = () => {
     { id: 3, naziv: "ADMINISTRATOR" },
   ];
   const { korisnikUloga, setKorisnikUloga } = useContext(LayoutContext);
-
   useEffect(() => {
     if (isAuthenticated) {
       const fetchKorisnik = async () => {
@@ -46,13 +48,14 @@ const App = () => {
       fetchKorisnik();
     }
   }, [isAuthenticated, accounts]);
+
   return (
     <LayoutProvider>
       <Router>
         <Routes>
           <Route path="/" element={<Login />} />
-          {isAuthenticated &&
-          uloge.some((uloga) => uloga.naziv === korisnikUloga) ? (
+          {isAuthenticated && korisnikUloga === "DJELATNIK" ? (
+            // Koda za prikaz DJELATNIK
             <>
               <Route path="/home" element={<Home />} />
               <Route path="/scanner" element={<Scanner />} />
@@ -60,12 +63,29 @@ const App = () => {
               <Route path="/arhiva" element={<Arhiva />} />
               <Route path="*" element={<Navigate to="/home" replace />} />
             </>
-          ) : isAuthenticated && korisnikUloga === uloge[1].naziv ? (
+          ) : isAuthenticated && korisnikUloga === "VODITELJ" ? (
             // Koda za prikaz VODITELJA
-            <></>
-          ) : isAuthenticated && korisnikUloga === uloge[2].naziv ? (
+            <>
+              <Route path="/home" element={<Home />} />
+              <Route path="/scanner" element={<Scanner />} />
+              <Route path="/barcodes" element={<Barcodes />} />
+              <Route path="/arhiva" element={<Arhiva />} />
+              <Route path="/digitalizacija" element={<Digitalizacija />} />
+              <Route path="/djelatnici" element={<Djelatnici />} />
+              <Route path="*" element={<Navigate to="/home" replace />} />
+            </>
+          ) : isAuthenticated && korisnikUloga === "ADMINISTRATOR" ? (
             // Koda za prikaz ADMINISTRATORA
-            <></>
+            <>
+              <Route path="/home" element={<Home />} />
+              <Route path="/scanner" element={<Scanner />} />
+              <Route path="/barcodes" element={<Barcodes />} />
+              <Route path="/arhiva" element={<Arhiva />} />
+              <Route path="/digitalizacija" element={<Digitalizacija />} />
+              <Route path="/korisnici" element={<Korisnici />} />
+              <Route path="/djelatnici" element={<Djelatnici />} />
+              <Route path="*" element={<Navigate to="/home" replace />} />
+            </>
           ) : (
             <Route path="*" element={<Unauthorized />} />
           )}

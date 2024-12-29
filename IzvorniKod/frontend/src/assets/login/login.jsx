@@ -40,10 +40,13 @@ const LoginSignUp = () => {
             `${BACKEND_API_URL}/api/korisnik/${userEmail}`
           );
           setKorisnikUloga("DJELATNIK");
+          setKorisnikUloga("ADMINISTRATOR");
           console.log("Korisnik postoji:", response.data);
           console.log("ID:", userId);
           console.log("uloga:", korisnikUloga);
-          navigate("/home");
+          setTimeout(() => {
+            navigate("/home");
+          }, 2000);
         } catch (error) {
           if (error.response && error.response.status === 404) {
             setError("New user detected.");
@@ -51,15 +54,7 @@ const LoginSignUp = () => {
               const newUser = {
                 ime: name,
                 prezime: surname,
-                korisnickoIme: userId,
                 email: userEmail,
-                lozinka: "1234",
-                uloga: "DJELATNIK",
-                statistikaDigitalizacije: {
-                  brojDigitaliziranih: 0,
-                  brojNaDigitalizaciji: 0,
-                  korisnik: null,
-                },
               };
 
               try {
@@ -73,8 +68,10 @@ const LoginSignUp = () => {
                   }
                 );
                 console.log("Korisnik dodan:", postResponse.data);
-                setKorisnikUloga("DJELATNIK");
-                navigate("/home");
+                setError("Getting user role.");
+                setTimeout(() => {
+                  navigate("/home");
+                }, 2000);
               } catch (error) {
                 setError("Error adding new user.");
                 console.error(
