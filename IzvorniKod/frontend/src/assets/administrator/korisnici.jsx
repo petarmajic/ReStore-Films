@@ -39,16 +39,15 @@ const KorisniciList = () => {
   };
   const handleRoleChange = async (event, email) => {
     try {
-      const response = await axios.put(
-        `${BACKEND_API_URL}/api/korisnik/update-uloga/${email}`,
-        { uloga: event.target.value }
+      const korisnik = { uloga: event.target.value };
+      const response = await axios.patch(
+        `${BACKEND_API_URL}/api/korisnik/update/ADMINISTRATOR/${email}`,
+        korisnik
       );
       console.log("Uloga updated successfully:", response.data);
       setKorisnici((prevKorisnici) =>
         prevKorisnici.map((korisnik) =>
-          korisnik.email === email
-            ? { ...korisnik, uloga: event.target.value }
-            : korisnik
+          korisnik.email === email ? { ...response.data } : korisnik
         )
       );
     } catch (error) {
