@@ -14,11 +14,11 @@ public interface GrupaZaDigitalizacijuRepository extends JpaRepository<GrupaZaDi
     List<Object[]> countFilmsByStatus();
 
     //koliko je grupa korisnik iznio iz skladista
-    @Query("SELECT k.idKorisnika, COUNT(g) FROM GrupaZaDigitalizaciju g JOIN g.iznioIzSkladistaKorisnik k GROUP BY k.idKorisnika")
-    List<Object[]> countGroupsTakenOutByUser(); //lista [[idKorisnika, broj], ...]
+    @Query("SELECT k.idKorisnika, COUNT(g) FROM Korisnik k JOIN k.iznioIzSkladistaGrupeZaDigitalizaciju g GROUP BY k.idKorisnika")
+    List<Object[]> countGroupsTakenOutByUser();
 
     //koliko je grupa korisnik vratio u skladiste
-    @Query("SELECT k.idKorisnika, COUNT(g) FROM GrupaZaDigitalizaciju g JOIN g.vratioUSkladisteKorisnik k GROUP BY k.idKorisnika")
-    List<Object[]> countGroupsReturnedByUser(); //lista [[idKorisnika, broj], ...]
+    @Query("SELECT k.idKorisnika, COUNT(g) FROM Korisnik k JOIN k.vratioUSkladisteGrupeZaDigitalizaciju g GROUP BY k.idKorisnika")
+    List<Object[]> countGroupsReturnedByUser();
 
 }

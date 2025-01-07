@@ -50,7 +50,7 @@ public class FilmskaTrakaServiceImpl implements FilmskaTrakaService {
         if (updatedTraka.getGodinaProizvodnje() != null) existingTraka.setGodinaProizvodnje(updatedTraka.getGodinaProizvodnje());
         if (updatedTraka.getDuration() != null) existingTraka.setDuration(updatedTraka.getDuration());
         if (updatedTraka.getVrstaSadrzaja() != null) existingTraka.setVrstaSadrzaja(updatedTraka.getVrstaSadrzaja());
-
+        if (updatedTraka.getGrupeZaDigitalizaciju() != null) existingTraka.setGrupeZaDigitalizaciju(updatedTraka.getGrupeZaDigitalizaciju());
         // Spremanje ažurirane filmske trake u bazu podataka
         return filmskaTrakaRepository.save(existingTraka);
     }

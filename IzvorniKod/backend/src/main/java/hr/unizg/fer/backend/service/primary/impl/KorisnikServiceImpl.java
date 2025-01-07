@@ -53,8 +53,8 @@ public class KorisnikServiceImpl implements KorisnikService {
         noviKorisnik.setEmail(korisnik.getEmail());
         noviKorisnik.setUloga(UlogaKorisnika.DJELATNIK);
         noviKorisnik.setStatistikaDigitalizacije(statistikaDigitalizacije);
-        noviKorisnik.setIznioIzSkladistaGrupeZaDigitalizaciju(new HashSet<>());
-        noviKorisnik.setVratioUSkladisteGrupeZaDigitalizaciju(new HashSet<>());
+        noviKorisnik.setIznioIzSkladistaGrupeZaDigitalizaciju(new ArrayList<>());
+        noviKorisnik.setVratioUSkladisteGrupeZaDigitalizaciju(new ArrayList<>());
 
         return korisnikRepository.save(noviKorisnik);
     }

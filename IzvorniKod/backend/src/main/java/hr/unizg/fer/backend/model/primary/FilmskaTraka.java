@@ -10,7 +10,9 @@ import lombok.Setter;
 import org.springframework.cglib.core.Local;
 
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -50,12 +52,9 @@ public class FilmskaTraka {
     @Column(name = "Duration", nullable = false)
     private LocalTime duration;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "Grupiranje",
-            joinColumns = @JoinColumn(name="FilmskaTraka_IDEmisije"),
-            inverseJoinColumns = @JoinColumn(name="GrupaZaDigitalizaciju_IDGrupe")
-    )
-    @JsonIgnore //pogledat smeta li ovaj JsonIgnore
-    private Set<GrupaZaDigitalizaciju> grupeZaDigitalizaciju;
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "FilmskaTraka_Grupe", joinColumns = @JoinColumn(name = "filmskaTraka_originalniNaslov"))
+    @Column(name = "idGrupaZaDigitalizaciju")
+    private List<Long> grupeZaDigitalizaciju = new ArrayList<>();
 }

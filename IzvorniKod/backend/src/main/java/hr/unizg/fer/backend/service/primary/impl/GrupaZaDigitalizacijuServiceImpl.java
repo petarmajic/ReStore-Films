@@ -48,17 +48,17 @@ public class GrupaZaDigitalizacijuServiceImpl implements GrupaZaDigitalizacijuSe
 
     @Override
     public GrupaZaDigitalizaciju addFilms(List<String> nasloviFilmova, GrupaZaDigitalizaciju grupaZaDigitalizaciju) {
-        Set<FilmskaTraka> filmskaTrakaSet = new HashSet<>();
+        List<String> filmskeTrakeNaslovi = new ArrayList<>();
         for(String naslov : nasloviFilmova) {
             if(filmskaTrakaRepository.findFilmskaTrakaByNaslov(naslov).isPresent()){
-                filmskaTrakaSet.add(filmskaTrakaRepository.findFilmskaTrakaByNaslov(naslov).get());
+                filmskeTrakeNaslovi.add(naslov);
             }
             else{
                 throw new NoSuchElementException("Ne postojeći film u bazi imena: " + naslov + " !");
             }
         }
 
-        grupaZaDigitalizaciju.setFilmskeTrake(filmskaTrakaSet);
+        grupaZaDigitalizaciju.setFilmskeTrake(filmskeTrakeNaslovi);
         return grupaZaDigitalizacijuRepository.save(grupaZaDigitalizaciju);
     }
 
@@ -80,7 +80,7 @@ public class GrupaZaDigitalizacijuServiceImpl implements GrupaZaDigitalizacijuSe
         //azuriraj atribute
         grupa.setStatusDigitalizacije(StatusDigitalizacije.ZAVRSENO);
         grupa.setVrijemeZavrsetka(LocalDateTime.now());
-        grupa.setVratioUSkladisteKorisnik(korisnik);
+        grupa.setVratioUSkladisteKorisnikId(korisnik.getIdKorisnika());
 
         //sacuvaj promjene
         return grupaZaDigitalizacijuRepository.save(grupa);

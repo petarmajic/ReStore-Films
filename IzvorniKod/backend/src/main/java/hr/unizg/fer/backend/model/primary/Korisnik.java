@@ -7,7 +7,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -40,13 +42,17 @@ public class Korisnik {
     @JsonManagedReference // za sprječavanje beskonačne petlje
     private StatistikaDigitalizacije statistikaDigitalizacije;
 
-    @OneToMany(mappedBy = "iznioIzSkladistaKorisnik", fetch = FetchType.EAGER)
-    @JsonManagedReference("iznioReference")
-    private Set<GrupaZaDigitalizaciju> iznioIzSkladistaGrupeZaDigitalizaciju;
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "Korisnik_GrupaZaDigitalizaciju_iznio",
+                    joinColumns = @JoinColumn(name = "iznioIzSkladistaKorisnikId"))
+    @Column(name = "idIznesenihGrupaZaDigitalizaciju")
+    private List<Long> iznioIzSkladistaGrupeZaDigitalizaciju = new ArrayList<>();
 
-    @OneToMany(mappedBy = "vratioUSkladisteKorisnik", fetch = FetchType.EAGER)
-    @JsonManagedReference("vratioReference")
-    private Set<GrupaZaDigitalizaciju> vratioUSkladisteGrupeZaDigitalizaciju;
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "Korisnik_GrupaZaDigitalizaciju_vratio",
+            joinColumns = @JoinColumn(name = "vratioUSkladisteKorisnikId"))
+    @Column(name = "idVracenihGrupaZaDigitalizaciju")
+    private List<Long> vratioUSkladisteGrupeZaDigitalizaciju = new ArrayList<>();
 
 }
 

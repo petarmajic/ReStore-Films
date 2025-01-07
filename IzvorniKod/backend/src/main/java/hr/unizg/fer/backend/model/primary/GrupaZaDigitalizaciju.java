@@ -12,7 +12,9 @@ import lombok.Setter;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -37,20 +39,16 @@ public class GrupaZaDigitalizaciju {
     @Column(name = "VrijemeZavrsetka")
     private LocalDateTime vrijemeZavrsetka;
 
-    @ManyToOne
-    @JoinColumn(name = "IDDjelatnikaIznio", nullable = false)
-    @JsonBackReference("iznioReference")
-    private Korisnik iznioIzSkladistaKorisnik;
+    @Column(name = "iznioIzSkladistaKorisnikId")
+    private Long iznioIzSkladistaKorisnikId;
 
-    @ManyToOne
-    @JoinColumn(name = "IDDjelatnikaVratio")
-    @JsonBackReference("vratioReference")
-    private Korisnik vratioUSkladisteKorisnik;
+    @Column(name = "vratioUSkladisteKorisnikId")
+    private Long vratioUSkladisteKorisnikId;
 
-    //provjerit dal je glavno ova klasa ili filmskaTraka pa oviso o tome okrenut JsonManagedReference i JsonBackReference
-    @ManyToMany(mappedBy = "grupeZaDigitalizaciju")
-    @JsonIgnore //ako ne bude radilo maknut
-    private Set<FilmskaTraka> filmskeTrake;
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "FilmskaTraka_Grupe", joinColumns = @JoinColumn(name = "idGrupaZaDigitalizaciju"))
+    @Column(name = "filmskaTraka_originalniNaslov")
+    private List<String> filmskeTrake = new ArrayList<>();
 
 
 
