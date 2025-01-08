@@ -48,12 +48,10 @@ public class GrupaZaDigitalizacijuController {
     //provjerit ko može slat na digitalizaciju pa ako treba radit provjeru
     // u tijelu dobijam naslove filmova koje zelim dodati u grupu za digitalizaciju
     @PostMapping(path = "/add")
-    public ResponseEntity<GrupaZaDigitalizaciju> createGroup(@RequestBody GrupaZaDigitalizacijuRequest
-                                                                         grupaZaDigitalizacijuRequest) {
+    public ResponseEntity<GrupaZaDigitalizaciju> createGroup(@RequestBody GrupaZaDigitalizaciju
+                                                                         grupaZaDigitalizaciju) {
         try{
-            GrupaZaDigitalizaciju updatedGrupaZaDigitalizaciju = grupaZaDigitalizacijuService.addFilms(
-                    grupaZaDigitalizacijuRequest.getNasloviFilmova(),
-                    grupaZaDigitalizacijuRequest.getGrupaZaDigitalizaciju());
+            GrupaZaDigitalizaciju updatedGrupaZaDigitalizaciju = grupaZaDigitalizacijuService.createGroup(grupaZaDigitalizaciju);
             return ResponseEntity.status(HttpStatus.OK).body(updatedGrupaZaDigitalizaciju);
         } catch (NoSuchElementException ex){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);

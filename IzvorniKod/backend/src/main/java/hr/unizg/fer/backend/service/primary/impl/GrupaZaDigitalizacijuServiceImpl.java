@@ -42,9 +42,9 @@ public class GrupaZaDigitalizacijuServiceImpl implements GrupaZaDigitalizacijuSe
     }
 
     @Override
-    public GrupaZaDigitalizaciju addFilms(List<String> nasloviFilmova, GrupaZaDigitalizaciju grupaZaDigitalizaciju) {
+    public GrupaZaDigitalizaciju createGroup(GrupaZaDigitalizaciju grupaZaDigitalizaciju) {
         List<String> filmskeTrakeNaslovi = new ArrayList<>();
-        for(String naslov : nasloviFilmova) {
+        for(String naslov : grupaZaDigitalizaciju.getFilmskeTrake()) {
             if(filmskaTrakaRepository.findFilmskaTrakaByNaslov(naslov).isPresent()){
                 filmskeTrakeNaslovi.add(naslov);
             }
@@ -54,6 +54,10 @@ public class GrupaZaDigitalizacijuServiceImpl implements GrupaZaDigitalizacijuSe
         }
 
         grupaZaDigitalizaciju.setFilmskeTrake(filmskeTrakeNaslovi);
+        grupaZaDigitalizaciju.setStatusDigitalizacije(StatusDigitalizacije.NA_DIGITALIZACIJI);
+        grupaZaDigitalizaciju.setVrijemePocetka(LocalDateTime.now());
+        grupaZaDigitalizaciju.setVrijemeZavrsetka(null);
+        grupaZaDigitalizaciju.setVratioUSkladisteKorisnikId(null);
         return grupaZaDigitalizacijuRepository.save(grupaZaDigitalizaciju);
     }
 

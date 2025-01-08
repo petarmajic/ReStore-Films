@@ -10,7 +10,7 @@ public interface GrupaZaDigitalizacijuService {
      Long getFilmCountByStatus(StatusDigitalizacije statusDigitalizacije);
      Long countGroupsTakenOutByUser(Long idKorisnika);
      Long countGroupsReturnedByUser(Long idKorisnika);
-     GrupaZaDigitalizaciju addFilms(List<String> nasloviFilmova, GrupaZaDigitalizaciju grupaZaDigitalizaciju);
+     GrupaZaDigitalizaciju createGroup(GrupaZaDigitalizaciju grupaZaDigitalizaciju);
      List<GrupaZaDigitalizaciju> getAll();
 //     GrupaZaDigitalizaciju updateGroup(Long idGrupe, String emailDjelatnika);
 }
