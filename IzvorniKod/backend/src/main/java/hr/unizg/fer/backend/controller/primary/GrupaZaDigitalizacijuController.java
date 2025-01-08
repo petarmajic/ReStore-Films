@@ -30,19 +30,19 @@ public class GrupaZaDigitalizacijuController {
         return ResponseEntity.status(HttpStatus.OK).body(grupaZaDigitalizacijuService.getAll());
     }
 
-    @GetMapping("/statusCounts")
-    public ResponseEntity<Map<StatusDigitalizacije, Integer>> getStatusCounts() {
-        return ResponseEntity.ok(grupaZaDigitalizacijuService.getFilmCountByStatus());
+    @GetMapping("/statusCounts/{statusDigitalizacije}")
+    public Long getStatusCounts(@PathVariable StatusDigitalizacije statusDigitalizacije) {
+        return grupaZaDigitalizacijuService.getFilmCountByStatus(statusDigitalizacije);
     }
 
-    @GetMapping("/groupsOut")
-    public List<Object[]> getGroupsTakenOutStatistics() {
-        return grupaZaDigitalizacijuService.countGroupsTakenOutByUser();
+    @GetMapping("/groupsOut/{idKorisnika}")
+    public Long getGroupsTakenOutStatistics(@PathVariable Long idKorisnika) {
+        return grupaZaDigitalizacijuService.countGroupsTakenOutByUser(idKorisnika);
     }
 
-    @GetMapping("/groupsReturned")
-    public List<Object[]> getGroupsReturnedStatistics() {
-        return grupaZaDigitalizacijuService.countGroupsReturnedByUser();
+    @GetMapping("/groupsReturned/{idKorisnika}")
+    public Long getGroupsReturnedStatistics(@PathVariable Long idKorisnika) {
+        return grupaZaDigitalizacijuService.countGroupsReturnedByUser(idKorisnika);
     }
 
     //provjerit ko može slat na digitalizaciju pa ako treba radit provjeru
@@ -60,7 +60,7 @@ public class GrupaZaDigitalizacijuController {
         }
     }
 
-//    @PutMapping("/{id}/updateGroup")
+//    @PatchMapping("/{id}/updateGroup")
 //    public ResponseEntity<GrupaZaDigitalizaciju> updateGroup(
 //            @PathVariable Long id,
 //            @RequestParam String userEmail) {

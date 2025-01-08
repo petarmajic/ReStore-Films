@@ -28,22 +28,17 @@ public class GrupaZaDigitalizacijuServiceImpl implements GrupaZaDigitalizacijuSe
         this.korisnikRepository = korisnikRepository;
     }
 
-    public Map<StatusDigitalizacije, Integer> getFilmCountByStatus() {
-        List<Object[]> results = grupaZaDigitalizacijuRepository.countFilmsByStatus();
-        Map<StatusDigitalizacije, Integer> statusCounts = new EnumMap<>(StatusDigitalizacije.class);
-        for (Object[] result : results) {
-            statusCounts.put((StatusDigitalizacije) result[0], ((Number)result[1]).intValue());
-        }
-        return statusCounts;
+    public Long getFilmCountByStatus(StatusDigitalizacije statusDigitalizacije) {
+         return grupaZaDigitalizacijuRepository.countFilmsByStatus(statusDigitalizacije);
     }
     @Override
-    public List<Object[]> countGroupsTakenOutByUser() {
-        return grupaZaDigitalizacijuRepository.countGroupsTakenOutByUser();
+    public Long countGroupsTakenOutByUser(Long idKorisnika) {
+        return grupaZaDigitalizacijuRepository.countGroupsTakenOutByUser(idKorisnika);
     }
 
     @Override
-    public List<Object[]> countGroupsReturnedByUser() {
-        return grupaZaDigitalizacijuRepository.countGroupsReturnedByUser();
+    public Long countGroupsReturnedByUser(Long idKorisnika) {
+        return grupaZaDigitalizacijuRepository.countGroupsReturnedByUser(idKorisnika);
     }
 
     @Override

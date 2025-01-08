@@ -51,7 +51,7 @@ public class FilmskaTrakaController {
     }
 
     // Endpoint za ažuriranje filmske trake
-    @PutMapping("/update/{id}")
+    @PatchMapping("/update/{id}")
     public ResponseEntity<FilmskaTraka> updateFilmskaTraka(
             @PathVariable Long id, // ID filmske trake koju ažuriramo
             @RequestBody FilmskaTraka updatedTraka) { // Novi podaci za filmsku traku
