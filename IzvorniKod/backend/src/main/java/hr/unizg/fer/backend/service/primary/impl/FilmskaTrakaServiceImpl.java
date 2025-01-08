@@ -43,19 +43,14 @@ public class FilmskaTrakaServiceImpl implements FilmskaTrakaService {
 
         // Ažuriranje polja
         if (updatedTraka.getOriginalniNaslov() != null) existingTraka.setOriginalniNaslov(updatedTraka.getOriginalniNaslov());
-        if (updatedTraka.getRadniNaslov() != null) existingTraka.setRadniNaslov(updatedTraka.getRadniNaslov());
         if (updatedTraka.getJezikOriginala() != null) existingTraka.setJezikOriginala(updatedTraka.getJezikOriginala());
         if (updatedTraka.getTon() != null) existingTraka.setTon(updatedTraka.getTon());
-        if (updatedTraka.getEmisija() != null) existingTraka.setEmisija(updatedTraka.getEmisija());
         if (updatedTraka.getPorijekloZemljaProizvodnje() != null) existingTraka.setPorijekloZemljaProizvodnje(updatedTraka.getPorijekloZemljaProizvodnje());
         if (updatedTraka.getLicenca() != null) existingTraka.setLicenca(updatedTraka.getLicenca());
         if (updatedTraka.getGodinaProizvodnje() != null) existingTraka.setGodinaProizvodnje(updatedTraka.getGodinaProizvodnje());
-        if (updatedTraka.getMarkIN() != null) existingTraka.setMarkIN(updatedTraka.getMarkIN());
-        if (updatedTraka.getMarkOUT() != null) existingTraka.setMarkOUT(updatedTraka.getMarkOUT());
         if (updatedTraka.getDuration() != null) existingTraka.setDuration(updatedTraka.getDuration());
-        if (updatedTraka.getBrojMedija() != null) existingTraka.setBrojMedija(updatedTraka.getBrojMedija());
         if (updatedTraka.getVrstaSadrzaja() != null) existingTraka.setVrstaSadrzaja(updatedTraka.getVrstaSadrzaja());
-
+        if (updatedTraka.getGrupeZaDigitalizaciju() != null) existingTraka.setGrupeZaDigitalizaciju(updatedTraka.getGrupeZaDigitalizaciju());
         // Spremanje ažurirane filmske trake u bazu podataka
         return filmskaTrakaRepository.save(existingTraka);
     }
@@ -64,25 +59,23 @@ public class FilmskaTrakaServiceImpl implements FilmskaTrakaService {
     public FilmskaTraka addFilmskaTraka(FilmskaTrakaArhiva newTraka) {
         if (newTraka.getOriginalniNaslov() == null || newTraka.getJezikOriginala() == null || newTraka.getTon() == null
             || newTraka.getPorijekloZemljaProizvodnje() == null || newTraka.getGodinaProizvodnje() == null
-            || newTraka.getMarkIN() == null || newTraka.getMarkOUT() == null || newTraka.getDuration() == null
-            || newTraka.getBrojMedija() == null){
+            || newTraka.getDuration() == null ){
                 throw new IllegalArgumentException("Jedan/vise argumenata -> NEDOZVOLJENA NULL vrijednost");
         }
+        if (filmskaTrakaRepository.findFilmskaTrakaByNaslov(newTraka.getOriginalniNaslov()).isPresent()) {
+            throw new IllegalArgumentException("NASLOV MORA BITI UNIKATAN!!!");
+        }
+
         FilmskaTraka filmskaTraka = new FilmskaTraka();
 
         filmskaTraka.setOriginalniNaslov(newTraka.getOriginalniNaslov());
-        filmskaTraka.setRadniNaslov(newTraka.getRadniNaslov());
         filmskaTraka.setJezikOriginala(newTraka.getJezikOriginala());
         filmskaTraka.setTon(newTraka.getTon());
-        filmskaTraka.setEmisija(newTraka.getEmisija());
         filmskaTraka.setVrstaSadrzaja(newTraka.getVrstaSadrzaja());
         filmskaTraka.setPorijekloZemljaProizvodnje(newTraka.getPorijekloZemljaProizvodnje());
         filmskaTraka.setLicenca(newTraka.getLicenca());
         filmskaTraka.setGodinaProizvodnje(newTraka.getGodinaProizvodnje());
-        filmskaTraka.setMarkIN(newTraka.getMarkIN());
-        filmskaTraka.setMarkOUT(newTraka.getMarkOUT());
         filmskaTraka.setDuration(newTraka.getDuration());
-        filmskaTraka.setBrojMedija(newTraka.getBrojMedija());
 
         return filmskaTrakaRepository.save(filmskaTraka);
     }
