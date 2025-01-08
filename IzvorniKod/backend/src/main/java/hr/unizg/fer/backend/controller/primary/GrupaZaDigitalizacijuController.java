@@ -60,16 +60,16 @@ public class GrupaZaDigitalizacijuController {
         }
     }
 
-    @PutMapping("/{id}/updateGroup")
-    public ResponseEntity<GrupaZaDigitalizaciju> updateGroup(
-            @PathVariable Long id,
-            @RequestParam String userEmail) {
-        try {
-            GrupaZaDigitalizaciju updatedGroup = grupaZaDigitalizacijuService.updateGroup(id, userEmail);
-            return ResponseEntity.status(HttpStatus.OK).body(updatedGroup);
-        } catch (NoSuchElementException ex) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        }
-    }
+//    @PutMapping("/{id}/updateGroup")
+//    public ResponseEntity<GrupaZaDigitalizaciju> updateGroup(
+//            @PathVariable Long id,
+//            @RequestParam String userEmail) {
+//        try {
+//            GrupaZaDigitalizaciju updatedGroup = grupaZaDigitalizacijuService.updateGroup(id, userEmail);
+//            return ResponseEntity.status(HttpStatus.OK).body(updatedGroup);
+//        } catch (NoSuchElementException ex) {
+//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+//        }
+//    }
 
 }
