@@ -1,6 +1,7 @@
 package hr.unizg.fer.backend.repository.primary;
 
 import hr.unizg.fer.backend.model.primary.GrupaZaDigitalizaciju;
+import hr.unizg.fer.backend.model.primary.StatusDigitalizacije;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -10,15 +11,15 @@ import java.util.List;
 @Repository
 public interface GrupaZaDigitalizacijuRepository extends JpaRepository<GrupaZaDigitalizaciju, Long> {
 
-    @Query("SELECT g.statusDigitalizacije, COUNT(f) FROM GrupaZaDigitalizaciju g JOIN g.filmskeTrake f GROUP BY g.statusDigitalizacije")
-    List<Object[]> countFilmsByStatus();
+    @Query(value = "SELECT COUNT(*) FROM grupa_za_digitalizaciju WHERE statusdigitalizacije= :statusDigitalizacije", nativeQuery = true)
+    Long countFilmsByStatus(StatusDigitalizacije statusDigitalizacije);
 
     //koliko je grupa korisnik iznio iz skladista
-    @Query("SELECT k.idKorisnika, COUNT(g) FROM Korisnik k JOIN k.iznioIzSkladistaGrupeZaDigitalizaciju g GROUP BY k.idKorisnika")
-    List<Object[]> countGroupsTakenOutByUser();
+    @Query(value = "SELECT COUNT(*) FROM grupa_za_digitalizaciju WHERE iznioizskladistakorisnikid= :idKorisnika", nativeQuery = true)
+    Long countGroupsTakenOutByUser(Long idKorisnika);
 
     //koliko je grupa korisnik vratio u skladiste
-    @Query("SELECT k.idKorisnika, COUNT(g) FROM Korisnik k JOIN k.vratioUSkladisteGrupeZaDigitalizaciju g GROUP BY k.idKorisnika")
-    List<Object[]> countGroupsReturnedByUser();
+    @Query(value = "SELECT COUNT(*) FROM grupa_za_digitalizaciju WHERE vratiouskladistekorisnikid = :idKorisnika", nativeQuery = true)
+    Long countGroupsReturnedByUser(Long idKorisnika);
 
 }

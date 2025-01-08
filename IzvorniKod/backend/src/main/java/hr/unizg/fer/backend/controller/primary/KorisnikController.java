@@ -73,7 +73,7 @@ public class KorisnikController {
             return ResponseEntity.status(HttpStatus.OK).body(updatedKorisnik);
         } catch (AccessDeniedException ex){
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
-        } catch (NoSuchElementException ex){
+        } catch (NoSuchElementException | IllegalArgumentException ex){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
     }
