@@ -9,7 +9,6 @@ import { useMsal } from "@azure/msal-react";
 import axios from "axios";
 
 const Barcodes = () => {
-  const { scannedBarcodes, setScannedBarcodes } = useContext(LayoutContext);
   const navigate = useNavigate();
   const { instance, accounts } = useMsal();
   const [filmskeTrake, setFilmskeTrake] = useState([]);
@@ -20,21 +19,12 @@ const Barcodes = () => {
     godina: "",
     trajanje: "",
   });
+  const [statusi, setStatusi] = useState({});
 
   const account = accounts[0];
-  let userName = account?.name ?? null;
-  let userEmail = account?.username ?? null;
   const BACKEND_API_URL = import.meta.env.VITE_BACKEND_API_URL;
-  userName = userName
-    .replace(/č/g, "C")
-    .replace(/ć/g, "C")
-    .replace(/Č/g, "C")
-    .replace(/Ć/g, "C");
-  userEmail = userEmail
-    .replace(/č/g, "C")
-    .replace(/ć/g, "C")
-    .replace(/Č/g, "C")
-    .replace(/Ć/g, "C");
+  let userName = account?.name?.replace(/[čćČĆ]/g, "C") ?? null;
+  let userEmail = account?.username?.replace(/[čćČĆ]/g, "C") ?? null;
 
   useEffect(() => {
     const fetchFilmskeTrake = async () => {
@@ -60,21 +50,26 @@ const Barcodes = () => {
     fetchFilmskeTrake();
   }, []);
 
-  const handleScannerClick = () => {
-    navigate("/scanner");
-  };
+  const promises = [
+    axios.get(
+      `${BACKEND_API_URL}/api/grupaZaDigitalizaciju/statusCounts/NA_CEKANJU`
+    ),
+    axios.get(
+      `${BACKEND_API_URL}/api/grupaZaDigitalizaciju/statusCounts/NA_DIGITALIZACIJI`
+    ),
+    axios.get(
+      `${BACKEND_API_URL}/api/grupaZaDigitalizaciju/statusCounts/ZAVRSENO`
+    ),
+  ];
 
-  const handleClearBarcodes = () => {
-    setScannedBarcodes([]);
-  };
-
-  const handleRemoveBarcode = (index) => {
-    if (index >= 0 && index < scannedBarcodes.length) {
-      const newBarcodes = [...scannedBarcodes];
-      newBarcodes.splice(index, 1);
-      setScannedBarcodes(newBarcodes);
-    }
-  };
+  Promise.all(promises).then((responses) => {
+    const statusiObjekat = {
+      NA_CEKANJU: responses[0].data,
+      NA_DIGITALIZACIJI: responses[1].data,
+      ZAVRSENO: responses[2].data,
+    };
+    setStatusi(statusiObjekat);
+  });
 
   const handleEditClick = (film) => {
     setSelectedFilm(film);
@@ -132,10 +127,28 @@ const Barcodes = () => {
       [name]: value,
     }));
   };
-  const handleHomeClick = () => {
-    navigate("/home");
-  };
 
+  const generatePdf = () => {
+    const doc = new jsPDF();
+    doc.setFontSize(18); // povećajte veličinu fonta
+    const date = new Date();
+    const dateString =
+      date.toLocaleDateString() + " " + date.toLocaleTimeString();
+    doc.text(`Voditelj: ${userName} `, 10, 10, null, null, "left");
+    doc.text(dateString, 180, 10, null, null, "right");
+
+    doc.text("Statistika digitalizacije", 10, 20); // povećajte y koordinatu za 10
+
+    doc.setFontSize(12); // smanjite veličinu fonta za ispis podataka
+    doc.text("NA CEKANJU:", 10, 30);
+    doc.text(`${statusi.NA_CEKANJU}`, 60, 30);
+    doc.text("NA DIGITALIZACIJI:", 10, 35);
+    doc.text(`${statusi.NA_DIGITALIZACIJI}`, 60, 35);
+    doc.text("ZAVRŠENO:", 10, 40);
+    doc.text(`${statusi.ZAVRSENO}`, 60, 40);
+
+    doc.save("statistika_digitalizacije.pdf");
+  };
   return (
     <Layout>
       <div className="barcode-main">
@@ -148,6 +161,11 @@ const Barcodes = () => {
           <div className="barcode-scanned">
             <div className="left-title">Statistika digitalizacije</div>
             <div className="left-list">
+              <strong>NA ČEKANJU:</strong> {statusi.NA_CEKANJU}
+              &nbsp;&nbsp;&nbsp;&nbsp;
+              <strong>NA DIGITALIZACIJI:</strong> {statusi.NA_DIGITALIZACIJI}
+              &nbsp;&nbsp;&nbsp;&nbsp;
+              <strong>ZAVRŠENO:</strong> {statusi.ZAVRSENO}
               {Array.isArray(filmskeTrake) && (
                 <div className="filmske-trake-list">
                   <ul>
@@ -165,8 +183,7 @@ const Barcodes = () => {
               )}
             </div>
             <div className="barcode-btns">
-              <button onClick={handleHomeClick}>Home</button>
-              <button onClick={handleScannerClick}>Scan</button>
+              <button onClick={() => generatePdf()}>PDF statistika</button>
             </div>
           </div>
           {selectedFilm && (

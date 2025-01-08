@@ -20,18 +20,8 @@ const Arhiva = () => {
   const { instance, accounts } = useMsal();
 
   const account = accounts[0];
-  let userName = account?.name ?? null;
-  let userEmail = account?.username ?? null;
-  userName = userName
-    .replace(/č/g, "C")
-    .replace(/ć/g, "C")
-    .replace(/Č/g, "C")
-    .replace(/Ć/g, "C");
-  userEmail = userEmail
-    .replace(/č/g, "C")
-    .replace(/ć/g, "C")
-    .replace(/Č/g, "C")
-    .replace(/Ć/g, "C");
+  let userName = account?.name?.replace(/[čćČĆ]/g, "C") ?? null;
+  let userEmail = account?.username?.replace(/[čćČĆ]/g, "C") ?? null;
 
   const handleScannerClick = () => {
     navigate("/home");

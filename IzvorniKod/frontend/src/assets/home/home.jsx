@@ -16,6 +16,7 @@ export default function Home() {
   let userName = account?.name ?? null;
   let userEmail = account?.username ?? null;
   const { korisnikUloga } = useContext(LayoutContext);
+  //const korisnikUloga = "ADMINISTRATOR";
   const handleScannerClick = () => {
     navigate("/scanner");
   };
@@ -52,32 +53,37 @@ export default function Home() {
             alt="background picture"
           ></img>
           <div className="btn-home">
-            <div className="scanner-list">
-              <button
-                onClick={handleScannerClick}
-                style={{ marginRight: "10px" }}
-              >
-                <img
-                  className="scan-img"
-                  src={barcodeScanner}
-                  alt="barcode scanner"
-                ></img>
-                Scan Barcode
-              </button>
-            </div>
-            <div className="scanner-list">
-              <button onClick={handleBarcodesClick}>
-                <img
-                  className="scan-img"
-                  src={barcodeList}
-                  alt="barcode list"
-                ></img>
-                Barcode List
-              </button>
-            </div>
-            <div className="scanner-list">
-              <button onClick={handleArhivaClick}>Arhiva</button>
-            </div>
+            {(korisnikUloga === "DJELATNIK" ||
+              korisnikUloga === "ADMINISTRATOR") && (
+              <>
+                <div className="scanner-list">
+                  <button
+                    onClick={handleScannerClick}
+                    style={{ marginRight: "10px" }}
+                  >
+                    <img
+                      className="scan-img"
+                      src={barcodeScanner}
+                      alt="barcode scanner"
+                    ></img>
+                    Scan Barcode
+                  </button>
+                </div>
+                <div className="scanner-list">
+                  <button onClick={handleBarcodesClick}>
+                    <img
+                      className="scan-img"
+                      src={barcodeList}
+                      alt="barcode list"
+                    ></img>
+                    Barcode List
+                  </button>
+                </div>
+                <div className="scanner-list">
+                  <button onClick={handleArhivaClick}>Arhiva</button>
+                </div>
+              </>
+            )}
             {(korisnikUloga === "VODITELJ" ||
               korisnikUloga === "ADMINISTRATOR") && (
               <>

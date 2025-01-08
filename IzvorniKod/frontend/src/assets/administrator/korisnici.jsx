@@ -12,6 +12,12 @@ const KorisniciList = () => {
   const [korisnici, setKorisnici] = useState([]);
   const BACKEND_API_URL = import.meta.env.VITE_BACKEND_API_URL;
 
+  const { instance, accounts } = useMsal();
+
+  const account = accounts[0];
+  let userName = account?.name?.replace(/[čćČĆ]/g, "C") ?? null;
+  let userEmail = account?.username?.replace(/[čćČĆ]/g, "C") ?? null;
+
   useEffect(() => {
     const fetchKorisnici = async () => {
       try {
@@ -53,6 +59,55 @@ const KorisniciList = () => {
     } catch (error) {
       console.error("Error updating uloga:", error);
     }
+  };
+
+  const generatePdf = () => {
+    const doc = new jsPDF();
+    doc.setFontSize(18); // povećajte veličinu fonta
+    const date = new Date();
+    const dateString =
+      date.toLocaleDateString() + " " + date.toLocaleTimeString();
+    doc.text(`Administrator: ${userName} `, 10, 10, null, null, "left");
+    doc.text(dateString, 180, 10, null, null, "right");
+
+    doc.text("Popis korisnika:", 10, 20); // povećajte y koordinatu za 10
+
+    // Dodajte zaglavlje tablice
+    doc.setFontSize(14); // smanjite veličinu fonta za zaglavlje
+    doc.text("Ime i Prezime", 10, 30); // povećajte y koordinatu za 10
+    doc.text("Email", 80, 30); // povećajte y koordinatu za 10
+    doc.text("Uloga", 150, 30); // povećajte y koordinatu za 10
+
+    korisnici
+      .sort((a, b) => {
+        if (a.uloga === b.uloga) {
+          return a.ime.localeCompare(b.ime);
+        } else {
+          return a.uloga.localeCompare(b.uloga);
+        }
+      })
+      .forEach((korisnici, index) => {
+        doc.setFontSize(12);
+        doc.text(
+          `${korisnici.ime.replace(
+            /[ČčĆć]/gi,
+            "c"
+          )} ${korisnici.prezime.replace(/[ČčĆć]/gi, "c")}`,
+          10,
+          40 + index * 10 // povećajte y koordinatu za 10
+        );
+        doc.text(korisnici.email, 80, 40 + index * 10); // povećajte y koordinatu za 10
+        doc.text(
+          `${korisnici.uloga}`,
+          150,
+          40 + index * 10 // povećajte y koordinatu za 10
+        );
+      });
+    doc.line(10, 31, 200, 31); // linija između zaglavlja i podataka
+    korisnici.forEach((korisnici, index) => {
+      doc.line(10, 41 + index * 10, 200, 41 + index * 10); // linija između redova
+    });
+    doc.save("statistika_djelatnika.pdf");
   };
 
   return (
@@ -105,7 +160,10 @@ const KorisniciList = () => {
                 </ul>
               </div>
             </div>
-            <div className="barcode-btns"></div>
+            <div className="barcode-btns">
+              {" "}
+              <button onClick={() => generatePdf()}>PDF statistika</button>
+            </div>
           </div>
         </div>
       </div>
