@@ -1,26 +1,21 @@
 package hr.unizg.fer.backend.model.primary;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.cglib.core.Local;
 
 import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name="filmskatrakaarhiva")
+@Table(name = "filmskatrakaarhiva")
 public class FilmskaTraka {
 
     @Id
@@ -28,7 +23,7 @@ public class FilmskaTraka {
     @Column(name = "IDEmisije", nullable = false)
     private Long idEmisije;
 
-    @Column(name = "OriginalniNaslov",nullable = false, unique = true)
+    @Column(name = "OriginalniNaslov", nullable = false, unique = true)
     private String originalniNaslov;
 
     @Column(name = "JezikOriginala", nullable = false)
@@ -52,9 +47,8 @@ public class FilmskaTraka {
     @Column(name = "Duration", nullable = false)
     private LocalTime duration;
 
-
-    @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(name = "FilmskaTraka_Grupe", joinColumns = @JoinColumn(name = "filmskaTraka_originalniNaslov"))
+    // tu su kao string spremljene grupe u kojima se film nalazi -> odvojene zarezom (ako ih je vise)
     @Column(name = "idGrupaZaDigitalizaciju")
-    private List<Long> grupeZaDigitalizaciju = new ArrayList<>();
+    private String grupeZaDigitalizaciju;
+
 }
