@@ -16,8 +16,10 @@ const Barcodes = () => {
   const { instance, accounts } = useMsal();
 
   const account = accounts[0];
-  let userName = account?.name?.replace(/[čćČĆ]/g, "C") ?? null;
-  let userEmail = account?.username?.replace(/[čćČĆ]/g, "C") ?? null;
+  let userName =
+    account?.name?.replace(/[ČĆ]/g, "C").replace(/[čć]/g, "c") ?? null;
+  let userEmail =
+    account?.username?.replace(/[ČĆ]/g, "C").replace(/[čć]/g, "c") ?? null;
 
   const handleScannerClick = () => {
     navigate("/scanner");

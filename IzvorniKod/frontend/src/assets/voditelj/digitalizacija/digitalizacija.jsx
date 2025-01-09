@@ -20,11 +20,15 @@ const Barcodes = () => {
     trajanje: "",
   });
   const [statusi, setStatusi] = useState({});
+  const [grupeZaDigitalizaciju, setGrupeZaDigitalizaciju] = useState([]);
+  const [filmoviUGrupi, setfilmoviUGrupi] = useState({});
 
   const account = accounts[0];
   const BACKEND_API_URL = import.meta.env.VITE_BACKEND_API_URL;
-  let userName = account?.name?.replace(/[čćČĆ]/g, "C") ?? null;
-  let userEmail = account?.username?.replace(/[čćČĆ]/g, "C") ?? null;
+  let userName =
+    account?.name?.replace(/[ČĆ]/g, "C").replace(/[čć]/g, "c") ?? null;
+  let userEmail =
+    account?.username?.replace(/[ČĆ]/g, "C").replace(/[čć]/g, "c") ?? null;
 
   useEffect(() => {
     const fetchFilmskeTrake = async () => {
@@ -39,6 +43,7 @@ const Barcodes = () => {
           zemlja: traka.porijekloZemljaProizvodnje,
           godina: traka.godinaProizvodnje,
           trajanje: traka.duration,
+          grupa: traka.grupeZaDigitalizaciju,
         }));
 
         setFilmskeTrake(filtriraneTrake);
@@ -46,8 +51,46 @@ const Barcodes = () => {
         console.error("Error fetching filmskeTrake:", error);
       }
     };
+    const fetchGrupeZaDigitalizaciju = async () => {
+      try {
+        const response = await axios.get(
+          `${BACKEND_API_URL}/api/grupaZaDigitalizaciju/all`
+        );
+
+        const grupe = response.data.map((grupa) => ({
+          idGrupe: grupa.idGrupe,
+          statusDigitalizacije: grupa.statusDigitalizacije,
+        }));
+
+        setGrupeZaDigitalizaciju(grupe);
+
+        grupe.forEach((grupa) => {
+          const fetchfilmoviUGrupi = async () => {
+            try {
+              const response = await axios.get(
+                `${BACKEND_API_URL}/api/grupaZaDigitalizaciju/getFilmsInGroup/${grupa.idGrupe}`
+              );
+
+              const filmi = response.data;
+
+              setfilmoviUGrupi((prevfilmoviUGrupi) => ({
+                ...prevfilmoviUGrupi,
+                [grupa.idGrupe]: filmi,
+              }));
+            } catch (error) {
+              console.error(error);
+            }
+          };
+
+          fetchfilmoviUGrupi();
+        });
+      } catch (error) {
+        console.error(error);
+      }
+    };
 
     fetchFilmskeTrake();
+    fetchGrupeZaDigitalizaciju();
   }, []);
 
   const promises = [
@@ -159,20 +202,18 @@ const Barcodes = () => {
         ></img>
         <div className="barcode-list-container">
           <div className="barcode-scanned">
-            <div className="left-title">Statistika digitalizacije</div>
+            <div className="left-title">Popis filmova</div>
             <div className="left-list">
-              <strong>NA ČEKANJU:</strong> {statusi.NA_CEKANJU}
-              &nbsp;&nbsp;&nbsp;&nbsp;
-              <strong>NA DIGITALIZACIJI:</strong> {statusi.NA_DIGITALIZACIJI}
-              &nbsp;&nbsp;&nbsp;&nbsp;
-              <strong>ZAVRŠENO:</strong> {statusi.ZAVRSENO}
               {Array.isArray(filmskeTrake) && (
                 <div className="filmske-trake-list">
                   <ul>
                     {filmskeTrake.map((film, index) => (
                       <li key={index}>
                         {index + 1}. {film.naslov} - {film.zemlja} -{" "}
-                        {film.godina} - {film.trajanje}
+                        {film.godina} - {film.trajanje} -{" "}
+                        {film.grupa
+                          ? `U grupi: ${film.grupa}`
+                          : "U grupi: nije"}
                         <button onClick={() => handleEditClick(film)}>
                           Edit
                         </button>
@@ -182,9 +223,7 @@ const Barcodes = () => {
                 </div>
               )}
             </div>
-            <div className="barcode-btns">
-              <button onClick={() => generatePdf()}>PDF statistika</button>
-            </div>
+            <div className="barcode-btns"></div>
           </div>
           {selectedFilm && (
             <div className="edit-form">
@@ -233,6 +272,37 @@ const Barcodes = () => {
               </form>
             </div>
           )}
+
+          <div className="barcode-grouped">
+            <div className="right-title">Statistika grupa</div>
+            <div className="grouped-list">
+              <ul></ul>
+              <strong>NA ČEKANJU:</strong> {statusi.NA_CEKANJU}
+              &nbsp;&nbsp;&nbsp;&nbsp;
+              <strong>NA DIGITALIZACIJI:</strong> {statusi.NA_DIGITALIZACIJI}
+              &nbsp;&nbsp;&nbsp;&nbsp;
+              <strong>ZAVRŠENO:</strong> {statusi.ZAVRSENO}
+              <ul>
+                {grupeZaDigitalizaciju.map((grupa, index) => (
+                  <li key={index}>
+                    <strong>ID Grupe: {grupa.idGrupe} - Status:</strong>{" "}
+                    {grupa.statusDigitalizacije}
+                    <br />
+                    <strong>Filmovi u grupi:</strong>
+                    <ul>
+                      {filmoviUGrupi[grupa.idGrupe] &&
+                        filmoviUGrupi[grupa.idGrupe].map((film, index) => (
+                          <li key={index}>{film}</li>
+                        ))}
+                    </ul>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div className="barcode-btns">
+              <button onClick={() => generatePdf()}>PDF statistika</button>
+            </div>
+          </div>
         </div>
       </div>
     </Layout>

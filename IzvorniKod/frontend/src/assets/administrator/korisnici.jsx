@@ -15,8 +15,10 @@ const KorisniciList = () => {
   const { instance, accounts } = useMsal();
 
   const account = accounts[0];
-  let userName = account?.name?.replace(/[čćČĆ]/g, "C") ?? null;
-  let userEmail = account?.username?.replace(/[čćČĆ]/g, "C") ?? null;
+  let userName =
+    account?.name?.replace(/[ČĆ]/g, "C").replace(/[čć]/g, "c") ?? null;
+  let userEmail =
+    account?.username?.replace(/[ČĆ]/g, "C").replace(/[čć]/g, "c") ?? null;
 
   useEffect(() => {
     const fetchKorisnici = async () => {
@@ -89,10 +91,11 @@ const KorisniciList = () => {
       .forEach((korisnici, index) => {
         doc.setFontSize(12);
         doc.text(
-          `${korisnici.ime.replace(
-            /[ČčĆć]/gi,
-            "c"
-          )} ${korisnici.prezime.replace(/[ČčĆć]/gi, "c")}`,
+          `${korisnici.ime
+            .replace(/[ČĆ]/g, "C")
+            .replace(/[čć]/g, "c")} ${korisnici.prezime
+            .replace(/[ČĆ]/g, "C")
+            .replace(/[čć]/g, "c")}`,
           10,
           40 + index * 10 // povećajte y koordinatu za 10
         );
@@ -132,11 +135,7 @@ const KorisniciList = () => {
                       |<strong>Email:</strong> {korisnik.email} |
                       <strong>Uloga:</strong>{" "}
                       {korisnik.uloga ? korisnik.uloga : "Nema uloge"} |
-                      <strong>Statistika Digitalizacije:</strong>{" "}
-                      {korisnik.statistikaDigitalizacije
-                        ? "Postoji"
-                        : "Nema podataka"}
-                      {"   "}
+                      {"         "}
                       <select
                         value={korisnik.uloga}
                         onChange={(event) =>
