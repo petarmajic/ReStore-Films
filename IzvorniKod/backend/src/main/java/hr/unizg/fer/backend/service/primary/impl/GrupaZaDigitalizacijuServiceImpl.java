@@ -42,9 +42,9 @@ public class GrupaZaDigitalizacijuServiceImpl implements GrupaZaDigitalizacijuSe
     }
 
     @Override
-    public GrupaZaDigitalizaciju addFilms(List<String> nasloviFilmova, GrupaZaDigitalizaciju grupaZaDigitalizaciju) {
+    public GrupaZaDigitalizaciju createGroup(GrupaZaDigitalizaciju grupaZaDigitalizaciju) {
         List<String> filmskeTrakeNaslovi = new ArrayList<>();
-        for(String naslov : nasloviFilmova) {
+        for(String naslov : grupaZaDigitalizaciju.getFilmskeTrake()) {
             if(filmskaTrakaRepository.findFilmskaTrakaByNaslov(naslov).isPresent()){
                 filmskeTrakeNaslovi.add(naslov);
             }
@@ -52,9 +52,28 @@ public class GrupaZaDigitalizacijuServiceImpl implements GrupaZaDigitalizacijuSe
                 throw new NoSuchElementException("Ne postojeći film u bazi imena: " + naslov + " !");
             }
         }
+        GrupaZaDigitalizaciju novaGrupaZaDigitalizaciju = new GrupaZaDigitalizaciju();
 
-        grupaZaDigitalizaciju.setFilmskeTrake(filmskeTrakeNaslovi);
-        return grupaZaDigitalizacijuRepository.save(grupaZaDigitalizaciju);
+        novaGrupaZaDigitalizaciju.setFilmskeTrake(filmskeTrakeNaslovi);
+        novaGrupaZaDigitalizaciju.setStatusDigitalizacije(StatusDigitalizacije.NA_DIGITALIZACIJI);
+        novaGrupaZaDigitalizaciju.setVrijemePocetka(LocalDateTime.now());
+        novaGrupaZaDigitalizaciju.setVrijemeZavrsetka(null);
+        novaGrupaZaDigitalizaciju.setVratioUSkladisteKorisnikId(null);
+        novaGrupaZaDigitalizaciju.setIznioIzSkladistaKorisnikId(grupaZaDigitalizaciju.getIznioIzSkladistaKorisnikId());
+        novaGrupaZaDigitalizaciju = grupaZaDigitalizacijuRepository.save(novaGrupaZaDigitalizaciju);
+
+        //dodavanje id-ja grupe filmovima
+        for(String naslov : filmskeTrakeNaslovi){
+            FilmskaTraka filmskaTraka = filmskaTrakaRepository.findFilmskaTrakaByNaslov(naslov).get();
+            if(filmskaTraka.getGrupeZaDigitalizaciju() != null){
+                filmskaTraka.setGrupeZaDigitalizaciju(filmskaTraka.getGrupeZaDigitalizaciju() +";" + novaGrupaZaDigitalizaciju.getIdGrupe().toString());
+            } else{
+                filmskaTraka.setGrupeZaDigitalizaciju(novaGrupaZaDigitalizaciju.getIdGrupe().toString());
+            }
+            filmskaTrakaRepository.save(filmskaTraka);
+        }
+
+        return novaGrupaZaDigitalizaciju;
     }
 
     @Override
@@ -62,24 +81,9 @@ public class GrupaZaDigitalizacijuServiceImpl implements GrupaZaDigitalizacijuSe
         return grupaZaDigitalizacijuRepository.findAll();
     }
 
-//    @Override
-//    public GrupaZaDigitalizaciju updateGroup(Long idGrupe, String emailKorisnika) {
-//        //pronadi grupu
-//        GrupaZaDigitalizaciju grupa = grupaZaDigitalizacijuRepository.findById(idGrupe)
-//                .orElseThrow(() -> new NoSuchElementException("Grupa s ID-em " + idGrupe + " nije pronađena."));
-//
-//        //pronadi korisnika
-//        Korisnik korisnik = korisnikRepository.findKorisnikByEmail(emailKorisnika)
-//                .orElseThrow(() -> new NoSuchElementException("Korisnik s emailom " + emailKorisnika + " nije pronađen."));
-//
-//        //azuriraj atribute
-//        grupa.setStatusDigitalizacije(StatusDigitalizacije.ZAVRSENO);
-//        grupa.setVrijemeZavrsetka(LocalDateTime.now());
-//        grupa.setVratioUSkladisteKorisnikId(korisnik.getIdKorisnika());
-//
-//        //sacuvaj promjene
-//        return grupaZaDigitalizacijuRepository.save(grupa);
-//    }
-
+    @Override
+    public List<String> getFilmsInGroup(Long idGrupe) {
+        return grupaZaDigitalizacijuRepository.getFilmsInGroup(idGrupe);
+    }
 
 }
