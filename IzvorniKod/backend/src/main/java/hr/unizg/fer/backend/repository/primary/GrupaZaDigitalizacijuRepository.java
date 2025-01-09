@@ -22,4 +22,7 @@ public interface GrupaZaDigitalizacijuRepository extends JpaRepository<GrupaZaDi
     @Query(value = "SELECT COUNT(*) FROM grupa_za_digitalizaciju WHERE vratiouskladistekorisnikid = :idKorisnika", nativeQuery = true)
     Long countGroupsReturnedByUser(Long idKorisnika);
 
+    @Query(value = "SELECT filmskatraka_originalninaslov FROM grupa_filmskeTrake WHERE idgrupazadigitalizaciju = :idGrupe", nativeQuery = true)
+    List<String> getFilmsInGroup(Long idGrupe);
+
 }

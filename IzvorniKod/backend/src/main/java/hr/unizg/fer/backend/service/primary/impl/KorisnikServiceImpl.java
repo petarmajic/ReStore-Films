@@ -3,7 +3,6 @@ package hr.unizg.fer.backend.service.primary.impl;
 import hr.unizg.fer.backend.model.primary.*;
 import hr.unizg.fer.backend.repository.primary.GrupaZaDigitalizacijuRepository;
 import hr.unizg.fer.backend.repository.primary.KorisnikRepository;
-import hr.unizg.fer.backend.repository.primary.StatistikaDigitalizacijeRepository;
 import hr.unizg.fer.backend.service.primary.KorisnikService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,13 +13,11 @@ import java.util.*;
 @Service
 public class KorisnikServiceImpl implements KorisnikService {
     private final KorisnikRepository korisnikRepository;
-    private final StatistikaDigitalizacijeRepository statistikaDigitalizacijeRepository;
     private final GrupaZaDigitalizacijuRepository grupaZaDigitalizacijuRepository;
 
     @Autowired
-    public KorisnikServiceImpl(KorisnikRepository korisnikRepository, StatistikaDigitalizacijeRepository statistikaDigitalizacijeRepository, GrupaZaDigitalizacijuRepository grupaZaDigitalizacijuRepository) {
+    public KorisnikServiceImpl(KorisnikRepository korisnikRepository, GrupaZaDigitalizacijuRepository grupaZaDigitalizacijuRepository) {
         this.korisnikRepository = korisnikRepository;
-        this.statistikaDigitalizacijeRepository = statistikaDigitalizacijeRepository;
         this.grupaZaDigitalizacijuRepository = grupaZaDigitalizacijuRepository;
     }
 
@@ -41,15 +38,11 @@ public class KorisnikServiceImpl implements KorisnikService {
         }
 
         Korisnik noviKorisnik = new Korisnik();
-        StatistikaDigitalizacije statistikaDigitalizacije = new StatistikaDigitalizacije();
-        statistikaDigitalizacije.setBrojDigitaliziranih(0);
-        statistikaDigitalizacije.setBrojNaDigitalizaciji(0);
 
         noviKorisnik.setIme(korisnik.getIme());
         noviKorisnik.setPrezime(korisnik.getPrezime());
         noviKorisnik.setEmail(korisnik.getEmail());
         noviKorisnik.setUloga(UlogaKorisnika.DJELATNIK);
-        noviKorisnik.setStatistikaDigitalizacije(statistikaDigitalizacije);
         noviKorisnik.setIznioIzSkladistaGrupeZaDigitalizaciju(new ArrayList<>());
         noviKorisnik.setVratioUSkladisteGrupeZaDigitalizaciju(new ArrayList<>());
 
@@ -97,24 +90,7 @@ public class KorisnikServiceImpl implements KorisnikService {
         if(korisnik.getUloga() != null){
             postojeciKorisnik.setUloga(korisnik.getUloga());
         }
-        // provjerit ovo -> dali trebam moci kreirati novu statistiku digitalizacije ako vec ne postoji itd...
-        // kod nas svaki korinsik by defalt ima statistiku digitalizacije
-        if(korisnik.getStatistikaDigitalizacije() != null){
-            StatistikaDigitalizacije postojecaStatistikaDigitalizacije =
-                    statistikaDigitalizacijeRepository.findById(postojeciKorisnik
-                            .getStatistikaDigitalizacije()
-                            .getIdStatistike())
-                            .orElse(new StatistikaDigitalizacije()); //provjerit ovo orElse
 
-            if(korisnik.getStatistikaDigitalizacije().getBrojDigitaliziranih() != null){
-                postojecaStatistikaDigitalizacije.setBrojDigitaliziranih(korisnik.getStatistikaDigitalizacije().getBrojDigitaliziranih());
-            }
-            if(korisnik.getStatistikaDigitalizacije().getBrojNaDigitalizaciji() != null){
-                postojecaStatistikaDigitalizacije.setBrojNaDigitalizaciji(korisnik.getStatistikaDigitalizacije().getBrojNaDigitalizaciji());
-            }
-
-            postojeciKorisnik.setStatistikaDigitalizacije(postojecaStatistikaDigitalizacije);
-        }
         // potencijalno treba dodati handlanje ovoga -> ako želimo to ovdje moći
         if(korisnik.getIznioIzSkladistaGrupeZaDigitalizaciju() != null){
             List<Long> grupeZaDigIds = new ArrayList<>();

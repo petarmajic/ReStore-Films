@@ -1,7 +1,5 @@
 package hr.unizg.fer.backend.controller.primary;
 
-import hr.unizg.fer.backend.dto.GrupaZaDigitalizacijuRequest;
-import hr.unizg.fer.backend.model.primary.FilmskaTraka;
 import hr.unizg.fer.backend.model.primary.GrupaZaDigitalizaciju;
 import hr.unizg.fer.backend.model.primary.StatusDigitalizacije;
 import hr.unizg.fer.backend.service.primary.GrupaZaDigitalizacijuService;
@@ -11,9 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 import java.util.NoSuchElementException;
-import java.util.Set;
 
 @RestController
 @RequestMapping("/api/grupaZaDigitalizaciju")
@@ -48,28 +44,26 @@ public class GrupaZaDigitalizacijuController {
     //provjerit ko može slat na digitalizaciju pa ako treba radit provjeru
     // u tijelu dobijam naslove filmova koje zelim dodati u grupu za digitalizaciju
     @PostMapping(path = "/add")
-    public ResponseEntity<GrupaZaDigitalizaciju> createGroup(@RequestBody GrupaZaDigitalizacijuRequest
-                                                                         grupaZaDigitalizacijuRequest) {
+    public ResponseEntity<GrupaZaDigitalizaciju> createGroup(@RequestBody GrupaZaDigitalizaciju
+                                                                         grupaZaDigitalizaciju) {
         try{
-            GrupaZaDigitalizaciju updatedGrupaZaDigitalizaciju = grupaZaDigitalizacijuService.addFilms(
-                    grupaZaDigitalizacijuRequest.getNasloviFilmova(),
-                    grupaZaDigitalizacijuRequest.getGrupaZaDigitalizaciju());
+            GrupaZaDigitalizaciju updatedGrupaZaDigitalizaciju = grupaZaDigitalizacijuService.createGroup(grupaZaDigitalizaciju);
             return ResponseEntity.status(HttpStatus.OK).body(updatedGrupaZaDigitalizaciju);
         } catch (NoSuchElementException ex){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        } catch (Exception ex){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
     }
 
-//    @PatchMapping("/{id}/updateGroup")
-//    public ResponseEntity<GrupaZaDigitalizaciju> updateGroup(
-//            @PathVariable Long id,
-//            @RequestParam String userEmail) {
-//        try {
-//            GrupaZaDigitalizaciju updatedGroup = grupaZaDigitalizacijuService.updateGroup(id, userEmail);
-//            return ResponseEntity.status(HttpStatus.OK).body(updatedGroup);
-//        } catch (NoSuchElementException ex) {
-//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-//        }
-//    }
+    @GetMapping(path = "getFilmsInGroup/{idGrupe}")
+    public ResponseEntity<List<String>> getFilmsInGroup(@PathVariable Long idGrupe) {
+        try{
+            List<String> filmsReturned = grupaZaDigitalizacijuService.getFilmsInGroup(idGrupe);
+            return ResponseEntity.status(HttpStatus.OK).body(filmsReturned);
+        } catch (Exception ex){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+    }
 
 }
