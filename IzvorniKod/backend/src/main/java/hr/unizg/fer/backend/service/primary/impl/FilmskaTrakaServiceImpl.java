@@ -76,6 +76,7 @@ public class FilmskaTrakaServiceImpl implements FilmskaTrakaService {
         filmskaTraka.setLicenca(newTraka.getLicenca());
         filmskaTraka.setGodinaProizvodnje(newTraka.getGodinaProizvodnje());
         filmskaTraka.setDuration(newTraka.getDuration());
+        filmskaTraka.setGrupeZaDigitalizaciju(null);
 
         return filmskaTrakaRepository.save(filmskaTraka);
     }

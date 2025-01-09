@@ -60,7 +60,20 @@ public class GrupaZaDigitalizacijuServiceImpl implements GrupaZaDigitalizacijuSe
         novaGrupaZaDigitalizaciju.setVrijemeZavrsetka(null);
         novaGrupaZaDigitalizaciju.setVratioUSkladisteKorisnikId(null);
         novaGrupaZaDigitalizaciju.setIznioIzSkladistaKorisnikId(grupaZaDigitalizaciju.getIznioIzSkladistaKorisnikId());
-        return grupaZaDigitalizacijuRepository.save(novaGrupaZaDigitalizaciju);
+        novaGrupaZaDigitalizaciju = grupaZaDigitalizacijuRepository.save(novaGrupaZaDigitalizaciju);
+
+        //dodavanje id-ja grupe filmovima
+        for(String naslov : filmskeTrakeNaslovi){
+            FilmskaTraka filmskaTraka = filmskaTrakaRepository.findFilmskaTrakaByNaslov(naslov).get();
+            if(filmskaTraka.getGrupeZaDigitalizaciju() != null){
+                filmskaTraka.setGrupeZaDigitalizaciju(filmskaTraka.getGrupeZaDigitalizaciju() +";" + novaGrupaZaDigitalizaciju.getIdGrupe().toString());
+            } else{
+                filmskaTraka.setGrupeZaDigitalizaciju(novaGrupaZaDigitalizaciju.getIdGrupe().toString());
+            }
+            filmskaTrakaRepository.save(filmskaTraka);
+        }
+
+        return novaGrupaZaDigitalizaciju;
     }
 
     @Override

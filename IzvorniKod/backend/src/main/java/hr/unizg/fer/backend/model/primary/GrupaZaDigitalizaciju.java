@@ -40,7 +40,7 @@ public class GrupaZaDigitalizaciju {
 
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "Grupa_FilmskeTrake", joinColumns = @JoinColumn(name = "idGrupaZaDigitalizaciju"))
-    @Column(name = "filmskaTraka_originalniNaslov", nullable = false)
+    @Column(name = "filmskaTraka_originalniNaslov")
     private List<String> filmskeTrake = new ArrayList<>();
 
 }

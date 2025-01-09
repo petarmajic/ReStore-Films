@@ -47,9 +47,8 @@ public class FilmskaTraka {
     @Column(name = "Duration", nullable = false)
     private LocalTime duration;
 
-    @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(name = "FilmskaTraka_Grupe", joinColumns = @JoinColumn(name = "filmskaTraka_originalniNaslov", referencedColumnName = "OriginalniNaslov"))
+    // tu su kao string spremljene grupe u kojima se film nalazi -> odvojene zarezom (ako ih je vise)
     @Column(name = "idGrupaZaDigitalizaciju")
-    private List<Long> grupeZaDigitalizaciju = new ArrayList<>();
+    private String grupeZaDigitalizaciju;
 
 }
