@@ -58,16 +58,14 @@ public class GrupaZaDigitalizacijuController {
         }
     }
 
-//    @PatchMapping("/{id}/updateGroup")
-//    public ResponseEntity<GrupaZaDigitalizaciju> updateGroup(
-//            @PathVariable Long id,
-//            @RequestParam String userEmail) {
-//        try {
-//            GrupaZaDigitalizaciju updatedGroup = grupaZaDigitalizacijuService.updateGroup(id, userEmail);
-//            return ResponseEntity.status(HttpStatus.OK).body(updatedGroup);
-//        } catch (NoSuchElementException ex) {
-//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-//        }
-//    }
+    @GetMapping(path = "getFilmsInGroup/{idGrupe}")
+    public ResponseEntity<List<String>> getFilmsInGroup(@PathVariable Long idGrupe) {
+        try{
+            List<String> filmsReturned = grupaZaDigitalizacijuService.getFilmsInGroup(idGrupe);
+            return ResponseEntity.status(HttpStatus.OK).body(filmsReturned);
+        } catch (Exception ex){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+    }
 
 }

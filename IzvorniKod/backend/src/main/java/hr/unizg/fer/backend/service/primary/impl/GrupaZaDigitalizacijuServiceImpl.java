@@ -81,24 +81,9 @@ public class GrupaZaDigitalizacijuServiceImpl implements GrupaZaDigitalizacijuSe
         return grupaZaDigitalizacijuRepository.findAll();
     }
 
-//    @Override
-//    public GrupaZaDigitalizaciju updateGroup(Long idGrupe, String emailKorisnika) {
-//        //pronadi grupu
-//        GrupaZaDigitalizaciju grupa = grupaZaDigitalizacijuRepository.findById(idGrupe)
-//                .orElseThrow(() -> new NoSuchElementException("Grupa s ID-em " + idGrupe + " nije pronađena."));
-//
-//        //pronadi korisnika
-//        Korisnik korisnik = korisnikRepository.findKorisnikByEmail(emailKorisnika)
-//                .orElseThrow(() -> new NoSuchElementException("Korisnik s emailom " + emailKorisnika + " nije pronađen."));
-//
-//        //azuriraj atribute
-//        grupa.setStatusDigitalizacije(StatusDigitalizacije.ZAVRSENO);
-//        grupa.setVrijemeZavrsetka(LocalDateTime.now());
-//        grupa.setVratioUSkladisteKorisnikId(korisnik.getIdKorisnika());
-//
-//        //sacuvaj promjene
-//        return grupaZaDigitalizacijuRepository.save(grupa);
-//    }
-
+    @Override
+    public List<String> getFilmsInGroup(Long idGrupe) {
+        return grupaZaDigitalizacijuRepository.getFilmsInGroup(idGrupe);
+    }
 
 }

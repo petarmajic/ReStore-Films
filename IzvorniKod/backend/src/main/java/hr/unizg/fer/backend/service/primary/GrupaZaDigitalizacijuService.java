@@ -12,5 +12,5 @@ public interface GrupaZaDigitalizacijuService {
      Long countGroupsReturnedByUser(Long idKorisnika);
      GrupaZaDigitalizaciju createGroup(GrupaZaDigitalizaciju grupaZaDigitalizaciju);
      List<GrupaZaDigitalizaciju> getAll();
-//     GrupaZaDigitalizaciju updateGroup(Long idGrupe, String emailDjelatnika);
+     List<String> getFilmsInGroup(Long idGrupe);
 }
