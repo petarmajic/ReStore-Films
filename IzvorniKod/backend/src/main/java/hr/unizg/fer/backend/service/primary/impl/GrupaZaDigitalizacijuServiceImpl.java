@@ -52,13 +52,15 @@ public class GrupaZaDigitalizacijuServiceImpl implements GrupaZaDigitalizacijuSe
                 throw new NoSuchElementException("Ne postojeći film u bazi imena: " + naslov + " !");
             }
         }
+        GrupaZaDigitalizaciju novaGrupaZaDigitalizaciju = new GrupaZaDigitalizaciju();
 
-        grupaZaDigitalizaciju.setFilmskeTrake(filmskeTrakeNaslovi);
-        grupaZaDigitalizaciju.setStatusDigitalizacije(StatusDigitalizacije.NA_DIGITALIZACIJI);
-        grupaZaDigitalizaciju.setVrijemePocetka(LocalDateTime.now());
-        grupaZaDigitalizaciju.setVrijemeZavrsetka(null);
-        grupaZaDigitalizaciju.setVratioUSkladisteKorisnikId(null);
-        return grupaZaDigitalizacijuRepository.save(grupaZaDigitalizaciju);
+        novaGrupaZaDigitalizaciju.setFilmskeTrake(filmskeTrakeNaslovi);
+        novaGrupaZaDigitalizaciju.setStatusDigitalizacije(StatusDigitalizacije.NA_DIGITALIZACIJI);
+        novaGrupaZaDigitalizaciju.setVrijemePocetka(LocalDateTime.now());
+        novaGrupaZaDigitalizaciju.setVrijemeZavrsetka(null);
+        novaGrupaZaDigitalizaciju.setVratioUSkladisteKorisnikId(null);
+        novaGrupaZaDigitalizaciju.setIznioIzSkladistaKorisnikId(grupaZaDigitalizaciju.getIznioIzSkladistaKorisnikId());
+        return grupaZaDigitalizacijuRepository.save(novaGrupaZaDigitalizaciju);
     }
 
     @Override
