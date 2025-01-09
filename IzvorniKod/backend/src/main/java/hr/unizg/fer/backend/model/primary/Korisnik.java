@@ -37,11 +37,6 @@ public class Korisnik {
     @Column(name = "Uloga", nullable = true)
     private UlogaKorisnika uloga;
 
-    @OneToOne(cascade = CascadeType.ALL) // cascadeType.ALL da se u bazi automatski handla i stvaranje, brisanje.. staDig
-    @JoinColumn(name = "IDStatistike", nullable = true)
-    @JsonManagedReference // za sprječavanje beskonačne petlje
-    private StatistikaDigitalizacije statistikaDigitalizacije;
-
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "Korisnik_GrupaZaDigitalizaciju_iznio",
                     joinColumns = @JoinColumn(name = "iznioIzSkladistaKorisnikId"))
