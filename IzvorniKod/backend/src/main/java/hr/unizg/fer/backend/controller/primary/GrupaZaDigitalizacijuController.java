@@ -51,6 +51,8 @@ public class GrupaZaDigitalizacijuController {
             return ResponseEntity.status(HttpStatus.OK).body(updatedGrupaZaDigitalizaciju);
         } catch (NoSuchElementException ex){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        } catch (Exception ex){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
     }
 
