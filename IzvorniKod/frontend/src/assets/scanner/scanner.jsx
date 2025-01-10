@@ -320,9 +320,9 @@ const BarcodeScanner = () => {
                   {error && <p style={{ color: "red" }}>{error}</p>}
                 </div>
                 <div className="fetch-btn">
-                  <button className="button-film" onClick={handleFetchFilmData}>
+                  {/*<button className="button-film" onClick={handleFetchFilmData}>
                     Fetch
-                  </button>
+                  </button>*/}
                   <button onClick={handleBarcodesClick}>List</button>
                   {displayInputFile && (
                     <div>
@@ -357,39 +357,40 @@ const BarcodeScanner = () => {
 
           {displayForm && (
             <form onSubmit={handleSubmitFilm}>
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: "10px",
-                }}
-              >
+              <div className="manual-input">
                 <label>
-                  Originalni naslov:
+                  Original title:
                   <input
+                    className="label-input"
                     type="text"
                     value={originalniNaslov}
                     onChange={(e) => setOriginalniNaslov(e.target.value)}
                   />
                 </label>
                 <label>
-                  Jezik originala:
+                  Original language:
                   <input
+                    className="label-input"
                     type="text"
                     value={jezikOriginala}
                     onChange={(e) => setJezikOriginala(e.target.value)}
                   />
                 </label>
                 <label>
-                  Ton:
-                  <select value={ton} onChange={(e) => setTon(e.target.value)}>
-                    <option value="DA">DA</option>
-                    <option value="NE">NE</option>
+                  Sound:
+                  <select
+                    className="label-input"
+                    value={ton}
+                    onChange={(e) => setTon(e.target.value)}
+                  >
+                    <option value="DA">Yes</option>
+                    <option value="NE">No</option>
                   </select>
                 </label>
                 <label>
-                  Porijeklo zemlja proizvodnje:
+                  Country of origin:
                   <input
+                    className="label-input"
                     type="text"
                     value={porijekloZemljaProizvodnje}
                     onChange={(e) =>
@@ -398,8 +399,9 @@ const BarcodeScanner = () => {
                   />
                 </label>
                 <label>
-                  Godina proizvodnje:
+                  Manufacturing year:
                   <input
+                    className="label-input"
                     type="number"
                     value={godinaProizvodnje}
                     onChange={(e) => {
@@ -423,8 +425,9 @@ const BarcodeScanner = () => {
                   />
                 </label>
                 <label>
-                  Trajanje:
+                  Duration:
                   <input
+                    className="label-input"
                     type="text"
                     value={duration}
                     onChange={(e) => {
@@ -460,6 +463,12 @@ const BarcodeScanner = () => {
                   />
                 </label>
                 <button
+                  style={{
+                    borderRadius: "0.5rem",
+                    width: "30%",
+                    alignSelf: "center",
+                    marginTop: "2rem",
+                  }}
                   onClick={(e) => {
                     e.preventDefault();
                     if (isValid) {
@@ -468,7 +477,7 @@ const BarcodeScanner = () => {
                   }}
                   disabled={!isValid}
                 >
-                  Dodaj film
+                  Add
                 </button>
               </div>
             </form>
