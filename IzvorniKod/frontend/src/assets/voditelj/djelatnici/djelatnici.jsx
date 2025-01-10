@@ -104,31 +104,35 @@ const Djelatnici = () => {
 
   return (
     <Layout>
-      <div className="barcode-main">
+      <div className="employee-main">
         <img
-          className="barcode-bg-image"
+          className="employee-bg-image"
           src={pozadina}
           alt="background picture"
         ></img>
-        <div className="barcode-list-container">
-          <div className="barcode-scanned">
-            <div className="left-title"> Popis djelatnika</div>
-            <div className="left-list">
+        <div className="employee-list-container">
+          <div className="employee-list-wrapper">
+            <div className="employee-title">Employees list</div>
+            <div className="employee-list">
               <div>
                 <ul>
                   {korisnici.map((korisnici, index) => (
-                    <li key={index} className="korisnik-item">
+                    <li key={index} className="employee-item">
                       <strong>
                         {korisnici.ime} {korisnici.prezime}
                       </strong>
-                      {"  "}|<strong>Email:</strong> {korisnici.email} |
+                      {"  ("}
+                      <strong>Email:</strong> {korisnici.email} {")"}
+                      <br></br>
                       <strong>Uloga:</strong>
                       {"  "}
-                      {korisnici.uloga ? korisnici.uloga : "Nema uloge"} |
-                      <strong>Iznio na digitalizaciju:</strong>
+                      {korisnici.uloga ? korisnici.uloga : "Nema uloge"}
+                      <br></br>
+                      <strong>Digitized:</strong>
                       {"  "}
                       {korisnici.iznio}
-                      {"  "}|<strong>Vratio u arhivu:</strong>
+                      {"  "}
+                      <strong>Archived:</strong>
                       {"  "}
                       {korisnici.vratio}
                       <hr />
@@ -137,8 +141,8 @@ const Djelatnici = () => {
                 </ul>
               </div>
             </div>
-            <div className="barcode-btns">
-              <button onClick={() => generatePdf()}>PDF statistika</button>
+            <div className="employee-btns">
+              <button onClick={() => generatePdf()}>Download</button>
             </div>
           </div>
         </div>

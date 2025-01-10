@@ -115,27 +115,29 @@ const KorisniciList = () => {
 
   return (
     <Layout>
-      <div className="barcode-main">
+      <div className="user-main">
         <img
-          className="barcode-bg-image"
+          className="user-bg-image"
           src={pozadina}
           alt="background picture"
         ></img>
-        <div className="barcode-list-container">
-          <div className="barcode-scanned">
-            <div className="left-title">Popis korisnika sustava</div>
-            <div className="left-list">
+        <div className="user-list-container">
+          <div className="user-list-wrapper">
+            <div className="user-title">System users list</div>
+            <div className="user-list">
               <div>
                 <ul>
                   {korisnici.map((korisnik, index) => (
-                    <li key={index} className="korisnik-item">
+                    <li key={index} className="user-item">
                       <strong>
                         {korisnik.ime} {korisnik.prezime}
-                      </strong>{" "}
-                      |<strong>Email:</strong> {korisnik.email} |
+                      </strong>
+                      {" ("}
+                      <strong>Email:</strong> {korisnik.email} {") "}
+                      <br></br>
                       <strong>Uloga:</strong>{" "}
-                      {korisnik.uloga ? korisnik.uloga : "Nema uloge"} |
-                      {"         "}
+                      {korisnik.uloga ? korisnik.uloga : "Nema uloge"}
+                      <br></br>
                       <select
                         value={korisnik.uloga}
                         onChange={(event) =>
@@ -159,9 +161,9 @@ const KorisniciList = () => {
                 </ul>
               </div>
             </div>
-            <div className="barcode-btns">
+            <div className="user-btns">
               {" "}
-              <button onClick={() => generatePdf()}>PDF statistika</button>
+              <button onClick={() => generatePdf()}>Download</button>
             </div>
           </div>
         </div>
