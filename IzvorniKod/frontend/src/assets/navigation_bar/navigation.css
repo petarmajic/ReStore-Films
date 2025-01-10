@@ -53,6 +53,15 @@
   background-color: #464646;
 }
 
+/* Uloga korisnika */
+.role-css {
+  font-family: "Cinzel", serif;
+  position: absolute;
+  margin-left: 20rem;
+  margin-top: -2.5rem;
+  font-size: 12;
+}
+
 /*-------------------------------------------------Responzivnost---------------------------------------------------*/
 
 @media (max-width: 768px) {

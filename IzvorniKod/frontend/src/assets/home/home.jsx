@@ -4,7 +4,11 @@ import "./home.css";
 import Layout from "../layout/layout";
 import pozadina from "../images/filmskaVrpca.jpg";
 import barcodeScanner from "../images/barcodeScanner.png";
-import barcodeList from "../images/barcodeList.png";
+import barcodeList from "../images/barkodLista.png";
+import archivePng from "../images/arhiva.png";
+import digitizationPng from "../images/digitalizacija.png";
+import employeePng from "../images/employee.png";
+import userPng from "../images/user.png";
 import { useMsal } from "@azure/msal-react";
 import { LayoutContext } from "../layout/layoutcontext";
 import axios from "axios";
@@ -80,7 +84,14 @@ export default function Home() {
                   </button>
                 </div>
                 <div className="scanner-list">
-                  <button onClick={handleArhivaClick}>Arhiva</button>
+                  <button onClick={handleArhivaClick}>
+                    <img
+                      className="scan-img"
+                      src={archivePng}
+                      alt="archive"
+                    ></img>
+                    Archive
+                  </button>
                 </div>
               </>
             )}
@@ -89,15 +100,30 @@ export default function Home() {
               <>
                 <div className="scanner-list">
                   <button onClick={handleDigitalizacijaClick}>
-                    Digitalizacija
+                    <img
+                      className="scan-img"
+                      src={digitizationPng}
+                      alt="digitization"
+                    ></img>
+                    Digitization
                   </button>
                 </div>
                 <div className="scanner-list">
-                  <button onClick={handleDjelatniciClick}>Djelatnici</button>
+                  <button onClick={handleDjelatniciClick}>
+                    <img
+                      className="scan-img"
+                      src={employeePng}
+                      alt="employees"
+                    ></img>
+                    Employees
+                  </button>
                 </div>
                 {korisnikUloga === "ADMINISTRATOR" && (
                   <div className="scanner-list">
-                    <button onClick={handleKorisniciClick}>Korisnici</button>
+                    <button onClick={handleKorisniciClick}>
+                      <img className="scan-img" src={userPng} alt="users"></img>
+                      Users
+                    </button>
                   </div>
                 )}
               </>

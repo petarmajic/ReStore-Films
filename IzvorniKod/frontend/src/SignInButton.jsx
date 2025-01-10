@@ -26,7 +26,7 @@ export const SignInButton = () => {
         height: "100%",
       }}
     >
-      SIGN IN
+      Sign in
     </Button>
   );
 };

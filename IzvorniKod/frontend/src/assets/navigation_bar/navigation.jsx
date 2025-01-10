@@ -45,18 +45,7 @@ const Navigation = () => {
     <nav className="navbar">
       <div className="nav-homebtn">
         <button onClick={handleHomeClick}>Home</button>
-        <div
-          style={{
-            position: "absolute",
-            top: 25,
-            left: 250,
-            marginLeft: 20,
-            fontSize: 12,
-            fontWeight: "bold",
-          }}
-        >
-          Role: {korisnikUloga}
-        </div>
+        {/*<div className="role-css">Role: {korisnikUloga}</div>*/}
       </div>
       <div className="nav-title">ReStore-Films</div>
       <div className="nav-signout">
