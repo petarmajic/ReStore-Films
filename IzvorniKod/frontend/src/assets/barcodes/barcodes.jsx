@@ -260,7 +260,7 @@ const Barcodes = () => {
         (sum, b) => sum + durationToSeconds(b.duration),
         0
       );
-      const title = `Grupa ${index + 1}: ${secondsToDuration(totalDuration)}`;
+      const title = `Group ${index + 1}: ${secondsToDuration(totalDuration)}`;
       groupedBarcodes[title] = group;
     });
 
@@ -316,8 +316,10 @@ const Barcodes = () => {
             <div className="barcode-btns">
               <button onClick={handleClearBarcodes}>Clear</button>
               <button onClick={handleScannerClick}>Scan</button>
-              <button onClick={handleDigitalizacijaClick}>
-                Digitalizacija
+            </div>
+            <div className="barcode-digit-btn">
+              <button id="digit" onClick={handleDigitalizacijaClick}>
+                Digitization
               </button>
             </div>
           </div>

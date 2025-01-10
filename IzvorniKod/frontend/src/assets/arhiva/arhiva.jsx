@@ -351,7 +351,6 @@ const Arhiva = () => {
             </p>
             <div className="barcode-btns">
               <button onClick={handleClearBarcodes}>Clear</button>
-              <button onClick={handleScannerClick}>Home</button>
               <button onClick={handleLoadPDF}>Load PDF</button>
               <button onClick={handleStorePDF}>Archive</button>
             </div>
