@@ -194,26 +194,28 @@ const Barcodes = () => {
   };
   return (
     <Layout>
-      <div className="barcode-main">
+      <div className="digit-main">
         <img
-          className="barcode-bg-image"
+          className="digit-bg-image"
           src={pozadina}
           alt="background picture"
         ></img>
-        <div className="barcode-list-container">
-          <div className="barcode-scanned">
-            <div className="left-title">Popis filmova</div>
-            <div className="left-list">
+        <div className="digit-list-container">
+          <div className="digit-film-list">
+            <div className="list-title">Movie list</div>
+            <div className="digit-list">
               {Array.isArray(filmskeTrake) && (
                 <div className="filmske-trake-list">
                   <ul>
                     {filmskeTrake.map((film, index) => (
                       <li key={index}>
-                        {index + 1}. {film.naslov} - {film.zemlja} -{" "}
-                        {film.godina} - {film.trajanje} -{" "}
+                        {index + 1}. {film.naslov} {"("}
+                        {film.zemlja} - {film.godina} - {film.trajanje}
+                        {") "}
+                        <br></br>
                         {film.grupa
-                          ? `U grupi: ${film.grupa}`
-                          : "U grupi: nije"}
+                          ? `In group: ${film.grupa}`
+                          : "In group: No"}
                         <button onClick={() => handleEditClick(film)}>
                           Edit
                         </button>
@@ -223,14 +225,14 @@ const Barcodes = () => {
                 </div>
               )}
             </div>
-            <div className="barcode-btns"></div>
+            <div className="digit-btns"></div>
           </div>
           {selectedFilm && (
             <div className="edit-form">
-              <h3>Ažuriraj Filmsku Traku</h3>
+              <h4>Update filmstrip</h4>
               <form onSubmit={handleUpdateSubmit}>
                 <label>
-                  Naslov:
+                  Title:
                   <input
                     type="text"
                     name="naslov"
@@ -239,7 +241,7 @@ const Barcodes = () => {
                   />
                 </label>
                 <label>
-                  Zemlja:
+                  Country:
                   <input
                     type="text"
                     name="zemlja"
@@ -248,7 +250,7 @@ const Barcodes = () => {
                   />
                 </label>
                 <label>
-                  Godina:
+                  Year:
                   <input
                     type="number"
                     name="godina"
@@ -257,7 +259,7 @@ const Barcodes = () => {
                   />
                 </label>
                 <label>
-                  Trajanje:
+                  Duration:
                   <input
                     type="text"
                     name="trajanje"
@@ -265,30 +267,31 @@ const Barcodes = () => {
                     onChange={handleChange}
                   />
                 </label>
-                <button type="submit">Spremi</button>
-                <button type="button" onClick={() => setSelectedFilm(null)}>
-                  Odustani
-                </button>
+                <div className="form-btns">
+                  <button type="submit">Update</button>
+                  <button type="button" onClick={() => setSelectedFilm(null)}>
+                    Quit
+                  </button>
+                </div>
               </form>
             </div>
           )}
 
-          <div className="barcode-grouped">
-            <div className="right-title">Statistika grupa</div>
+          <div className="digit-grouped">
+            <div className="group-title">Group statistics</div>
             <div className="grouped-list">
-              <ul></ul>
-              <strong>NA ČEKANJU:</strong> {statusi.NA_CEKANJU}
+              <strong>On waiting:</strong> {statusi.NA_CEKANJU}
               &nbsp;&nbsp;&nbsp;&nbsp;
-              <strong>NA DIGITALIZACIJI:</strong> {statusi.NA_DIGITALIZACIJI}
+              <strong>On digitalization:</strong> {statusi.NA_DIGITALIZACIJI}
               &nbsp;&nbsp;&nbsp;&nbsp;
-              <strong>ZAVRŠENO:</strong> {statusi.ZAVRSENO}
+              <strong>Finished:</strong> {statusi.ZAVRSENO}
               <ul>
                 {grupeZaDigitalizaciju.map((grupa, index) => (
                   <li key={index}>
-                    <strong>ID Grupe: {grupa.idGrupe} - Status:</strong>{" "}
+                    <strong>Group ID: {grupa.idGrupe} - Status:</strong>{" "}
                     {grupa.statusDigitalizacije}
                     <br />
-                    <strong>Filmovi u grupi:</strong>
+                    <strong>Movie group:</strong>
                     <ul>
                       {filmoviUGrupi[grupa.idGrupe] &&
                         filmoviUGrupi[grupa.idGrupe].map((film, index) => (
@@ -299,8 +302,8 @@ const Barcodes = () => {
                 ))}
               </ul>
             </div>
-            <div className="barcode-btns">
-              <button onClick={() => generatePdf()}>PDF statistika</button>
+            <div className="digit-btns">
+              <button onClick={() => generatePdf()}>Download</button>
             </div>
           </div>
         </div>

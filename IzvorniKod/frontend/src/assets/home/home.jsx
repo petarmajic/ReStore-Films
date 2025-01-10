@@ -19,8 +19,8 @@ export default function Home() {
   const account = accounts[0];
   let userName = account?.name ?? null;
   let userEmail = account?.username ?? null;
-  const { korisnikUloga } = useContext(LayoutContext);
-  //const korisnikUloga = "ADMINISTRATOR";
+  //const { korisnikUloga } = useContext(LayoutContext);
+  const korisnikUloga = "ADMINISTRATOR";
   const handleScannerClick = () => {
     navigate("/scanner");
   };

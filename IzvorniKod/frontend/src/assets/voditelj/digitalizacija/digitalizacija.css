@@ -2,7 +2,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&display=swap");
 
 /* Slika pozadine */
-.barcode-bg-image {
+.digit-bg-image {
   position: fixed;
   top: 0;
   left: 0;
@@ -13,7 +13,7 @@
 }
 
 /* Glavni omotač */
-.barcode-main {
+.digit-main {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -22,7 +22,7 @@
 }
 
 /* Središnji kontejner */
-.barcode-list-container {
+.digit-list-container {
   background-color: #3a3a3a;
   box-shadow: 0.5rem 0.5rem 1rem rgba(0, 0, 0, 0.2);
   color: #ededed;
@@ -34,8 +34,9 @@
   border-radius: 0.5rem;
 }
 
-/* Omotač skeniranih bark kodova */
-.barcode-scanned {
+/* Omotač popisa filmova i grupa*/
+.digit-film-list,
+.digit-grouped {
   display: flex;
   flex-direction: column;
   width: 50%;
@@ -44,26 +45,20 @@
   padding: 1rem;
 }
 
-/* Lista skeniranih i grupiranih bar kodova */
-.left-list,
-.grouped-list {
+/* Lista popisa i grupiranih filmova */
+.digit-list {
   text-align: left;
   font-size: 0.7rem;
   overflow-y: auto;
 }
 
-/* Total duration i trajanje grupe */
-.total-duration,
-.group-key {
-  font-size: 0.9rem;
-}
-
-.group-key {
-  text-align: left;
+.digit-grouped {
+  text-align: center;
+  overflow-y: auto;
 }
 
 /* Omotač gumbova */
-.barcode-btns {
+.digit-btns {
   padding: 0.5rem;
   margin-top: auto;
   display: flex;
@@ -71,125 +66,160 @@
 }
 
 /* Funkcionalni gumbi */
-.barcode-btns button {
+.digit-btns button {
   background-color: #6c757d;
   color: #ededed;
   border: none;
   border-radius: 0.5rem;
-  width: 25%;
+  width: 80%;
 }
 
 /* Prijelaz miša preko gumba */
-.barcode-btns button:hover {
+.digit-btns button:hover {
   background-color: #5a6268;
 }
 
-/* Omotač grupiranih bark kodova */
-.barcode-grouped {
-  display: flex;
-  flex-direction: column;
-  width: 50%;
+/* Prozor za edit */
+.edit-form {
   text-align: center;
   font-size: 1.5rem;
   padding: 1rem;
 }
 
-/* Omotač liste grupiranih bar kodova */
-.wrap-group {
-  text-align: left;
+.edit-form form {
+  width: 100%;
+}
+
+label {
+  text-align: start;
+}
+
+input {
+  border-radius: 0.5rem;
+  width: 100%;
+}
+
+.form-btns {
+  display: flex;
+  justify-content: space-evenly;
+  padding: 1.5rem;
+}
+
+.form-btns button {
+  background-color: #6c757d;
+  color: #ededed;
+  border: none;
+  border-radius: 0.5rem;
+  width: 40%;
 }
 
 /*----------------------Responzivnost---------------------------*/
 @media (max-width: 1024px) {
-  .barcode-list-container {
+  .digit-list-container {
     flex-direction: column;
+    overflow-y: auto;
+    height: auto;
+    margin-bottom: 10vh;
   }
 
-  .barcode-scanned,
-  .barcode-grouped {
+  .digit-list-container > div {
+    flex-shrink: 0;
+  }
+
+  .digit-film-list,
+  .digit-grouped {
     width: 100%;
     height: 50%;
   }
 
-  .left-title,
-  .right-title {
+  .list-title,
+  .group-title {
     font-size: 1.6rem;
   }
 
-  .left-list,
+  .digit-list,
   .grouped-list {
     font-size: 0.9rem;
+    max-height: 25vh;
   }
 
-  .total-duration,
-  .group-key {
-    font-size: 1rem;
-  }
-
-  .barcode-btns button {
+  .digit-btns button {
     width: 25%;
+  }
+
+  .edit-form label {
+    width: 100%;
   }
 }
 
 @media (min-width: 1024px) and (max-height: 900px) {
-  .barcode-list-container {
+  .digit-list-container {
     flex-direction: row;
   }
 
-  .barcode-scanned,
-  .barcode-grouped {
+  .digit-film-list,
+  .digit-grouped {
     padding: 1rem;
     width: 100%;
     height: 100%;
   }
 
-  .left-title,
-  .right-title {
+  .list-title,
+  .group-title {
     font-size: 1.4rem;
   }
 
-  .left-list,
+  .digit-list,
   .grouped-list {
     font-size: 0.8rem;
+    align-self: center;
   }
 
-  .total-duration,
-  .group-key {
-    font-size: 0.9rem;
+  .digit-btns button {
+    width: 80%;
   }
 
-  .barcode-btns button {
-    width: 30%;
+  .form-btns button {
+    width: 40%;
   }
 }
 
 @media (max-width: 480px) {
-  .barcode-list-container {
+  .digit-list-container {
     flex-direction: column;
+    overflow-y: auto;
+    height: auto;
+    margin-bottom: 10vh;
   }
 
-  .barcode-scanned,
-  .barcode-grouped {
+  .digit-list-container > div {
+    flex-shrink: 0;
+  }
+
+  .digit-film-list,
+  .digit-grouped {
     width: 100%;
     height: 50%;
   }
 
-  .left-title,
-  .right-title {
+  .list-title,
+  .group-title {
     font-size: 1.2rem;
+    align-self: center;
   }
 
-  .left-list,
+  .digit-list,
   .grouped-list {
     font-size: 0.7rem;
+    max-height: 25vh;
   }
 
-  .total-duration,
-  .group-key {
-    font-size: 0.8rem;
+  .digit-btns button {
+    width: 65%;
   }
 
-  .barcode-btns button {
-    width: 35%;
+  .edit-form {
+    font-size: 1rem;
+    padding: 1rem;
   }
 }
