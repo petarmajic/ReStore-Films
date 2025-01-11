@@ -31,15 +31,6 @@ const Arhiva = () => {
   const handleClearBarcodes = () => {
     setArhivaBarcodes([]);
   };
-  const handleSelectGroup = (groupKey) => {
-    const newSelectedGroups = { ...selectedGroups };
-    if (newSelectedGroups[groupKey]) {
-      delete newSelectedGroups[groupKey];
-    } else {
-      newSelectedGroups[groupKey] = true;
-    }
-    setSelectedGroups(newSelectedGroups);
-  };
 
   const handleLoadPDF = () => {
     const pdfFileInput = document.createElement("input");
@@ -321,6 +312,14 @@ const Arhiva = () => {
     setSelectedGroups({});
   };
 
+  useEffect(() => {
+    const newSelectedGroups = {};
+    Object.keys(groupedBarcodes).forEach((groupKey) => {
+      newSelectedGroups[groupKey] = true;
+    });
+    setSelectedGroups(newSelectedGroups);
+  }, [groupedBarcodes]);
+
   return (
     <Layout>
       <div className="barcode-main">
@@ -362,18 +361,6 @@ const Arhiva = () => {
               {Object.keys(groupedBarcodes).map((groupKey) => (
                 <div className="wrap-group">
                   <p className="group-key">{groupKey}</p>
-                  <input
-                    type="checkbox"
-                    checked={selectedGroups[groupKey]}
-                    onChange={() => handleSelectGroup(groupKey)}
-                    style={{
-                      fontSize: "16px",
-                      padding: "0 5px",
-                      border: "none",
-                      backgroundColor: "transparent",
-                      cursor: "pointer",
-                    }}
-                  />
                   <div>
                     <ul>
                       {groupedBarcodes[groupKey].map((barcode, index) => (
