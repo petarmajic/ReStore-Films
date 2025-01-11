@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.nio.file.AccessDeniedException;
-import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
@@ -146,7 +145,6 @@ public class KorisnikServiceImpl implements KorisnikService {
                     GrupaZaDigitalizaciju grupaZaDigitalizaciju = grupaZaDigitalizacijuRepository.findById(id).get();
                     grupaZaDigitalizaciju.setVratioUSkladisteKorisnikId(postojeciKorisnik.getIdKorisnika());
                     grupaZaDigitalizaciju.setStatusDigitalizacije(StatusDigitalizacije.ZAVRSENO);
-                    grupaZaDigitalizaciju.setVrijemeZavrsetka(LocalDateTime.now());
                     grupaZaDigitalizacijuRepository.save(grupaZaDigitalizaciju);
                 } else{
 >>>>>>> b015fa0 (backend/ popravljeno vrijeme zavrsetka digitalizacije)
