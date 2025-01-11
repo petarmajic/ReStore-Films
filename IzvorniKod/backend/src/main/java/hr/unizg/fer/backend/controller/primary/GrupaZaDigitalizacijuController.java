@@ -1,7 +1,5 @@
 package hr.unizg.fer.backend.controller.primary;
 
-import hr.unizg.fer.backend.dto.GrupaZaDigitalizacijuRequest;
-import hr.unizg.fer.backend.model.primary.FilmskaTraka;
 import hr.unizg.fer.backend.model.primary.GrupaZaDigitalizaciju;
 import hr.unizg.fer.backend.model.primary.StatusDigitalizacije;
 import hr.unizg.fer.backend.service.primary.GrupaZaDigitalizacijuService;
@@ -11,9 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 import java.util.NoSuchElementException;
-import java.util.Set;
 
 @RestController
 @RequestMapping("/api/grupaZaDigitalizaciju")
@@ -55,6 +51,8 @@ public class GrupaZaDigitalizacijuController {
             return ResponseEntity.status(HttpStatus.OK).body(updatedGrupaZaDigitalizaciju);
         } catch (NoSuchElementException ex){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        } catch (Exception ex){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
     }
 
