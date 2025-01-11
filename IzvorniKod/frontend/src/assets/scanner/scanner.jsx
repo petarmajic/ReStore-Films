@@ -54,21 +54,21 @@ const BarcodeScanner = () => {
   }, [scannedData]);
 
   const handleFetchFilmData = async () => {
+    const existingBarcode = scannedBarcodes.find((barcode) => {
+      return typeof barcode === "object" && barcode.barcode === scannedData;
+    });
+
     if (scannedData) {
       try {
-        const BACKEND_API_URL = import.meta.env.VITE_BACKEND_API_URL;
-        const url = `${BACKEND_API_URL}/api/filmskaTrakaArhiva/${scannedData}`;
-        const response = await axios.get(url, {
-          headers: { "Content-Type": "application/json" },
-        });
-
-        console.log("Film data fetched:", response.data);
-
-        const existingBarcode = scannedBarcodes.find((barcode) => {
-          return typeof barcode === "object" && barcode.barcode === scannedData;
-        });
-
         if (!existingBarcode) {
+          const BACKEND_API_URL = import.meta.env.VITE_BACKEND_API_URL;
+          const url = `${BACKEND_API_URL}/api/filmskaTrakaArhiva/${scannedData}`;
+          const response = await axios.get(url, {
+            headers: { "Content-Type": "application/json" },
+          });
+
+          console.log("Film data fetched:", response.data);
+
           const updatedBarcodes = [
             ...scannedBarcodes,
             {
@@ -76,9 +76,28 @@ const BarcodeScanner = () => {
               filmTitle: response.data.originalniNaslov,
               duration: response.data.duration,
               database: true,
+              part: "",
             },
           ];
-
+          const newFilm = {
+            originalniNaslov: response.data.originalniNaslov,
+            jezikOriginala: response.data.jezikOriginala,
+            ton: response.data.ton,
+            porijekloZemljaProizvodnje:
+              response.data.porijekloZemljaProizvodnje,
+            godinaProizvodnje: response.data.godinaProizvodnje,
+            duration: response.data.duration,
+          };
+          axios
+            .post(`${BACKEND_API_URL}/api/filmskaTraka/add`, newFilm, {
+              headers: { "Content-Type": "application/json" },
+            })
+            .then((response) => {
+              console.log("Film successfully added:", response.data);
+            })
+            .catch((error) => {
+              console.error("Error sending data to server:", error);
+            });
           setScannedBarcodes(updatedBarcodes);
           scannedBarcodesRef.current.add(scannedData);
         } else {

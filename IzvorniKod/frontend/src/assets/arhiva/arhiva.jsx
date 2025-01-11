@@ -8,29 +8,46 @@ import jsPDF from "jspdf";
 import { getDocument, GlobalWorkerOptions } from "pdfjs-dist";
 GlobalWorkerOptions.workerSrc = "/assets/pdf.worker.min.mjs";
 import { useMsal } from "@azure/msal-react";
+import axios from "axios";
 
 const Arhiva = () => {
   const { scannedBarcodes, setScannedBarcodes } = useContext(LayoutContext);
   const [selectedBarcodes, setSelectedBarcodes] = useState({});
   const [arhivaBarcodes, setArhivaBarcodes] = useState([]);
   const [mergedBarcodes, setMergedBarcodes] = useState([]);
+  const [groupes, setGroupes] = useState([]);
 
   const navigate = useNavigate();
   const [selectedGroups, setSelectedGroups] = useState({});
   const { instance, accounts } = useMsal();
-
+  const [korisnikId, setKorisnikId] = useState(null);
+  const BACKEND_API_URL = import.meta.env.VITE_BACKEND_API_URL;
   const account = accounts[0];
   let userName =
     account?.name?.replace(/[ČĆ]/g, "C").replace(/[čć]/g, "c") ?? null;
   let userEmail =
     account?.username?.replace(/[ČĆ]/g, "C").replace(/[čć]/g, "c") ?? null;
 
-  const handleScannerClick = () => {
-    navigate("/home");
-  };
   const handleClearBarcodes = () => {
     setArhivaBarcodes([]);
   };
+  useEffect(() => {
+    const fetchKorisnikData = async () => {
+      try {
+        const url = `${BACKEND_API_URL}/api/korisnik/${userEmail}`;
+        const response = await axios.get(url);
+        const korisnikData = response.data;
+        if (korisnikData) {
+          setKorisnikId(korisnikData.idKorisnika);
+        } else {
+          console.log("No korisnik data found");
+        }
+      } catch (error) {
+        console.error("Error fetching korisnikID:", error);
+      }
+    };
+    fetchKorisnikData();
+  }, []);
 
   const handleLoadPDF = () => {
     const pdfFileInput = document.createElement("input");
@@ -94,6 +111,13 @@ const Arhiva = () => {
                 duration: match[4].trim(),
               });
             }
+            const groupNumberMatch = line.match(/Grupa (\d+)/);
+            if (groupNumberMatch) {
+              const groupNumber = parseInt(groupNumberMatch[1], 10);
+              // Update the groupes state with the group number
+              setGroupes((prevGroupes) => [...prevGroupes, groupNumber]);
+            }
+            console.log("Groupes:", groupes);
           });
 
           console.log("Parsirani filmovi:", filmovi);
@@ -152,33 +176,7 @@ const Arhiva = () => {
     ].join(":");
   };
   const mergeBarcodes = (barcodes) => {
-    const barcodeMap = new Map();
-
-    barcodes.forEach((barcode) => {
-      const match = barcode.filmTitle.match(/^(.*?)(?: - \d+\. dio)$/);
-      const baseFilmTitle = match ? match[1].trim() : barcode.filmTitle;
-
-      if (barcodeMap.has(barcode.barcode)) {
-        const existing = barcodeMap.get(barcode.barcode);
-
-        const newDuration =
-          durationToSeconds(existing.duration) +
-          durationToSeconds(barcode.duration);
-
-        barcodeMap.set(barcode.barcode, {
-          ...existing,
-          filmTitle: baseFilmTitle,
-          duration: secondsToDuration(newDuration),
-        });
-      } else {
-        barcodeMap.set(barcode.barcode, {
-          ...barcode,
-          filmTitle: baseFilmTitle,
-        });
-      }
-    });
-
-    return Array.from(barcodeMap.values());
+    return arhivaBarcodes;
   };
   //
   //
@@ -222,7 +220,9 @@ const Arhiva = () => {
         (sum, b) => sum + durationToSeconds(b.duration),
         0
       );
-      const title = `PDF ${index + 1}: ${secondsToDuration(totalDuration)}`;
+      const title = `Grupa ${groupes[index]}: ${secondsToDuration(
+        totalDuration
+      )}`;
       groupedBarcodes[title] = group;
     });
 
@@ -240,8 +240,8 @@ const Arhiva = () => {
   }, [arhivaBarcodes]);
   console.log(mergedBarcodes);
 
-  const handleStorePDF = () => {
-    console.log("Ime i email korisnika:", userName, userEmail);
+  const handleStorePDF = async () => {
+    console.log("Ime i email korisnika:", userName, userEmail, korisnikId);
     setSelectedBarcodes({});
     Object.keys(selectedGroups).forEach((groupKey) => {
       selectedBarcodes[groupKey] = groupedBarcodes[groupKey];
@@ -281,9 +281,11 @@ const Arhiva = () => {
       selectedBarcodes[groupKey].forEach((barcode, barcodeIndex) => {
         const text = `${barcodeIndex + 1}. ${
           barcode.barcode
-        } - ${barcode.filmTitle.replace(/č/g, "c").replace(/ć/g, "c")} - ${
-          barcode.duration
-        }`;
+        } - ${barcode.filmTitle
+          .replace(/Č/g, "C")
+          .replace(/Ć/g, "C")
+          .replace(/č/g, "c")
+          .replace(/ć/g, "c")}${barcode.part} - ${barcode.duration}`;
         pdfDoc.text(text, 10, 40 + barcodeIndex * 10, null, null, "left", true);
       });
       pdfDoc.text(`Potpis: ___________`, 180, 280, null, null, "right");
