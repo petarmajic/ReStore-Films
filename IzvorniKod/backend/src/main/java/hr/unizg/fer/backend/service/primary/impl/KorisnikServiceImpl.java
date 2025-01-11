@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.nio.file.AccessDeniedException;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
@@ -115,6 +116,7 @@ public class KorisnikServiceImpl implements KorisnikService {
             }
             postojeciKorisnik.setIznioIzSkladistaGrupeZaDigitalizaciju(grupeZaDigIds);
         }
+<<<<<<< HEAD
 
         if (korisnik.getVratioUSkladisteGrupeZaDigitalizaciju() != null) {
             // Dohvati postojeću listu ili kreiraj novu ako je null
@@ -134,6 +136,20 @@ public class KorisnikServiceImpl implements KorisnikService {
                         grupaZaDigitalizacijuRepository.save(grupaZaDigitalizaciju);
                     }
                 } else {
+=======
+        if(korisnik.getVratioUSkladisteGrupeZaDigitalizaciju() != null){
+            List<Long> grupeZaDigIds = new ArrayList<>();
+            for(Long id: korisnik.getVratioUSkladisteGrupeZaDigitalizaciju()){
+                if(grupaZaDigitalizacijuRepository.findById(id).isPresent()){
+                    grupeZaDigIds.add(id);
+                    // dodavanje vratioUSkladisteKorisnikId u grupi za digitalizaciju
+                    GrupaZaDigitalizaciju grupaZaDigitalizaciju = grupaZaDigitalizacijuRepository.findById(id).get();
+                    grupaZaDigitalizaciju.setVratioUSkladisteKorisnikId(postojeciKorisnik.getIdKorisnika());
+                    grupaZaDigitalizaciju.setStatusDigitalizacije(StatusDigitalizacije.ZAVRSENO);
+                    grupaZaDigitalizaciju.setVrijemeZavrsetka(LocalDateTime.now());
+                    grupaZaDigitalizacijuRepository.save(grupaZaDigitalizaciju);
+                } else{
+>>>>>>> b015fa0 (backend/ popravljeno vrijeme zavrsetka digitalizacije)
                     throw new IllegalArgumentException("Nepostojeca grupa za digitalizaciju!");
                 }
             }
