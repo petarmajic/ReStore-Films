@@ -93,34 +93,48 @@ public class KorisnikServiceImpl implements KorisnikService {
         }
 
         // potencijalno treba dodati handlanje ovoga -> ako želimo to ovdje moći
-        if(korisnik.getIznioIzSkladistaGrupeZaDigitalizaciju() != null){
-            List<Long> grupeZaDigIds = new ArrayList<>();
-            for(Long id: korisnik.getIznioIzSkladistaGrupeZaDigitalizaciju()){
-                if(grupaZaDigitalizacijuRepository.findById(id).isPresent()){
-                    grupeZaDigIds.add(id);
-                    // dodavanje iznioIzSkladistaKorsinikId u grupi za digitalizaciju
-                    GrupaZaDigitalizaciju grupaZaDigitalizaciju = grupaZaDigitalizacijuRepository.findById(id).get();
-                    grupaZaDigitalizaciju.setIznioIzSkladistaKorisnikId(postojeciKorisnik.getIdKorisnika());
-                    grupaZaDigitalizaciju.setStatusDigitalizacije(StatusDigitalizacije.NA_DIGITALIZACIJI);
-                    grupaZaDigitalizacijuRepository.save(grupaZaDigitalizaciju);
-                } else{
+        if (korisnik.getIznioIzSkladistaGrupeZaDigitalizaciju() != null) {
+            // Dohvati postojeću listu ili kreiraj novu ako je null
+            List<Long> grupeZaDigIds = postojeciKorisnik.getIznioIzSkladistaGrupeZaDigitalizaciju() != null
+                    ? new ArrayList<>(postojeciKorisnik.getIznioIzSkladistaGrupeZaDigitalizaciju())
+                    : new ArrayList<>();
+
+            for (Long id : korisnik.getIznioIzSkladistaGrupeZaDigitalizaciju()) {
+                if (grupaZaDigitalizacijuRepository.findById(id).isPresent()) {
+                    // Provjeri da li ID već postoji u listi
+                    if (!grupeZaDigIds.contains(id)) {
+                        grupeZaDigIds.add(id);
+                        // Ažuriraj grupu za digitalizaciju
+                        GrupaZaDigitalizaciju grupaZaDigitalizaciju = grupaZaDigitalizacijuRepository.findById(id).get();
+                        grupaZaDigitalizaciju.setIznioIzSkladistaKorisnikId(postojeciKorisnik.getIdKorisnika());
+                        grupaZaDigitalizaciju.setStatusDigitalizacije(StatusDigitalizacije.NA_DIGITALIZACIJI);
+                        grupaZaDigitalizacijuRepository.save(grupaZaDigitalizaciju);
+                    }
+                } else {
                     throw new IllegalArgumentException("Nepostojeca grupa za digitalizaciju!");
                 }
             }
             postojeciKorisnik.setIznioIzSkladistaGrupeZaDigitalizaciju(grupeZaDigIds);
         }
-        if(korisnik.getVratioUSkladisteGrupeZaDigitalizaciju() != null){
-            List<Long> grupeZaDigIds = new ArrayList<>();
-            for(Long id: korisnik.getVratioUSkladisteGrupeZaDigitalizaciju()){
-                if(grupaZaDigitalizacijuRepository.findById(id).isPresent()){
-                    grupeZaDigIds.add(id);
-                    // dodavanje vratioUSkladisteKorisnikId u grupi za digitalizaciju
-                    GrupaZaDigitalizaciju grupaZaDigitalizaciju = grupaZaDigitalizacijuRepository.findById(id).get();
-                    grupaZaDigitalizaciju.setVratioUSkladisteKorisnikId(postojeciKorisnik.getIdKorisnika());
-                    grupaZaDigitalizaciju.setStatusDigitalizacije(StatusDigitalizacije.ZAVRSENO);
-                    grupaZaDigitalizaciju.setVrijemeZavrsetka(LocalDateTime.now());
-                    grupaZaDigitalizacijuRepository.save(grupaZaDigitalizaciju);
-                } else{
+        if (korisnik.getVratioUSkladisteGrupeZaDigitalizaciju() != null) {
+            // Dohvati postojeću listu ili kreiraj novu ako je null
+            List<Long> grupeZaDigIds = postojeciKorisnik.getVratioUSkladisteGrupeZaDigitalizaciju() != null
+                    ? new ArrayList<>(postojeciKorisnik.getVratioUSkladisteGrupeZaDigitalizaciju())
+                    : new ArrayList<>();
+
+            for (Long id : korisnik.getVratioUSkladisteGrupeZaDigitalizaciju()) {
+                if (grupaZaDigitalizacijuRepository.findById(id).isPresent()) {
+                    // Provjeri da li ID već postoji u listi
+                    if (!grupeZaDigIds.contains(id)) {
+                        grupeZaDigIds.add(id);
+                        // Ažuriraj grupu za digitalizaciju
+                        GrupaZaDigitalizaciju grupaZaDigitalizaciju = grupaZaDigitalizacijuRepository.findById(id).get();
+                        grupaZaDigitalizaciju.setVratioUSkladisteKorisnikId(postojeciKorisnik.getIdKorisnika());
+                        grupaZaDigitalizaciju.setStatusDigitalizacije(StatusDigitalizacije.ZAVRSENO);
+                        grupaZaDigitalizaciju.setVrijemeZavrsetka(LocalDateTime.now());
+                        grupaZaDigitalizacijuRepository.save(grupaZaDigitalizaciju);
+                    }
+                } else {
                     throw new IllegalArgumentException("Nepostojeca grupa za digitalizaciju!");
                 }
             }
@@ -128,5 +142,7 @@ public class KorisnikServiceImpl implements KorisnikService {
         }
 
         return korisnikRepository.save(postojeciKorisnik);
+
     }
+
 }
