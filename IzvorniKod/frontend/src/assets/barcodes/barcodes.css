@@ -225,4 +225,8 @@
   .barcode-grouped {
     max-height: 35vh !important;
   }
+
+  .barcode-btns button {
+    width: 35%;
+  }
 }
