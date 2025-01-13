@@ -115,6 +115,10 @@
   width: 50%;
 }
 
+#digit:hover {
+  background-color: #5a6268;
+}
+
 /*----------------------Responzivnost---------------------------*/
 @media (max-width: 1024px) {
   .barcode-list-container {

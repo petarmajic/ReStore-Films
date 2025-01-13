@@ -222,7 +222,7 @@ const Arhiva = () => {
         (sum, b) => sum + durationToSeconds(b.duration),
         0
       );
-      const title = `Grupa ${groupes[index]}: ${secondsToDuration(
+      const title = `Group ${groupes[index]}: ${secondsToDuration(
         totalDuration
       )}`;
       groupedBarcodes[title] = group;
@@ -352,16 +352,16 @@ const Arhiva = () => {
 
   return (
     <Layout>
-      <div className="barcode-main">
+      <div className="archive-main">
         <img
-          className="barcode-bg-image"
+          className="archive-bg-image"
           src={pozadina}
           alt="background picture"
         ></img>
-        <div className="barcode-list-container">
-          <div className="barcode-scanned">
-            <div className="left-title">Arhiva barcodes</div>
-            <div className="left-list">
+        <div className="archive-list-container">
+          <div className="archive-scanned">
+            <div className="left-archive-title">Barcodes archive</div>
+            <div className="left-archive-list">
               <ul>
                 {mergedBarcodes.map((barcode, index) => (
                   <li key={index}>
@@ -375,23 +375,23 @@ const Arhiva = () => {
                 ))}
               </ul>
             </div>
-            <p className="total-duration">
+            <p className="archive-total-duration">
               Total duration: {calculateTotalDuration()}
             </p>
             {error && <p style={{ color: "red" }}>{error}</p>}
-            <div className="barcode-btns">
+            <div className="archive-btns">
               <button onClick={handleClearBarcodes}>Clear</button>
-              <button onClick={handleLoadPDF}>Load PDF</button>
+              <button onClick={handleLoadPDF}>Load</button>
               <button onClick={handleStorePDF}>Archive</button>
             </div>
           </div>
 
-          <div className="barcode-grouped">
-            <div className="right-title">PDF barcodes</div>
-            <div className="grouped-list">
+          <div className="archive-grouped">
+            <div className="right-archive-title">PDF Barcodes</div>
+            <div className="grouped-archive-list">
               {Object.keys(groupedBarcodes).map((groupKey) => (
-                <div className="wrap-group">
-                  <p className="group-key">{groupKey}</p>
+                <div className="archive-wrap-group">
+                  <p className="archive-group-key">{groupKey}</p>
                   <div>
                     <ul>
                       {groupedBarcodes[groupKey].map((barcode, index) => (
