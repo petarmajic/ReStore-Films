@@ -25,8 +25,7 @@
 .btn-home {
   background-color: #3a3a3a;
   box-shadow: 0.5rem 0.5rem 1rem rgba(0, 0, 0, 0.2);
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  display: flex;
   justify-content: space-evenly;
   justify-items: center;
   align-items: center;
@@ -79,7 +78,7 @@
 /*----------------------Responzivnost---------------------------*/
 @media (max-width: 1024px) and (min-height: 1023px) {
   .btn-home {
-    grid-template-columns: repeat(2, 1fr);
+    flex-direction: column;
     gap: 1.5rem;
     padding: 1.5rem;
     font-size: 1.1rem;
@@ -105,7 +104,7 @@
 
 @media (max-width: 480px) {
   .btn-home {
-    grid-template-columns: 1fr;
+    flex-direction: column;
     padding: 1.25rem;
     font-size: 0.95rem;
     gap: 1.5rem;

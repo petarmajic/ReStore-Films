@@ -338,21 +338,23 @@ const BarcodeScanner = () => {
                   <p>Barcode: {scannedData}</p>
                   {error && <p style={{ color: "red" }}>{error}</p>}
                 </div>
+                <div className="error-div">
+                  {displayInputFile && (
+                    <div className="input-div">
+                      <input
+                        type="file"
+                        accept=".xml"
+                        onChange={handleXmlFileChange}
+                        id="file-upload"
+                      />
+                    </div>
+                  )}
+                </div>
                 <div className="fetch-btn">
                   {/*<button className="button-film" onClick={handleFetchFilmData}>
                     Fetch
                   </button>*/}
                   <button onClick={handleBarcodesClick}>List</button>
-                  {displayInputFile && (
-                    <div>
-                      <input
-                        type="file"
-                        accept=".xml"
-                        onChange={handleXmlFileChange}
-                      />
-                      <p>XML file</p>
-                    </div>
-                  )}
                   <button onClick={handleManualEntry}>Manual input</button>
                 </div>
               </div>

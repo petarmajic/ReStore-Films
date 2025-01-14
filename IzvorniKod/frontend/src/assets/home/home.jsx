@@ -19,8 +19,8 @@ export default function Home() {
   const account = accounts[0];
   let userName = account?.name ?? null;
   let userEmail = account?.username ?? null;
-  //const { korisnikUloga } = useContext(LayoutContext);
-  const korisnikUloga = "ADMINISTRATOR";
+  const { korisnikUloga } = useContext(LayoutContext);
+  //const korisnikUloga = "DJELATNIK";
   const handleScannerClick = () => {
     navigate("/scanner");
   };
@@ -57,8 +57,7 @@ export default function Home() {
             alt="background picture"
           ></img>
           <div className="btn-home">
-            {(korisnikUloga === "DJELATNIK" ||
-              korisnikUloga === "ADMINISTRATOR") && (
+            {korisnikUloga === "DJELATNIK" && (
               <>
                 <div className="scanner-list">
                   <button
@@ -95,8 +94,7 @@ export default function Home() {
                 </div>
               </>
             )}
-            {(korisnikUloga === "VODITELJ" ||
-              korisnikUloga === "ADMINISTRATOR") && (
+            {korisnikUloga === "VODITELJ" && (
               <>
                 <div className="scanner-list">
                   <button onClick={handleDigitalizacijaClick}>
@@ -118,14 +116,16 @@ export default function Home() {
                     Employees
                   </button>
                 </div>
-                {korisnikUloga === "ADMINISTRATOR" && (
-                  <div className="scanner-list">
-                    <button onClick={handleKorisniciClick}>
-                      <img className="scan-img" src={userPng} alt="users"></img>
-                      Users
-                    </button>
-                  </div>
-                )}
+              </>
+            )}
+            {korisnikUloga === "ADMINISTRATOR" && (
+              <>
+                <div className="scanner-list">
+                  <button onClick={handleKorisniciClick}>
+                    <img className="scan-img" src={userPng} alt="users"></img>
+                    Users
+                  </button>
+                </div>
               </>
             )}
           </div>

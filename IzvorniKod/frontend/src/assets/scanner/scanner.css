@@ -133,10 +133,38 @@
   border-radius: 0.5rem;
 }
 
+.input-div {
+  width: 40%;
+}
+
+.error-div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+input[type="file"]::file-selector-button {
+  display: block;
+  width: 100%;
+  border-radius: 0.5rem;
+  background-color: #6c757d;
+  color: #ededed;
+  border: none;
+  cursor: pointer;
+}
+
+input[type="file"]::file-selector-button:hover {
+  background-color: #5a6268;
+}
+
 /*----------------------Responzivnost---------------------------*/
 @media (max-width: 1024px) {
   .scan-container {
     flex-direction: column;
+    overflow-y: auto;
+    height: auto;
+    min-height: 75vh;
+    margin-bottom: 10vh;
     padding: 0.5rem;
   }
 
@@ -270,6 +298,10 @@
 @media (max-width: 480px) {
   .scan-container {
     flex-direction: column;
+    overflow-y: auto;
+    height: auto;
+    min-height: 75vh;
+    margin-bottom: 10vh;
     padding: 0.5rem;
   }
 
@@ -331,5 +363,9 @@
 
   button {
     align-self: center;
+  }
+
+  .input-div {
+    width: 50%;
   }
 }
