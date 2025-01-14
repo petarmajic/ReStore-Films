@@ -147,9 +147,11 @@ const BarcodeScanner = () => {
               porijekloZemljaProizvodnje: xmlDoc.getElementsByTagName(
                 "Porijeklo_ZemljaProizvodnje"
               )[0].childNodes[0].nodeValue,
-              godinaProizvodnje:
+              godinaProizvodnje: parseInt(
                 xmlDoc.getElementsByTagName("GodinaProizvodnje")[0]
                   .childNodes[0].nodeValue,
+                10
+              ),
               duration: duration,
             };
 
