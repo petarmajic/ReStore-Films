@@ -300,7 +300,7 @@ const Arhiva = () => {
             .replace(/Č/g, "C")
             .replace(/Ć/g, "C")
             .replace(/č/g, "c")
-            .replace(/ć/g, "c")}${barcode.part} - ${barcode.duration}`;
+            .replace(/ć/g, "c")} - ${barcode.duration}`;
           pdfDoc.text(
             text,
             10,

@@ -110,7 +110,7 @@ const KorisniciList = () => {
     korisnici.forEach((korisnici, index) => {
       doc.line(10, 41 + index * 10, 200, 41 + index * 10); // linija između redova
     });
-    doc.save("statistika_djelatnika.pdf");
+    doc.save("korisnici.pdf");
   };
 
   return (

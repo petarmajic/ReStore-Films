@@ -67,9 +67,11 @@ const App = () => {
             // Koda za prikaz VODITELJA
             <>
               <Route path="/home" element={<Home />} />
+              {/*
               <Route path="/scanner" element={<Scanner />} />
               <Route path="/barcodes" element={<Barcodes />} />
               <Route path="/arhiva" element={<Arhiva />} />
+              */}
               <Route path="/digitalizacija" element={<Digitalizacija />} />
               <Route path="/djelatnici" element={<Djelatnici />} />
               <Route path="*" element={<Navigate to="/home" replace />} />
@@ -78,12 +80,15 @@ const App = () => {
             // Koda za prikaz ADMINISTRATORA
             <>
               <Route path="/home" element={<Home />} />
+              {/*
               <Route path="/scanner" element={<Scanner />} />
               <Route path="/barcodes" element={<Barcodes />} />
               <Route path="/arhiva" element={<Arhiva />} />
               <Route path="/digitalizacija" element={<Digitalizacija />} />
-              <Route path="/korisnici" element={<Korisnici />} />
               <Route path="/djelatnici" element={<Djelatnici />} />
+              */}
+              <Route path="/korisnici" element={<Korisnici />} />
+
               <Route path="*" element={<Navigate to="/home" replace />} />
             </>
           ) : (

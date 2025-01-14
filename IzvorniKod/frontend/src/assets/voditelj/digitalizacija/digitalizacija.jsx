@@ -138,7 +138,7 @@ const Barcodes = () => {
     };
 
     try {
-      const response = await axios.put(
+      const response = await axios.patch(
         `${BACKEND_API_URL}/api/filmskaTraka/update/${selectedFilm.id}`,
         updatePayload
       );
