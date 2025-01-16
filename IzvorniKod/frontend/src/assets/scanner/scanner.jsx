@@ -180,6 +180,7 @@ const BarcodeScanner = () => {
                   filmTitle,
                   duration,
                   database: false,
+                  part: "",
                 },
               ];
 
@@ -304,6 +305,7 @@ const BarcodeScanner = () => {
           filmTitle: originalniNaslov,
           duration: response.data.duration || duration,
           database: false,
+          part: "",
         },
       ];
 
