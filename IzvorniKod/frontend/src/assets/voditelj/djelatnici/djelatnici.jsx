@@ -24,7 +24,8 @@ const Djelatnici = () => {
       try {
         const response = await axios.get(`${BACKEND_API_URL}/api/korisnik/all`);
         const filteredKorisnici = response.data.filter(
-          (korisnik) => korisnik.uloga === "DJELATNIK"
+          (korisnik) =>
+            korisnik.uloga === "DJELATNIK" || korisnik.uloga === "VODITELJ"
         );
         const korisniciSaStatistikom = await Promise.all(
           filteredKorisnici.map(async (korisnik) => {

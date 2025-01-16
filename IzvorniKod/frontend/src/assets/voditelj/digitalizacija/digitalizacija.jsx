@@ -22,6 +22,7 @@ const Barcodes = () => {
   const [statusi, setStatusi] = useState({});
   const [grupeZaDigitalizaciju, setGrupeZaDigitalizaciju] = useState([]);
   const [filmoviUGrupi, setfilmoviUGrupi] = useState({});
+  const [selectedFilter, setSelectedFilter] = useState("all");
 
   const account = accounts[0];
   const BACKEND_API_URL = import.meta.env.VITE_BACKEND_API_URL;
@@ -285,21 +286,36 @@ const Barcodes = () => {
               <strong>On digitalization:</strong> {statusi.NA_DIGITALIZACIJI}
               &nbsp;&nbsp;&nbsp;&nbsp;
               <strong>Finished:</strong> {statusi.ZAVRSENO}
+              <select
+                value={selectedFilter}
+                onChange={(e) => setSelectedFilter(e.target.value)}
+              >
+                <option value="all">All</option>
+                <option value="NA_DIGITALIZACIJI">On Digitalization</option>
+                <option value="ZAVRSENO">Finished</option>
+              </select>
               <ul>
-                {grupeZaDigitalizaciju.map((grupa, index) => (
-                  <li key={index}>
-                    <strong>Group ID: {grupa.idGrupe} - Status:</strong>{" "}
-                    {grupa.statusDigitalizacije}
-                    <br />
-                    <strong>Movie group:</strong>
-                    <ul>
-                      {filmoviUGrupi[grupa.idGrupe] &&
-                        filmoviUGrupi[grupa.idGrupe].map((film, index) => (
-                          <li key={index}>{film}</li>
-                        ))}
-                    </ul>
-                  </li>
-                ))}
+                {grupeZaDigitalizaciju
+                  .filter((grupa) =>
+                    selectedFilter === "all"
+                      ? true
+                      : grupa.statusDigitalizacije === selectedFilter
+                  )
+                  .sort((a, b) => a.idGrupe - b.idGrupe)
+                  .map((grupa, index) => (
+                    <li key={index}>
+                      <strong>Group ID: {grupa.idGrupe} - Status:</strong>{" "}
+                      {grupa.statusDigitalizacije}
+                      <br />
+                      <strong>Movie group:</strong>
+                      <ul>
+                        {filmoviUGrupi[grupa.idGrupe] &&
+                          filmoviUGrupi[grupa.idGrupe].map((film, index) => (
+                            <li key={index}>{film}</li>
+                          ))}
+                      </ul>
+                    </li>
+                  ))}
               </ul>
             </div>
             <div className="digit-btns">

@@ -1,5 +1,5 @@
 import "./navigation.css";
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useIsAuthenticated } from "@azure/msal-react";
 import { SignInButton } from "../../SignInButton";
@@ -16,6 +16,7 @@ const Navigation = () => {
   const account = accounts[0];
   let userEmail = account?.username ?? null;
   const { korisnikUloga, setKorisnikUloga } = useContext(LayoutContext);
+  const [korisnik, setKorisnik] = useState(null);
 
   const handleHomeClick = () => {
     {
@@ -26,20 +27,23 @@ const Navigation = () => {
     if (isAuthenticated) {
       const fetchKorisnik = async () => {
         try {
+          console.log("Dohvaćam korisnika...");
           const response = await axios.get(
             `${BACKEND_API_URL}/api/korisnik/${userEmail}`
           );
+          console.log("Korisnik dohvaćen:", response.data);
+          setKorisnik(response.data);
           setKorisnikUloga(response.data.uloga);
           console.log(
             `Korisnik: ${userEmail} postoji, uloga: ${korisnikUloga}`
           );
         } catch (error) {
-          console.error("Greška pri dohvatu korisnika:", error.response.data);
+          console.error("Greška pri dohvatu korisnika:", error.message);
         }
       };
       fetchKorisnik();
     }
-  }, []);
+  }, [isAuthenticated]);
 
   return (
     <nav className="navbar">
@@ -49,7 +53,42 @@ const Navigation = () => {
       </div>
       <div className="nav-title">ReStore-Films</div>
       <div className="nav-signout">
-        {isAuthenticated ? <SignOutButton /> : <SignInButton />}
+        {isAuthenticated ? (
+          <div className="user-info">
+            <button
+              className="username-button"
+              onMouseOver={(e) => {
+                e.target.classList.add("hover");
+              }}
+              onMouseOut={(e) => {
+                e.target.classList.remove("hover");
+              }}
+            >
+              {korisnik ? (
+                `${korisnik.ime} ${korisnik.prezime.charAt(0)}.`
+              ) : (
+                <span>Loading...</span>
+              )}
+              <span className="username-tooltip">
+                {korisnik ? (
+                  <>
+                    {korisnik.ime} {korisnik.prezime}
+                    <br />
+                    {korisnik.email}
+                    <br />
+                    {korisnik.uloga}
+                    <br />
+                    <SignOutButton />
+                  </>
+                ) : (
+                  <span>Loading...</span>
+                )}
+              </span>
+            </button>
+          </div>
+        ) : (
+          <SignInButton />
+        )}
       </div>
     </nav>
   );

@@ -1,6 +1,35 @@
 /* Import fonta */
 @import url("https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&display=swap");
 
+.username-button {
+  position: relative;
+  display: inline-block;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  color: #fff;
+  cursor: pointer;
+}
+
+
+.username-tooltip {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  padding: 10px;
+  visibility: hidden;
+  opacity: 0;
+  transition: visibility 0s, opacity 0.5s linear;
+  margin-right: 20px;
+}
+
+.username-button:hover .username-tooltip {
+  visibility: visible;
+  opacity: 1;
+}
+
+
+
 /* Navigacijska traka */
 .navbar {
   position: fixed;
