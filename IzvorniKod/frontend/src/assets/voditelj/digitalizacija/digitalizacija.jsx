@@ -61,30 +61,10 @@ const Barcodes = () => {
         const grupe = response.data.map((grupa) => ({
           idGrupe: grupa.idGrupe,
           statusDigitalizacije: grupa.statusDigitalizacije,
+          filmovi: grupa.filmskeTrake,
         }));
 
         setGrupeZaDigitalizaciju(grupe);
-
-        grupe.forEach((grupa) => {
-          const fetchfilmoviUGrupi = async () => {
-            try {
-              const response = await axios.get(
-                `${BACKEND_API_URL}/api/grupaZaDigitalizaciju/getFilmsInGroup/${grupa.idGrupe}`
-              );
-
-              const filmi = response.data;
-
-              setfilmoviUGrupi((prevfilmoviUGrupi) => ({
-                ...prevfilmoviUGrupi,
-                [grupa.idGrupe]: filmi,
-              }));
-            } catch (error) {
-              console.error(error);
-            }
-          };
-
-          fetchfilmoviUGrupi();
-        });
       } catch (error) {
         console.error(error);
       }
@@ -309,8 +289,8 @@ const Barcodes = () => {
                       <br />
                       <strong>Movie group:</strong>
                       <ul>
-                        {filmoviUGrupi[grupa.idGrupe] &&
-                          filmoviUGrupi[grupa.idGrupe].map((film, index) => (
+                        {grupa.filmovi &&
+                          grupa.filmovi.map((film, index) => (
                             <li key={index}>{film}</li>
                           ))}
                       </ul>

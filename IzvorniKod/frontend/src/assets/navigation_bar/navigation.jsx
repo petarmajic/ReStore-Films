@@ -53,7 +53,7 @@ const Navigation = () => {
       <div className="nav-signout">
         {isAuthenticated ? (
           <div className="user-info">
-            <button
+            <div
               className="username-button"
               onMouseOver={(e) => {
                 e.target.classList.add("hover");
@@ -67,7 +67,7 @@ const Navigation = () => {
               ) : (
                 <span>...</span>
               )}
-              <span className="username-tooltip">
+              <div className="username-tooltip">
                 {korisnik ? (
                   <>
                     {korisnik.ime} {korisnik.prezime}
@@ -81,8 +81,8 @@ const Navigation = () => {
                 ) : (
                   <span>Loading...</span>
                 )}
-              </span>
-            </button>
+              </div>
+            </div>
           </div>
         ) : (
           <SignInButton />
