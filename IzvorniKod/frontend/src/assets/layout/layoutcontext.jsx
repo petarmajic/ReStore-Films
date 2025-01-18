@@ -5,6 +5,7 @@ const LayoutContext = createContext();
 function LayoutProvider({ children }) {
   const [scannedBarcodes, setScannedBarcodes] = useState([]);
   const [korisnikUloga, setKorisnikUloga] = useState(null);
+  const [korisnik, setKorisnik] = useState(null);
 
   return (
     <LayoutContext.Provider
@@ -13,6 +14,8 @@ function LayoutProvider({ children }) {
         setScannedBarcodes,
         korisnikUloga,
         setKorisnikUloga,
+        korisnik,
+        setKorisnik,
       }}
     >
       {children}

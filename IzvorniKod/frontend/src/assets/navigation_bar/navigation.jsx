@@ -16,7 +16,7 @@ const Navigation = () => {
   const account = accounts[0];
   let userEmail = account?.username ?? null;
   const { korisnikUloga, setKorisnikUloga } = useContext(LayoutContext);
-  const [korisnik, setKorisnik] = useState(null);
+  const { korisnik, setKorisnik } = useContext(LayoutContext);
 
   const handleHomeClick = () => {
     {
@@ -24,26 +24,24 @@ const Navigation = () => {
     }
   };
   useEffect(() => {
-    if (isAuthenticated) {
-      const fetchKorisnik = async () => {
-        try {
-          console.log("Dohvaćam korisnika...");
-          const response = await axios.get(
-            `${BACKEND_API_URL}/api/korisnik/${userEmail}`
-          );
-          console.log("Korisnik dohvaćen:", response.data);
-          setKorisnik(response.data);
-          setKorisnikUloga(response.data.uloga);
-          console.log(
-            `Korisnik: ${userEmail} postoji, uloga: ${korisnikUloga}`
-          );
-        } catch (error) {
-          console.error("Greška pri dohvatu korisnika:", error.message);
-        }
-      };
-      fetchKorisnik();
-    }
+    const fetchKorisnik = async () => {
+      try {
+        const response = await axios.get(
+          `${BACKEND_API_URL}/api/korisnik/${userEmail}`
+        );
+        setKorisnikUloga(response.data.uloga);
+        setKorisnik(response.data);
+      } catch (error) {
+        console.error("Greška pri dohvatu korisnika:", error.message);
+      }
+    };
+    fetchKorisnik();
   }, [isAuthenticated]);
+  useEffect(() => {
+    console.log(
+      `Korisnik: ${userEmail} postoji, uloga navigation.jsx: ${korisnikUloga}`
+    );
+  }, [korisnikUloga]);
 
   return (
     <nav className="navbar">
@@ -67,7 +65,7 @@ const Navigation = () => {
               {korisnik ? (
                 `${korisnik.ime} ${korisnik.prezime.charAt(0)}.`
               ) : (
-                <span>Loading...</span>
+                <span>...</span>
               )}
               <span className="username-tooltip">
                 {korisnik ? (
@@ -76,7 +74,7 @@ const Navigation = () => {
                     <br />
                     {korisnik.email}
                     <br />
-                    {korisnik.uloga}
+                    {korisnikUloga}
                     <br />
                     <SignOutButton />
                   </>

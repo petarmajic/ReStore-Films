@@ -12,15 +12,20 @@ import userPng from "../images/user.png";
 import { useMsal } from "@azure/msal-react";
 import { LayoutContext } from "../layout/layoutcontext";
 import axios from "axios";
+import { useIsAuthenticated } from "@azure/msal-react";
 
-export default function Home() {
+const Home = () => {
   const { accounts } = useMsal();
   const navigate = useNavigate();
   const account = accounts[0];
   let userName = account?.name ?? null;
   let userEmail = account?.username ?? null;
-  const { korisnikUloga } = useContext(LayoutContext);
+  const { korisnikUloga, setKorisnikUloga } = useContext(LayoutContext);
   //const korisnikUloga = "DJELATNIK";
+
+  const isAuthenticated = useIsAuthenticated();
+  const BACKEND_API_URL = import.meta.env.VITE_BACKEND_API_URL;
+
   const handleScannerClick = () => {
     navigate("/scanner");
   };
@@ -44,8 +49,8 @@ export default function Home() {
   const apiUrl = import.meta.env.VITE_APP_API_URL;
   const backendUrl = import.meta.env.VITE_BACKEND_API_URL;
 
-  console.log("API URL:", apiUrl);
-  console.log("Backend API URL:", backendUrl);
+  //console.log("API URL:", apiUrl);
+  //console.log("Backend API URL:", backendUrl);
 
   return (
     <>
@@ -133,4 +138,5 @@ export default function Home() {
       </Layout>
     </>
   );
-}
+};
+export default Home;
