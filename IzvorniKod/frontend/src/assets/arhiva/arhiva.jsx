@@ -8,48 +8,50 @@ import jsPDF from "jspdf";
 import { getDocument, GlobalWorkerOptions } from "pdfjs-dist";
 GlobalWorkerOptions.workerSrc = "/assets/pdf.worker.min.mjs";
 import { useMsal } from "@azure/msal-react";
+import axios from "axios";
 
 const Arhiva = () => {
   const { scannedBarcodes, setScannedBarcodes } = useContext(LayoutContext);
   const [selectedBarcodes, setSelectedBarcodes] = useState({});
   const [arhivaBarcodes, setArhivaBarcodes] = useState([]);
   const [mergedBarcodes, setMergedBarcodes] = useState([]);
+  const [groupes, setGroupes] = useState([]);
+  const [error, setError] = useState(null);
 
   const navigate = useNavigate();
   const [selectedGroups, setSelectedGroups] = useState({});
   const { instance, accounts } = useMsal();
-
+  const [korisnikId, setKorisnikId] = useState(null);
+  const BACKEND_API_URL = import.meta.env.VITE_BACKEND_API_URL;
   const account = accounts[0];
-  let userName = account?.name ?? null;
-  let userEmail = account?.username ?? null;
-  userName = userName
-    .replace(/č/g, "C")
-    .replace(/ć/g, "C")
-    .replace(/Č/g, "C")
-    .replace(/Ć/g, "C");
-  userEmail = userEmail
-    .replace(/č/g, "C")
-    .replace(/ć/g, "C")
-    .replace(/Č/g, "C")
-    .replace(/Ć/g, "C");
+  let userName =
+    account?.name?.replace(/[ČĆ]/g, "C").replace(/[čć]/g, "c") ?? null;
+  let userEmail =
+    account?.username?.replace(/[ČĆ]/g, "C").replace(/[čć]/g, "c") ?? null;
 
-  const handleScannerClick = () => {
-    navigate("/home");
-  };
   const handleClearBarcodes = () => {
     setArhivaBarcodes([]);
   };
-  const handleSelectGroup = (groupKey) => {
-    const newSelectedGroups = { ...selectedGroups };
-    if (newSelectedGroups[groupKey]) {
-      delete newSelectedGroups[groupKey];
-    } else {
-      newSelectedGroups[groupKey] = true;
-    }
-    setSelectedGroups(newSelectedGroups);
-  };
+  useEffect(() => {
+    const fetchKorisnikData = async () => {
+      try {
+        const url = `${BACKEND_API_URL}/api/korisnik/${userEmail}`;
+        const response = await axios.get(url);
+        const korisnikData = response.data;
+        if (korisnikData) {
+          setKorisnikId(korisnikData.idKorisnika);
+        } else {
+          console.log("No korisnik data found");
+        }
+      } catch (error) {
+        console.error("Error fetching korisnikID:", error);
+      }
+    };
+    fetchKorisnikData();
+  }, []);
 
   const handleLoadPDF = () => {
+    setGroupes([]);
     const pdfFileInput = document.createElement("input");
     pdfFileInput.type = "file";
     pdfFileInput.accept = "application/pdf";
@@ -111,6 +113,13 @@ const Arhiva = () => {
                 duration: match[4].trim(),
               });
             }
+            const groupNumberMatch = line.match(/Grupa (\d+)/);
+            if (groupNumberMatch) {
+              const groupNumber = parseInt(groupNumberMatch[1], 10);
+              // Update the groupes state with the group number
+              setGroupes((prevGroupes) => [...prevGroupes, groupNumber]);
+            }
+            console.log("Groupes:", groupes);
           });
 
           console.log("Parsirani filmovi:", filmovi);
@@ -169,33 +178,7 @@ const Arhiva = () => {
     ].join(":");
   };
   const mergeBarcodes = (barcodes) => {
-    const barcodeMap = new Map();
-
-    barcodes.forEach((barcode) => {
-      const match = barcode.filmTitle.match(/^(.*?)(?: - \d+\. dio)$/);
-      const baseFilmTitle = match ? match[1].trim() : barcode.filmTitle;
-
-      if (barcodeMap.has(barcode.barcode)) {
-        const existing = barcodeMap.get(barcode.barcode);
-
-        const newDuration =
-          durationToSeconds(existing.duration) +
-          durationToSeconds(barcode.duration);
-
-        barcodeMap.set(barcode.barcode, {
-          ...existing,
-          filmTitle: baseFilmTitle,
-          duration: secondsToDuration(newDuration),
-        });
-      } else {
-        barcodeMap.set(barcode.barcode, {
-          ...barcode,
-          filmTitle: baseFilmTitle,
-        });
-      }
-    });
-
-    return Array.from(barcodeMap.values());
+    return arhivaBarcodes;
   };
   //
   //
@@ -239,7 +222,9 @@ const Arhiva = () => {
         (sum, b) => sum + durationToSeconds(b.duration),
         0
       );
-      const title = `PDF ${index + 1}: ${secondsToDuration(totalDuration)}`;
+      const title = `Group ${groupes[index]}: ${secondsToDuration(
+        totalDuration
+      )}`;
       groupedBarcodes[title] = group;
     });
 
@@ -257,90 +242,126 @@ const Arhiva = () => {
   }, [arhivaBarcodes]);
   console.log(mergedBarcodes);
 
-  const handleStorePDF = () => {
-    console.log("Ime i email korisnika:", userName, userEmail);
-    setSelectedBarcodes({});
-    Object.keys(selectedGroups).forEach((groupKey) => {
-      selectedBarcodes[groupKey] = groupedBarcodes[groupKey];
-    });
-    // Generirajte PDF dokument sa odabranim filmovima
-    const pdfDoc = new jsPDF();
-    Object.keys(selectedBarcodes).forEach((groupKey, index) => {
-      if (index > 0) {
-        pdfDoc.addPage();
-      }
-      const date = new Date();
-      const dateString =
-        date.toLocaleDateString() + " " + date.toLocaleTimeString();
-      pdfDoc.text(`${userName} (${userEmail})`, 10, 10, null, null, "left");
-      pdfDoc.text(dateString, 180, 10, null, null, "right");
-      pdfDoc.text(
-        "Popis filmova vracenih u arhivu:",
-        10,
-        20,
-        null,
-        null,
-        "left"
-      );
-      const groupDuration = selectedBarcodes[groupKey].reduce(
-        (acc, barcode) => {
-          const durationInSeconds = durationToSeconds(barcode.duration);
-          return acc + durationInSeconds;
+  const handleStorePDF = async () => {
+    console.log("Ime i email korisnika:", userName, userEmail, korisnikId);
+    try {
+      // Slanje zahtjeva na backend
+      const response = await axios.patch(
+        `${BACKEND_API_URL}/api/korisnik/update/ADMINISTRATOR/${userEmail}`,
+        {
+          vratioUSkladisteGrupeZaDigitalizaciju: groupes,
         },
-        0
+        {
+          headers: { "Content-Type": "application/json" },
+        }
       );
-      const groupDurationText = secondsToDuration(groupDuration);
-      pdfDoc.text(
-        `Grupa ${index + 1} (Ukupno trajanje: ${groupDurationText})`,
-        10,
-        30
-      );
-      selectedBarcodes[groupKey].forEach((barcode, barcodeIndex) => {
-        const text = `${barcodeIndex + 1}. ${
-          barcode.barcode
-        } - ${barcode.filmTitle.replace(/č/g, "c").replace(/ć/g, "c")} - ${
-          barcode.duration
-        }`;
-        pdfDoc.text(text, 10, 40 + barcodeIndex * 10, null, null, "left", true);
+      setSelectedBarcodes({});
+      Object.keys(selectedGroups).forEach((groupKey) => {
+        selectedBarcodes[groupKey] = groupedBarcodes[groupKey];
       });
-      pdfDoc.text(`Potpis: ___________`, 180, 280, null, null, "right");
-    });
-    const pdfBlob = new Blob([pdfDoc.output("blob")], {
-      type: "application/pdf",
-    });
-    const pdfUrl = URL.createObjectURL(pdfBlob);
-    const link = document.createElement("a");
-    link.href = pdfUrl;
-    link.download = "arhiva.pdf";
-    link.click();
-    URL.revokeObjectURL(pdfUrl);
+      // Generirajte PDF dokument sa odabranim filmovima
+      const pdfDoc = new jsPDF();
+      Object.keys(selectedBarcodes).forEach((groupKey, index) => {
+        if (index > 0) {
+          pdfDoc.addPage();
+        }
+        const date = new Date();
+        const dateString =
+          date.toLocaleDateString() + " " + date.toLocaleTimeString();
+        pdfDoc.text(`${userName} (${userEmail})`, 10, 10, null, null, "left");
+        pdfDoc.text(dateString, 180, 10, null, null, "right");
+        pdfDoc.text(
+          "Popis filmova vracenih u arhivu:",
+          10,
+          20,
+          null,
+          null,
+          "left"
+        );
+        const groupDuration = selectedBarcodes[groupKey].reduce(
+          (acc, barcode) => {
+            const durationInSeconds = durationToSeconds(barcode.duration);
+            return acc + durationInSeconds;
+          },
+          0
+        );
 
-    const selectedBarcodesArray = Object.values(selectedBarcodes);
-    const newScannedBarcodes = mergedBarcodes.filter((barcode) => {
-      return !selectedBarcodesArray.some((group) => {
-        return group.some((selectedBarcode) => {
-          return selectedBarcode.barcode === barcode.barcode;
+        const groupDurationText = secondsToDuration(groupDuration);
+        pdfDoc.text(
+          `Grupa: ${groupes[index]} (Ukupno trajanje: ${groupDurationText})`,
+          10,
+          30
+        );
+
+        selectedBarcodes[groupKey].forEach((barcode, barcodeIndex) => {
+          const text = `${barcodeIndex + 1}. ${
+            barcode.barcode
+          } - ${barcode.filmTitle
+            .replace(/Č/g, "C")
+            .replace(/Ć/g, "C")
+            .replace(/č/g, "c")
+            .replace(/ć/g, "c")} - ${barcode.duration}`;
+          pdfDoc.text(
+            text,
+            10,
+            40 + barcodeIndex * 10,
+            null,
+            null,
+            "left",
+            true
+          );
+        });
+        pdfDoc.text(`Potpis: ___________`, 180, 280, null, null, "right");
+      });
+      const pdfBlob = new Blob([pdfDoc.output("blob")], {
+        type: "application/pdf",
+      });
+      const pdfUrl = URL.createObjectURL(pdfBlob);
+      const link = document.createElement("a");
+      link.href = pdfUrl;
+      link.download = "arhiva.pdf";
+      link.click();
+      URL.revokeObjectURL(pdfUrl);
+
+      const selectedBarcodesArray = Object.values(selectedBarcodes);
+      const newScannedBarcodes = mergedBarcodes.filter((barcode) => {
+        return !selectedBarcodesArray.some((group) => {
+          return group.some((selectedBarcode) => {
+            return selectedBarcode.barcode === barcode.barcode;
+          });
         });
       });
-    });
-    setMergedBarcodes(newScannedBarcodes);
-    setArhivaBarcodes(newScannedBarcodes);
-    setSelectedBarcodes({});
-    setSelectedGroups({});
+      setMergedBarcodes(newScannedBarcodes);
+      setArhivaBarcodes(newScannedBarcodes);
+      setSelectedBarcodes({});
+      setSelectedGroups({});
+      setError(null);
+    } catch (error) {
+      console.error(`Greška kod slanja grupe`, error);
+      setError(`Greška kod slanja grupa`);
+    }
   };
+
+  useEffect(() => {
+    const newSelectedGroups = {};
+    Object.keys(groupedBarcodes).forEach((groupKey) => {
+      newSelectedGroups[groupKey] = true;
+    });
+    setSelectedGroups(newSelectedGroups);
+  }, [groupedBarcodes]);
 
   return (
     <Layout>
-      <div className="barcode-main">
+      <div className="archive-main">
         <img
-          className="barcode-bg-image"
+          className="archive-bg-image"
           src={pozadina}
           alt="background picture"
         ></img>
-        <div className="barcode-list-container">
-          <div className="barcode-scanned">
-            <div className="left-title">Arhiva barcodes</div>
-            <div className="left-list">
+        <div className="archive-list-container">
+          <div className="archive-scanned">
+            <div className="left-archive-title">Barcodes archive</div>
+            <div className="left-archive-list">
               <ul>
                 {mergedBarcodes.map((barcode, index) => (
                   <li key={index}>
@@ -354,35 +375,23 @@ const Arhiva = () => {
                 ))}
               </ul>
             </div>
-            <p className="total-duration">
+            <p className="archive-total-duration">
               Total duration: {calculateTotalDuration()}
             </p>
-            <div className="barcode-btns">
+            {error && <p style={{ color: "red" }}>{error}</p>}
+            <div className="archive-btns">
               <button onClick={handleClearBarcodes}>Clear</button>
-              <button onClick={handleScannerClick}>Home</button>
-              <button onClick={handleLoadPDF}>Load PDF</button>
+              <button onClick={handleLoadPDF}>Load</button>
               <button onClick={handleStorePDF}>Archive</button>
             </div>
           </div>
 
-          <div className="barcode-grouped">
-            <div className="right-title">PDF barcodes</div>
-            <div className="grouped-list">
+          <div className="archive-grouped">
+            <div className="right-archive-title">PDF Barcodes</div>
+            <div className="grouped-archive-list">
               {Object.keys(groupedBarcodes).map((groupKey) => (
-                <div className="wrap-group">
-                  <p className="group-key">{groupKey}</p>
-                  <input
-                    type="checkbox"
-                    checked={selectedGroups[groupKey]}
-                    onChange={() => handleSelectGroup(groupKey)}
-                    style={{
-                      fontSize: "16px",
-                      padding: "0 5px",
-                      border: "none",
-                      backgroundColor: "transparent",
-                      cursor: "pointer",
-                    }}
-                  />
+                <div className="archive-wrap-group">
+                  <p className="archive-group-key">{groupKey}</p>
                   <div>
                     <ul>
                       {groupedBarcodes[groupKey].map((barcode, index) => (

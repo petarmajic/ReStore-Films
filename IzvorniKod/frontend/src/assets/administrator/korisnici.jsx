@@ -12,6 +12,14 @@ const KorisniciList = () => {
   const [korisnici, setKorisnici] = useState([]);
   const BACKEND_API_URL = import.meta.env.VITE_BACKEND_API_URL;
 
+  const { instance, accounts } = useMsal();
+
+  const account = accounts[0];
+  let userName =
+    account?.name?.replace(/[ČĆ]/g, "C").replace(/[čć]/g, "c") ?? null;
+  let userEmail =
+    account?.username?.replace(/[ČĆ]/g, "C").replace(/[čć]/g, "c") ?? null;
+
   useEffect(() => {
     const fetchKorisnici = async () => {
       try {
@@ -55,33 +63,81 @@ const KorisniciList = () => {
     }
   };
 
+  const generatePdf = () => {
+    const doc = new jsPDF();
+    doc.setFontSize(18); // povećajte veličinu fonta
+    const date = new Date();
+    const dateString =
+      date.toLocaleDateString() + " " + date.toLocaleTimeString();
+    doc.text(`Administrator: ${userName} `, 10, 10, null, null, "left");
+    doc.text(dateString, 180, 10, null, null, "right");
+
+    doc.text("Popis korisnika:", 10, 20); // povećajte y koordinatu za 10
+
+    // Dodajte zaglavlje tablice
+    doc.setFontSize(14); // smanjite veličinu fonta za zaglavlje
+    doc.text("Ime i Prezime", 10, 30); // povećajte y koordinatu za 10
+    doc.text("Email", 80, 30); // povećajte y koordinatu za 10
+    doc.text("Uloga", 150, 30); // povećajte y koordinatu za 10
+
+    korisnici
+      .sort((a, b) => {
+        if (a.uloga === b.uloga) {
+          return a.ime.localeCompare(b.ime);
+        } else {
+          return a.uloga.localeCompare(b.uloga);
+        }
+      })
+      .forEach((korisnici, index) => {
+        doc.setFontSize(12);
+        doc.text(
+          `${korisnici.ime
+            .replace(/[ČĆ]/g, "C")
+            .replace(/[čć]/g, "c")} ${korisnici.prezime
+            .replace(/[ČĆ]/g, "C")
+            .replace(/[čć]/g, "c")}`,
+          10,
+          40 + index * 10 // povećajte y koordinatu za 10
+        );
+        doc.text(korisnici.email, 80, 40 + index * 10); // povećajte y koordinatu za 10
+        doc.text(
+          `${korisnici.uloga}`,
+          150,
+          40 + index * 10 // povećajte y koordinatu za 10
+        );
+      });
+    doc.line(10, 31, 200, 31); // linija između zaglavlja i podataka
+    korisnici.forEach((korisnici, index) => {
+      doc.line(10, 41 + index * 10, 200, 41 + index * 10); // linija između redova
+    });
+    doc.save("korisnici.pdf");
+  };
+
   return (
     <Layout>
-      <div className="barcode-main">
+      <div className="user-main">
         <img
-          className="barcode-bg-image"
+          className="user-bg-image"
           src={pozadina}
           alt="background picture"
         ></img>
-        <div className="barcode-list-container">
-          <div className="barcode-scanned">
-            <div className="left-title">Popis korisnika sustava</div>
-            <div className="left-list">
+        <div className="user-list-container">
+          <div className="user-list-wrapper">
+            <div className="user-title">System users list</div>
+            <div className="user-list">
               <div>
                 <ul>
                   {korisnici.map((korisnik, index) => (
-                    <li key={index} className="korisnik-item">
+                    <li key={index} className="user-item">
                       <strong>
                         {korisnik.ime} {korisnik.prezime}
-                      </strong>{" "}
-                      |<strong>Email:</strong> {korisnik.email} |
+                      </strong>
+                      {" ("}
+                      <strong>Email:</strong> {korisnik.email} {") "}
+                      <br></br>
                       <strong>Uloga:</strong>{" "}
-                      {korisnik.uloga ? korisnik.uloga : "Nema uloge"} |
-                      <strong>Statistika Digitalizacije:</strong>{" "}
-                      {korisnik.statistikaDigitalizacije
-                        ? "Postoji"
-                        : "Nema podataka"}
-                      {"   "}
+                      {korisnik.uloga ? korisnik.uloga : "Nema uloge"}
+                      <br></br>
                       <select
                         value={korisnik.uloga}
                         onChange={(event) =>
@@ -105,7 +161,10 @@ const KorisniciList = () => {
                 </ul>
               </div>
             </div>
-            <div className="barcode-btns"></div>
+            <div className="user-btns">
+              {" "}
+              <button onClick={() => generatePdf()}>Download</button>
+            </div>
           </div>
         </div>
       </div>

@@ -54,21 +54,21 @@ const BarcodeScanner = () => {
   }, [scannedData]);
 
   const handleFetchFilmData = async () => {
+    const existingBarcode = scannedBarcodes.find((barcode) => {
+      return typeof barcode === "object" && barcode.barcode === scannedData;
+    });
+
     if (scannedData) {
       try {
-        const BACKEND_API_URL = import.meta.env.VITE_BACKEND_API_URL;
-        const url = `${BACKEND_API_URL}/api/filmskaTrakaArhiva/${scannedData}`;
-        const response = await axios.get(url, {
-          headers: { "Content-Type": "application/json" },
-        });
-
-        console.log("Film data fetched:", response.data);
-
-        const existingBarcode = scannedBarcodes.find((barcode) => {
-          return typeof barcode === "object" && barcode.barcode === scannedData;
-        });
-
         if (!existingBarcode) {
+          const BACKEND_API_URL = import.meta.env.VITE_BACKEND_API_URL;
+          const url = `${BACKEND_API_URL}/api/filmskaTrakaArhiva/${scannedData}`;
+          const response = await axios.get(url, {
+            headers: { "Content-Type": "application/json" },
+          });
+
+          console.log("Film data fetched:", response.data);
+
           const updatedBarcodes = [
             ...scannedBarcodes,
             {
@@ -76,9 +76,28 @@ const BarcodeScanner = () => {
               filmTitle: response.data.originalniNaslov,
               duration: response.data.duration,
               database: true,
+              part: "",
             },
           ];
-
+          const newFilm = {
+            originalniNaslov: response.data.originalniNaslov,
+            jezikOriginala: response.data.jezikOriginala,
+            ton: response.data.ton,
+            porijekloZemljaProizvodnje:
+              response.data.porijekloZemljaProizvodnje,
+            godinaProizvodnje: response.data.godinaProizvodnje,
+            duration: response.data.duration,
+          };
+          axios
+            .post(`${BACKEND_API_URL}/api/filmskaTraka/add`, newFilm, {
+              headers: { "Content-Type": "application/json" },
+            })
+            .then((response) => {
+              console.log("Film successfully added:", response.data);
+            })
+            .catch((error) => {
+              console.error("Error sending data to server:", error);
+            });
           setScannedBarcodes(updatedBarcodes);
           scannedBarcodesRef.current.add(scannedData);
         } else {
@@ -128,9 +147,11 @@ const BarcodeScanner = () => {
               porijekloZemljaProizvodnje: xmlDoc.getElementsByTagName(
                 "Porijeklo_ZemljaProizvodnje"
               )[0].childNodes[0].nodeValue,
-              godinaProizvodnje:
+              godinaProizvodnje: parseInt(
                 xmlDoc.getElementsByTagName("GodinaProizvodnje")[0]
                   .childNodes[0].nodeValue,
+                10
+              ),
               duration: duration,
             };
 
@@ -159,6 +180,7 @@ const BarcodeScanner = () => {
                   filmTitle,
                   duration,
                   database: false,
+                  part: "",
                 },
               ];
 
@@ -283,6 +305,7 @@ const BarcodeScanner = () => {
           filmTitle: originalniNaslov,
           duration: response.data.duration || duration,
           database: false,
+          part: "",
         },
       ];
 
@@ -319,21 +342,23 @@ const BarcodeScanner = () => {
                   <p>Barcode: {scannedData}</p>
                   {error && <p style={{ color: "red" }}>{error}</p>}
                 </div>
-                <div className="fetch-btn">
-                  <button className="button-film" onClick={handleFetchFilmData}>
-                    Fetch
-                  </button>
-                  <button onClick={handleBarcodesClick}>List</button>
+                <div className="error-div">
                   {displayInputFile && (
-                    <div>
+                    <div className="input-div">
                       <input
                         type="file"
                         accept=".xml"
                         onChange={handleXmlFileChange}
+                        id="file-upload"
                       />
-                      <p>XML file</p>
                     </div>
                   )}
+                </div>
+                <div className="fetch-btn">
+                  {/*<button className="button-film" onClick={handleFetchFilmData}>
+                    Fetch
+                  </button>*/}
+                  <button onClick={handleBarcodesClick}>List</button>
                   <button onClick={handleManualEntry}>Manual input</button>
                 </div>
               </div>
@@ -357,39 +382,40 @@ const BarcodeScanner = () => {
 
           {displayForm && (
             <form onSubmit={handleSubmitFilm}>
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: "10px",
-                }}
-              >
+              <div className="manual-input">
                 <label>
-                  Originalni naslov:
+                  Original title:
                   <input
+                    className="label-input"
                     type="text"
                     value={originalniNaslov}
                     onChange={(e) => setOriginalniNaslov(e.target.value)}
                   />
                 </label>
                 <label>
-                  Jezik originala:
+                  Original language:
                   <input
+                    className="label-input"
                     type="text"
                     value={jezikOriginala}
                     onChange={(e) => setJezikOriginala(e.target.value)}
                   />
                 </label>
                 <label>
-                  Ton:
-                  <select value={ton} onChange={(e) => setTon(e.target.value)}>
-                    <option value="DA">DA</option>
-                    <option value="NE">NE</option>
+                  Sound:
+                  <select
+                    className="label-input"
+                    value={ton}
+                    onChange={(e) => setTon(e.target.value)}
+                  >
+                    <option value="DA">Yes</option>
+                    <option value="NE">No</option>
                   </select>
                 </label>
                 <label>
-                  Porijeklo zemlja proizvodnje:
+                  Country of origin:
                   <input
+                    className="label-input"
                     type="text"
                     value={porijekloZemljaProizvodnje}
                     onChange={(e) =>
@@ -398,8 +424,9 @@ const BarcodeScanner = () => {
                   />
                 </label>
                 <label>
-                  Godina proizvodnje:
+                  Manufacturing year:
                   <input
+                    className="label-input"
                     type="number"
                     value={godinaProizvodnje}
                     onChange={(e) => {
@@ -423,8 +450,9 @@ const BarcodeScanner = () => {
                   />
                 </label>
                 <label>
-                  Trajanje:
+                  Duration:
                   <input
+                    className="label-input"
                     type="text"
                     value={duration}
                     onChange={(e) => {
@@ -460,6 +488,12 @@ const BarcodeScanner = () => {
                   />
                 </label>
                 <button
+                  style={{
+                    borderRadius: "0.5rem",
+                    width: "30%",
+                    alignSelf: "center",
+                    marginTop: "2rem",
+                  }}
                   onClick={(e) => {
                     e.preventDefault();
                     if (isValid) {
@@ -468,7 +502,7 @@ const BarcodeScanner = () => {
                   }}
                   disabled={!isValid}
                 >
-                  Dodaj film
+                  Add
                 </button>
               </div>
             </form>

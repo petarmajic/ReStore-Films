@@ -1,4 +1,4 @@
-import { useRef, useState, useContext, useEffect } from "react";
+import { useState, useContext, useEffect, useLayoutEffect } from "react";
 import { LayoutProvider } from "./assets/layout/layoutcontext";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Login from "./assets/login/login";
@@ -17,6 +17,7 @@ import Korisnici from "./assets/administrator/korisnici";
 import Djelatnici from "./assets/voditelj/djelatnici/djelatnici";
 
 const App = () => {
+  const { korisnikUloga, setKorisnikUloga } = useContext(LayoutContext);
   const isAuthenticated = useIsAuthenticated();
   const { instance, accounts } = useMsal();
   const BACKEND_API_URL = import.meta.env.VITE_BACKEND_API_URL;
@@ -27,12 +28,7 @@ const App = () => {
     const [name, surname] = userName.split(" ");
     let userId = userEmail.split("@")[0];
   }
-  const uloge = [
-    { id: 1, naziv: "DJELATNIK" },
-    { id: 2, naziv: "VODITELJ" },
-    { id: 3, naziv: "ADMINISTRATOR" },
-  ];
-  const { korisnikUloga, setKorisnikUloga } = useContext(LayoutContext);
+
   useEffect(() => {
     if (isAuthenticated) {
       const fetchKorisnik = async () => {
@@ -41,14 +37,21 @@ const App = () => {
             `${BACKEND_API_URL}/api/korisnik/${userEmail}`
           );
           setKorisnikUloga(response.data.uloga);
+          console.log(
+            `Korisnik: ${userEmail} postoji, uloga App.jsx: ${korisnikUloga}`
+          );
         } catch (error) {
           console.error("Greška pri dohvatu korisnika:", error.response.data);
         }
       };
       fetchKorisnik();
     }
-  }, [isAuthenticated, accounts]);
-
+  }, [isAuthenticated]);
+  useLayoutEffect(() => {
+    console.log(
+      `Korisnik: ${userEmail} postoji, uloga app.jsx: ${korisnikUloga}`
+    );
+  }, [korisnikUloga]);
   return (
     <LayoutProvider>
       <Router>
@@ -67,9 +70,11 @@ const App = () => {
             // Koda za prikaz VODITELJA
             <>
               <Route path="/home" element={<Home />} />
+
               <Route path="/scanner" element={<Scanner />} />
               <Route path="/barcodes" element={<Barcodes />} />
               <Route path="/arhiva" element={<Arhiva />} />
+
               <Route path="/digitalizacija" element={<Digitalizacija />} />
               <Route path="/djelatnici" element={<Djelatnici />} />
               <Route path="*" element={<Navigate to="/home" replace />} />
@@ -78,12 +83,15 @@ const App = () => {
             // Koda za prikaz ADMINISTRATORA
             <>
               <Route path="/home" element={<Home />} />
+
               <Route path="/scanner" element={<Scanner />} />
               <Route path="/barcodes" element={<Barcodes />} />
               <Route path="/arhiva" element={<Arhiva />} />
               <Route path="/digitalizacija" element={<Digitalizacija />} />
-              <Route path="/korisnici" element={<Korisnici />} />
               <Route path="/djelatnici" element={<Djelatnici />} />
+
+              <Route path="/korisnici" element={<Korisnici />} />
+
               <Route path="*" element={<Navigate to="/home" replace />} />
             </>
           ) : (

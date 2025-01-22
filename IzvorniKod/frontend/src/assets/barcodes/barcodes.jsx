@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import pozadina from "../images/filmskaVrpca.jpg";
 import jsPDF from "jspdf";
 import { useMsal } from "@azure/msal-react";
+import axios from "axios";
 
 const Barcodes = () => {
   const { scannedBarcodes, setScannedBarcodes } = useContext(LayoutContext);
@@ -14,21 +15,14 @@ const Barcodes = () => {
   const navigate = useNavigate();
   const [selectedGroups, setSelectedGroups] = useState({});
   const { instance, accounts } = useMsal();
+  const [korisnikId, setKorisnikId] = useState(null);
 
   const account = accounts[0];
-  let userName = account?.name ?? null;
-  let userEmail = account?.username ?? null;
-  userName = userName
-    .replace(/č/g, "C")
-    .replace(/ć/g, "C")
-    .replace(/Č/g, "C")
-    .replace(/Ć/g, "C");
-  userEmail = userEmail
-    .replace(/č/g, "C")
-    .replace(/ć/g, "C")
-    .replace(/Č/g, "C")
-    .replace(/Ć/g, "C");
-
+  let userName =
+    account?.name?.replace(/[ČĆ]/g, "C").replace(/[čć]/g, "c") ?? null;
+  let userEmail =
+    account?.username?.replace(/[ČĆ]/g, "C").replace(/[čć]/g, "c") ?? null;
+  const BACKEND_API_URL = import.meta.env.VITE_BACKEND_API_URL;
   const handleScannerClick = () => {
     navigate("/scanner");
   };
@@ -44,64 +38,107 @@ const Barcodes = () => {
       setScannedBarcodes(newBarcodes);
     }
   };
-  const handleSelectGroup = (groupKey) => {
-    const newSelectedGroups = { ...selectedGroups };
-    if (newSelectedGroups[groupKey]) {
-      delete newSelectedGroups[groupKey];
-    } else {
-      newSelectedGroups[groupKey] = true;
-    }
-    setSelectedGroups(newSelectedGroups);
-  };
+  useEffect(() => {
+    const fetchKorisnikData = async () => {
+      try {
+        const url = `${BACKEND_API_URL}/api/korisnik/${userEmail}`;
+        const response = await axios.get(url);
+        const korisnikData = response.data;
+        if (korisnikData) {
+          setKorisnikId(korisnikData.idKorisnika);
+        } else {
+          console.log("No korisnik data found");
+        }
+      } catch (error) {
+        console.error("Error fetching korisnikID:", error);
+      }
+    };
+    fetchKorisnikData();
+  }, []);
+  const handleDigitalizacijaClick = async () => {
+    console.log("Ime i email korisnika:", userName, userEmail, korisnikId);
 
-  const handleDigitalizacijaClick = () => {
-    console.log("Ime i email korisnika:", userName, userEmail);
-    setSelectedBarcodes({});
-    Object.keys(selectedGroups).forEach((groupKey) => {
-      selectedBarcodes[groupKey] = groupedBarcodes[groupKey];
-    });
-    // Generirajte PDF dokument sa odabranim filmovima
+    // Kreiranje nove kopije selectedBarcodes
+    const newSelectedBarcodes = {};
+    for (const groupKey of Object.keys(selectedGroups)) {
+      newSelectedBarcodes[groupKey] = groupedBarcodes[groupKey];
+    }
+
     const pdfDoc = new jsPDF();
-    Object.keys(selectedBarcodes).forEach((groupKey, index) => {
-      if (index > 0) {
+    const date = new Date();
+    const dateString =
+      date.toLocaleDateString() + " " + date.toLocaleTimeString();
+    let pageIndex = 0;
+
+    for (const [groupKey, groupValue] of Object.entries(newSelectedBarcodes)) {
+      if (pageIndex > 0) {
         pdfDoc.addPage();
       }
-      const date = new Date();
-      const dateString =
-        date.toLocaleDateString() + " " + date.toLocaleTimeString();
-      pdfDoc.text(`${userName} (${userEmail})`, 10, 10, null, null, "left");
+
+      // Dodaj osnovne informacije u PDF
+      pdfDoc.text(`${userName} (${userEmail})`, 10, 10);
       pdfDoc.text(dateString, 180, 10, null, null, "right");
-      pdfDoc.text(
-        "Popis filmova na digitalizaciji:",
-        10,
-        20,
-        null,
-        null,
-        "left"
-      );
-      const groupDuration = selectedBarcodes[groupKey].reduce(
-        (acc, barcode) => {
-          const durationInSeconds = durationToSeconds(barcode.duration);
-          return acc + durationInSeconds;
-        },
+      pdfDoc.text("Popis filmova na digitalizaciji:", 10, 20);
+
+      const groupDuration = groupValue.reduce(
+        (acc, barcode) => acc + durationToSeconds(barcode.duration),
         0
       );
-      const groupDurationText = secondsToDuration(groupDuration);
-      pdfDoc.text(
-        `Grupa ${index + 1} (Ukupno trajanje: ${groupDurationText})`,
-        10,
-        30
+
+      const filmskeTrake = newSelectedBarcodes[groupKey].map(
+        (barcode) => barcode.filmTitle
       );
-      selectedBarcodes[groupKey].forEach((barcode, barcodeIndex) => {
-        const text = `${barcodeIndex + 1}. ${
-          barcode.barcode
-        } - ${barcode.filmTitle.replace(/č/g, "c").replace(/ć/g, "c")} - ${
-          barcode.duration
-        }`;
-        pdfDoc.text(text, 10, 40 + barcodeIndex * 10, null, null, "left", true);
-      });
-      pdfDoc.text(`Potpis: ___________`, 180, 280, null, null, "right");
-    });
+
+      // Validacija filmskeTrake
+      if (!filmskeTrake.length) {
+        console.warn(`Grupa ${groupKey} nema ispravnih filmskih traka.`);
+        continue;
+      }
+
+      console.log(`Slanje zahtjeva sa filmskim trakama:`, filmskeTrake);
+
+      try {
+        // Slanje zahtjeva na backend
+        const response = await axios.post(
+          `${BACKEND_API_URL}/api/grupaZaDigitalizaciju/add`,
+          {
+            iznioIzSkladistaKorisnikId: korisnikId,
+            filmskeTrake,
+          },
+          {
+            headers: { "Content-Type": "application/json" },
+          }
+        );
+
+        const grupaId = response.data.idGrupe;
+        const groupDurationText = secondsToDuration(groupDuration);
+
+        pdfDoc.text(
+          `Grupa ${grupaId} (Ukupno trajanje: ${groupDurationText})`,
+          10,
+          30
+        );
+
+        // Dodavanje bar kodova u PDF
+        groupValue.forEach((barcode, barcodeIndex) => {
+          const text = `${barcodeIndex + 1}. ${
+            barcode.barcode
+          } - ${barcode.filmTitle
+            .replace(/Č/g, "C")
+            .replace(/Ć/g, "C")
+            .replace(/č/g, "c")
+            .replace(/ć/g, "c")}${barcode.part} - ${barcode.duration}`;
+          pdfDoc.text(text, 10, 40 + barcodeIndex * 10);
+        });
+
+        pdfDoc.text("Potpis: ___________", 180, 280, null, null, "right");
+      } catch (error) {
+        console.error(`Greška kod slanja grupe ${groupKey}:`, error);
+      }
+      pageIndex++;
+    }
+
+    // Generiraj i preuzmi PDF
     const pdfBlob = new Blob([pdfDoc.output("blob")], {
       type: "application/pdf",
     });
@@ -112,18 +149,21 @@ const Barcodes = () => {
     link.click();
     URL.revokeObjectURL(pdfUrl);
 
-    const selectedBarcodesArray = Object.values(selectedBarcodes);
+    // Ažuriraj stanje bar kodova
+    const selectedBarcodesArray = Object.values(newSelectedBarcodes);
     const newScannedBarcodes = scannedBarcodes.filter((barcode) => {
-      return !selectedBarcodesArray.some((group) => {
-        return group.some((selectedBarcode) => {
-          return selectedBarcode.barcode === barcode.barcode;
-        });
-      });
+      return !selectedBarcodesArray.some((group) =>
+        group.some(
+          (selectedBarcode) => selectedBarcode.barcode === barcode.barcode
+        )
+      );
     });
+
     setScannedBarcodes(newScannedBarcodes);
     setSelectedBarcodes({});
     setSelectedGroups({});
   };
+
   const calculateTotalDuration = () => {
     const totalDuration = scannedBarcodes.reduce((acc, barcode) => {
       if (typeof barcode === "object" && barcode.duration) {
@@ -194,7 +234,7 @@ const Barcodes = () => {
         segments.push({
           ...barcode,
           duration: secondsToDuration(maxDuration),
-          filmTitle: `${barcode.filmTitle} - ${partNumber}. dio`,
+          part: ` - ${partNumber}. dio`,
         });
         remainingDuration -= maxDuration;
         partNumber++;
@@ -204,7 +244,7 @@ const Barcodes = () => {
         segments.push({
           ...barcode,
           duration: secondsToDuration(remainingDuration),
-          filmTitle: `${barcode.filmTitle} - ${partNumber}. dio`,
+          part: ` - ${partNumber}. dio`,
         });
       }
       return segments;
@@ -268,7 +308,7 @@ const Barcodes = () => {
         (sum, b) => sum + durationToSeconds(b.duration),
         0
       );
-      const title = `Grupa ${index + 1}: ${secondsToDuration(totalDuration)}`;
+      const title = `Group ${index + 1}: ${secondsToDuration(totalDuration)}`;
       groupedBarcodes[title] = group;
     });
 
@@ -278,6 +318,14 @@ const Barcodes = () => {
   const groupedBarcodes = useMemo(() => {
     return groupBarcodesByDuration(scannedBarcodes);
   }, [scannedBarcodes]);
+
+  useEffect(() => {
+    const newSelectedGroups = {};
+    Object.keys(groupedBarcodes).forEach((groupKey) => {
+      newSelectedGroups[groupKey] = true;
+    });
+    setSelectedGroups(newSelectedGroups);
+  }, [groupedBarcodes]);
 
   return (
     <Layout>
@@ -324,8 +372,10 @@ const Barcodes = () => {
             <div className="barcode-btns">
               <button onClick={handleClearBarcodes}>Clear</button>
               <button onClick={handleScannerClick}>Scan</button>
-              <button onClick={handleDigitalizacijaClick}>
-                Digitalizacija
+            </div>
+            <div className="barcode-digit-btn">
+              <button id="digit" onClick={handleDigitalizacijaClick}>
+                Digitization
               </button>
             </div>
           </div>
@@ -336,18 +386,6 @@ const Barcodes = () => {
               {Object.keys(groupedBarcodes).map((groupKey) => (
                 <div className="wrap-group">
                   <p className="group-key">{groupKey}</p>
-                  <input
-                    type="checkbox"
-                    checked={selectedGroups[groupKey]}
-                    onChange={() => handleSelectGroup(groupKey)}
-                    style={{
-                      fontSize: "16px",
-                      padding: "0 5px",
-                      border: "none",
-                      backgroundColor: "transparent",
-                      cursor: "pointer",
-                    }}
-                  />
                   <div>
                     <ul>
                       {groupedBarcodes[groupKey].map((barcode, index) => (
@@ -355,7 +393,7 @@ const Barcodes = () => {
                           <span style={{ fontSize: "16px" }}>
                             {index + 1}.{" "}
                             {typeof barcode === "object"
-                              ? `${barcode.barcode} - ${barcode.filmTitle} - ${barcode.duration}`
+                              ? `${barcode.barcode} - ${barcode.filmTitle}${barcode.part} - ${barcode.duration}`
                               : barcode}
                           </span>
                         </li>

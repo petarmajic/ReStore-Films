@@ -1,5 +1,5 @@
 import "./navigation.css";
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useIsAuthenticated } from "@azure/msal-react";
 import { SignInButton } from "../../SignInButton";
@@ -16,6 +16,7 @@ const Navigation = () => {
   const account = accounts[0];
   let userEmail = account?.username ?? null;
   const { korisnikUloga, setKorisnikUloga } = useContext(LayoutContext);
+  const { korisnik, setKorisnik } = useContext(LayoutContext);
 
   const handleHomeClick = () => {
     {
@@ -23,44 +24,69 @@ const Navigation = () => {
     }
   };
   useEffect(() => {
-    if (isAuthenticated) {
-      const fetchKorisnik = async () => {
-        try {
-          const response = await axios.get(
-            `${BACKEND_API_URL}/api/korisnik/${userEmail}`
-          );
-          setKorisnikUloga(response.data.uloga);
-          console.log(
-            `Korisnik: ${userEmail} postoji, uloga: ${korisnikUloga}`
-          );
-        } catch (error) {
-          console.error("Greška pri dohvatu korisnika:", error.response.data);
-        }
-      };
-      fetchKorisnik();
-    }
-  }, []);
+    const fetchKorisnik = async () => {
+      try {
+        const response = await axios.get(
+          `${BACKEND_API_URL}/api/korisnik/${userEmail}`
+        );
+        setKorisnikUloga(response.data.uloga);
+        setKorisnik(response.data);
+      } catch (error) {
+        console.error("Greška pri dohvatu korisnika:", error.message);
+      }
+    };
+    fetchKorisnik();
+  }, [isAuthenticated]);
+  useEffect(() => {
+    console.log(
+      `Korisnik: ${userEmail} postoji, uloga navigation.jsx: ${korisnikUloga}`
+    );
+  }, [korisnikUloga]);
 
   return (
     <nav className="navbar">
       <div className="nav-homebtn">
         <button onClick={handleHomeClick}>Home</button>
-        <div
-          style={{
-            position: "absolute",
-            top: 25,
-            left: 250,
-            marginLeft: 20,
-            fontSize: 12,
-            fontWeight: "bold",
-          }}
-        >
-          Role: {korisnikUloga}
-        </div>
+        {/*<div className="role-css">Role: {korisnikUloga}</div>*/}
       </div>
       <div className="nav-title">ReStore-Films</div>
       <div className="nav-signout">
-        {isAuthenticated ? <SignOutButton /> : <SignInButton />}
+        {isAuthenticated ? (
+          <div className="user-info">
+            <div
+              className="username-button"
+              onMouseOver={(e) => {
+                e.target.classList.add("hover");
+              }}
+              onMouseOut={(e) => {
+                e.target.classList.remove("hover");
+              }}
+            >
+              {korisnik ? (
+                `${korisnik.ime} ${korisnik.prezime.charAt(0)}.`
+              ) : (
+                <span>...</span>
+              )}
+              <div className="username-tooltip">
+                {korisnik ? (
+                  <>
+                    {korisnik.ime} {korisnik.prezime}
+                    <br />
+                    {korisnik.email}
+                    <br />
+                    {korisnikUloga}
+                    <br />
+                    <SignOutButton />
+                  </>
+                ) : (
+                  <span>Loading...</span>
+                )}
+              </div>
+            </div>
+          </div>
+        ) : (
+          <SignInButton />
+        )}
       </div>
     </nav>
   );

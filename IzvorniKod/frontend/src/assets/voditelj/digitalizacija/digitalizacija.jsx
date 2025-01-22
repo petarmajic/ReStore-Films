@@ -9,7 +9,6 @@ import { useMsal } from "@azure/msal-react";
 import axios from "axios";
 
 const Barcodes = () => {
-  const { scannedBarcodes, setScannedBarcodes } = useContext(LayoutContext);
   const navigate = useNavigate();
   const { instance, accounts } = useMsal();
   const [filmskeTrake, setFilmskeTrake] = useState([]);
@@ -20,21 +19,17 @@ const Barcodes = () => {
     godina: "",
     trajanje: "",
   });
+  const [statusi, setStatusi] = useState({});
+  const [grupeZaDigitalizaciju, setGrupeZaDigitalizaciju] = useState([]);
+  const [filmoviUGrupi, setfilmoviUGrupi] = useState({});
+  const [selectedFilter, setSelectedFilter] = useState("all");
 
   const account = accounts[0];
-  let userName = account?.name ?? null;
-  let userEmail = account?.username ?? null;
   const BACKEND_API_URL = import.meta.env.VITE_BACKEND_API_URL;
-  userName = userName
-    .replace(/č/g, "C")
-    .replace(/ć/g, "C")
-    .replace(/Č/g, "C")
-    .replace(/Ć/g, "C");
-  userEmail = userEmail
-    .replace(/č/g, "C")
-    .replace(/ć/g, "C")
-    .replace(/Č/g, "C")
-    .replace(/Ć/g, "C");
+  let userName =
+    account?.name?.replace(/[ČĆ]/g, "C").replace(/[čć]/g, "c") ?? null;
+  let userEmail =
+    account?.username?.replace(/[ČĆ]/g, "C").replace(/[čć]/g, "c") ?? null;
 
   useEffect(() => {
     const fetchFilmskeTrake = async () => {
@@ -49,6 +44,7 @@ const Barcodes = () => {
           zemlja: traka.porijekloZemljaProizvodnje,
           godina: traka.godinaProizvodnje,
           trajanje: traka.duration,
+          grupa: traka.grupeZaDigitalizaciju,
         }));
 
         setFilmskeTrake(filtriraneTrake);
@@ -56,25 +52,48 @@ const Barcodes = () => {
         console.error("Error fetching filmskeTrake:", error);
       }
     };
+    const fetchGrupeZaDigitalizaciju = async () => {
+      try {
+        const response = await axios.get(
+          `${BACKEND_API_URL}/api/grupaZaDigitalizaciju/all`
+        );
+
+        const grupe = response.data.map((grupa) => ({
+          idGrupe: grupa.idGrupe,
+          statusDigitalizacije: grupa.statusDigitalizacije,
+          filmovi: grupa.filmskeTrake,
+        }));
+
+        setGrupeZaDigitalizaciju(grupe);
+      } catch (error) {
+        console.error(error);
+      }
+    };
 
     fetchFilmskeTrake();
+    fetchGrupeZaDigitalizaciju();
   }, []);
 
-  const handleScannerClick = () => {
-    navigate("/scanner");
-  };
+  const promises = [
+    axios.get(
+      `${BACKEND_API_URL}/api/grupaZaDigitalizaciju/statusCounts/NA_CEKANJU`
+    ),
+    axios.get(
+      `${BACKEND_API_URL}/api/grupaZaDigitalizaciju/statusCounts/NA_DIGITALIZACIJI`
+    ),
+    axios.get(
+      `${BACKEND_API_URL}/api/grupaZaDigitalizaciju/statusCounts/ZAVRSENO`
+    ),
+  ];
 
-  const handleClearBarcodes = () => {
-    setScannedBarcodes([]);
-  };
-
-  const handleRemoveBarcode = (index) => {
-    if (index >= 0 && index < scannedBarcodes.length) {
-      const newBarcodes = [...scannedBarcodes];
-      newBarcodes.splice(index, 1);
-      setScannedBarcodes(newBarcodes);
-    }
-  };
+  Promise.all(promises).then((responses) => {
+    const statusiObjekat = {
+      NA_CEKANJU: responses[0].data,
+      NA_DIGITALIZACIJI: responses[1].data,
+      ZAVRSENO: responses[2].data,
+    };
+    setStatusi(statusiObjekat);
+  });
 
   const handleEditClick = (film) => {
     setSelectedFilm(film);
@@ -100,7 +119,7 @@ const Barcodes = () => {
     };
 
     try {
-      const response = await axios.put(
+      const response = await axios.patch(
         `${BACKEND_API_URL}/api/filmskaTraka/update/${selectedFilm.id}`,
         updatePayload
       );
@@ -132,29 +151,52 @@ const Barcodes = () => {
       [name]: value,
     }));
   };
-  const handleHomeClick = () => {
-    navigate("/home");
-  };
 
+  const generatePdf = () => {
+    const doc = new jsPDF();
+    doc.setFontSize(18); // povećajte veličinu fonta
+    const date = new Date();
+    const dateString =
+      date.toLocaleDateString() + " " + date.toLocaleTimeString();
+    doc.text(`Voditelj: ${userName} `, 10, 10, null, null, "left");
+    doc.text(dateString, 180, 10, null, null, "right");
+
+    doc.text("Statistika digitalizacije", 10, 20); // povećajte y koordinatu za 10
+
+    doc.setFontSize(12); // smanjite veličinu fonta za ispis podataka
+    doc.text("NA CEKANJU:", 10, 30);
+    doc.text(`${statusi.NA_CEKANJU}`, 60, 30);
+    doc.text("NA DIGITALIZACIJI:", 10, 35);
+    doc.text(`${statusi.NA_DIGITALIZACIJI}`, 60, 35);
+    doc.text("ZAVRŠENO:", 10, 40);
+    doc.text(`${statusi.ZAVRSENO}`, 60, 40);
+
+    doc.save("statistika_digitalizacije.pdf");
+  };
   return (
     <Layout>
-      <div className="barcode-main">
+      <div className="digit-main">
         <img
-          className="barcode-bg-image"
+          className="digit-bg-image"
           src={pozadina}
           alt="background picture"
         ></img>
-        <div className="barcode-list-container">
-          <div className="barcode-scanned">
-            <div className="left-title">Statistika digitalizacije</div>
-            <div className="left-list">
+        <div className="digit-list-container">
+          <div className="digit-film-list">
+            <div className="list-title">Movie list</div>
+            <div className="digit-list">
               {Array.isArray(filmskeTrake) && (
                 <div className="filmske-trake-list">
                   <ul>
                     {filmskeTrake.map((film, index) => (
                       <li key={index}>
-                        {index + 1}. {film.naslov} - {film.zemlja} -{" "}
-                        {film.godina} - {film.trajanje}
+                        {index + 1}. {film.naslov} {"("}
+                        {film.zemlja} - {film.godina} - {film.trajanje}
+                        {") "}
+                        <br></br>
+                        {film.grupa
+                          ? `In group: ${film.grupa}`
+                          : "In group: No"}
                         <button onClick={() => handleEditClick(film)}>
                           Edit
                         </button>
@@ -164,17 +206,14 @@ const Barcodes = () => {
                 </div>
               )}
             </div>
-            <div className="barcode-btns">
-              <button onClick={handleHomeClick}>Home</button>
-              <button onClick={handleScannerClick}>Scan</button>
-            </div>
+            <div className="digit-btns"></div>
           </div>
           {selectedFilm && (
             <div className="edit-form">
-              <h3>Ažuriraj Filmsku Traku</h3>
+              <h4>Update filmstrip</h4>
               <form onSubmit={handleUpdateSubmit}>
                 <label>
-                  Naslov:
+                  Title:
                   <input
                     type="text"
                     name="naslov"
@@ -183,7 +222,7 @@ const Barcodes = () => {
                   />
                 </label>
                 <label>
-                  Zemlja:
+                  Country:
                   <input
                     type="text"
                     name="zemlja"
@@ -192,7 +231,7 @@ const Barcodes = () => {
                   />
                 </label>
                 <label>
-                  Godina:
+                  Year:
                   <input
                     type="number"
                     name="godina"
@@ -201,7 +240,7 @@ const Barcodes = () => {
                   />
                 </label>
                 <label>
-                  Trajanje:
+                  Duration:
                   <input
                     type="text"
                     name="trajanje"
@@ -209,13 +248,60 @@ const Barcodes = () => {
                     onChange={handleChange}
                   />
                 </label>
-                <button type="submit">Spremi</button>
-                <button type="button" onClick={() => setSelectedFilm(null)}>
-                  Odustani
-                </button>
+                <div className="form-btns">
+                  <button type="submit">Update</button>
+                  <button type="button" onClick={() => setSelectedFilm(null)}>
+                    Quit
+                  </button>
+                </div>
               </form>
             </div>
           )}
+
+          <div className="digit-grouped">
+            <div className="group-title">Group statistics</div>
+            <div className="grouped-list">
+              <strong>On waiting:</strong> {statusi.NA_CEKANJU}
+              &nbsp;&nbsp;&nbsp;&nbsp;
+              <strong>On digitalization:</strong> {statusi.NA_DIGITALIZACIJI}
+              &nbsp;&nbsp;&nbsp;&nbsp;
+              <strong>Finished:</strong> {statusi.ZAVRSENO}
+              <select
+                value={selectedFilter}
+                onChange={(e) => setSelectedFilter(e.target.value)}
+              >
+                <option value="all">All</option>
+                <option value="NA_DIGITALIZACIJI">On Digitalization</option>
+                <option value="ZAVRSENO">Finished</option>
+              </select>
+              <ul>
+                {grupeZaDigitalizaciju
+                  .filter((grupa) =>
+                    selectedFilter === "all"
+                      ? true
+                      : grupa.statusDigitalizacije === selectedFilter
+                  )
+                  .sort((a, b) => a.idGrupe - b.idGrupe)
+                  .map((grupa, index) => (
+                    <li key={index}>
+                      <strong>Group ID: {grupa.idGrupe} - Status:</strong>{" "}
+                      {grupa.statusDigitalizacije}
+                      <br />
+                      <strong>Movie group:</strong>
+                      <ul>
+                        {grupa.filmovi &&
+                          grupa.filmovi.map((film, index) => (
+                            <li key={index}>{film}</li>
+                          ))}
+                      </ul>
+                    </li>
+                  ))}
+              </ul>
+            </div>
+            <div className="digit-btns">
+              <button onClick={() => generatePdf()}>Download</button>
+            </div>
+          </div>
         </div>
       </div>
     </Layout>

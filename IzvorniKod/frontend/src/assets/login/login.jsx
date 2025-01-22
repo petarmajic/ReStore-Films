@@ -104,7 +104,7 @@ const LoginSignUp = () => {
         <div>
           <h1 className="title">ReStore Films</h1>
           <h2 className="subtitle">
-            Oživite prošlost kroz digitalnu tehnologiju
+            Relive the past through digital techonolgy
           </h2>
         </div>
         <div className="sign-in-wrap">

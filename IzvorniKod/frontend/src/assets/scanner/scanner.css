@@ -54,7 +54,7 @@
   justify-content: center;
   align-items: center;
   width: 100%;
-  height: 40%;
+  height: 50%;
   padding: 1rem;
 }
 
@@ -79,7 +79,7 @@
 .fetch-btn {
   display: flex;
   justify-content: space-evenly;
-  height: 40%;
+  height: 50%;
 }
 
 /* Dizajn gumba */
@@ -119,11 +119,53 @@
   font-size: 0.8rem;
 }
 
+/* Ručni unos */
+.manual-input {
+  width: 38vw;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+/* Inputi */
+.label-input {
+  margin-left: 0.5rem;
+  border-radius: 0.5rem;
+}
+
+.input-div {
+  width: 40%;
+}
+
+.error-div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+input[type="file"]::file-selector-button {
+  display: block;
+  width: 100%;
+  border-radius: 0.5rem;
+  background-color: #6c757d;
+  color: #ededed;
+  border: none;
+  cursor: pointer;
+}
+
+input[type="file"]::file-selector-button:hover {
+  background-color: #5a6268;
+}
+
 /*----------------------Responzivnost---------------------------*/
 @media (max-width: 1024px) {
   .scan-container {
     flex-direction: column;
-    padding: 1.5rem;
+    overflow-y: auto;
+    height: auto;
+    min-height: 75vh;
+    margin-bottom: 10vh;
+    padding: 0.5rem;
   }
 
   .scanner-wrapper {
@@ -133,7 +175,6 @@
 
   .fetch-div {
     font-size: 1.5rem;
-    height: 30%;
   }
 
   .scanner-wrapper,
@@ -141,13 +182,17 @@
     width: 100%;
   }
 
+  .cam-dim {
+    height: 65%;
+  }
+
   .scan-container video {
-    width: 80%;
+    width: 90%;
     height: 100%;
   }
 
   .scanned-title {
-    font-size: 2rem;
+    font-size: 1.75rem;
   }
 
   .fetch-btn button {
@@ -157,6 +202,31 @@
 
   .scan-br-list {
     font-size: 1rem;
+    margin-top: 1.5rem;
+  }
+
+  .manual-input {
+    width: 100%;
+    height: 30%;
+    align-items: center;
+  }
+
+  .label-input {
+    margin-left: 0;
+  }
+
+  label {
+    width: 30%;
+  }
+
+  form {
+    overflow-y: auto;
+    margin-top: 1rem;
+    width: 100%;
+  }
+
+  button {
+    align-self: center;
   }
 }
 
@@ -169,19 +239,23 @@
   .scanner-wrapper {
     font-size: 1.5rem;
     height: 100%;
+    width: 50%;
   }
 
   .fetch-div {
     font-size: 1rem;
   }
 
-  .scanner-wrapper,
+  .scanner-wrapper {
+    width: 68%;
+  }
+
   .brc-list-container {
-    width: 100%;
+    width: 50%;
   }
 
   .scan-container video {
-    width: 70%;
+    width: 80%;
     height: 100%;
   }
 
@@ -197,20 +271,46 @@
   .scan-br-list {
     font-size: 0.8rem;
   }
+
+  .manual-input {
+    width: 100%;
+    height: 30%;
+  }
+
+  .label-input {
+    margin-left: 0;
+  }
+
+  label {
+    width: 25vw;
+  }
+
+  form {
+    margin-top: 1rem;
+    width: 35%;
+  }
+
+  button {
+    align-self: center;
+  }
 }
 
 @media (max-width: 480px) {
   .scan-container {
     flex-direction: column;
-    padding: 1.25rem;
+    overflow-y: auto;
+    height: auto;
+    min-height: 75vh;
+    margin-bottom: 10vh;
+    padding: 0.5rem;
   }
 
   .scanner-wrapper {
-    font-size: 1.25rem;
+    font-size: 1rem;
   }
 
   .fetch-div {
-    font-size: 1rem;
+    font-size: 0.8rem;
   }
 
   .scanner-wrapper,
@@ -218,13 +318,17 @@
     width: 100%;
   }
 
+  .cam-dim {
+    height: 70%;
+  }
+
   .scan-container video {
-    width: 90%;
-    height: 90%;
+    width: 100%;
+    height: 100%;
   }
 
   .scanned-title {
-    font-size: 1.25rem;
+    font-size: 1rem;
   }
 
   .fetch-btn button {
@@ -234,5 +338,34 @@
 
   .scan-br-list {
     font-size: 0.75rem;
+    margin-top: 1.5rem;
+  }
+
+  .manual-input {
+    width: 100%;
+    height: 30%;
+  }
+
+  .label-input {
+    margin-left: 0;
+  }
+
+  label {
+    width: 100%;
+    align-self: start;
+  }
+
+  form {
+    overflow-y: auto;
+    margin-top: 1rem;
+    width: 100%;
+  }
+
+  button {
+    align-self: center;
+  }
+
+  .input-div {
+    width: 50%;
   }
 }
