@@ -6,6 +6,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Parameters;
@@ -19,78 +20,63 @@ public class LoginTest {
 
     @BeforeClass
     public void setUp() {
-        // Postavljanje staze do ChromeDriver-a i pokretanje preglednika
         System.setProperty("webdriver.chrome.driver", "/Users/petarmajic/Downloads/chromedriver-mac-x64/chromedriver");
         driver = new ChromeDriver();
-        wait = new WebDriverWait(driver, Duration.ofSeconds(30)); // Inicijalizacija čekanja
-        driver.manage().window().maximize(); // Maksimizacija prozora preglednika
+        wait = new WebDriverWait(driver, Duration.ofSeconds(30));
+        driver.manage().window().maximize();
     }
 
     @Test
-    @Parameters({"username", "password"}) // Parametri za prijavu (korisničko ime i lozinka)
+    @Parameters({"username", "password"})
     public void testMicrosoftLogin(String username, String password) {
-        try {
-            // Otvaranje početne stranice
-            driver.get("https://restore-films-frontend.onrender.com/");
+        driver.get("https://restore-films-frontend.onrender.com/");
 
-            // Klik na gumb "Sign in"
-            clickElement(By.xpath("//button[contains(text(),'Sign in')]"), wait);
+        clickElement(By.xpath("//button[contains(text(),'Sign in')]"), wait);
 
-            // Unos korisničkog imena
-            enterText(By.name("loginfmt"), username, wait);
-            // Klik na gumb "Dalje" za potvrdu unosa korisničkog imena
-            clickElement(By.id("idSIButton9"), wait);
+        enterText(By.name("loginfmt"), username, wait);
+        clickElement(By.id("idSIButton9"), wait);
 
-            // Provjera za grešku vezanu uz neispravno korisničko ime
-            checkForError(By.xpath("//div[contains(text(),'To korisničko ime možda nije ispravno.')]"),
-                    "Test Failed: To korisničko ime možda nije ispravno.", wait);
-
-            // Unos lozinke
-            enterText(By.name("passwd"), password, wait);
-            // Klik na gumb "Dalje" za potvrdu lozinke
-            clickElement(By.id("idSIButton9"), wait);
-
-            // Provjera za grešku vezanu uz neispravnu lozinku ili korisnički račun
-            checkForError(By.xpath("//div[contains(text(),'Račun ili lozinka nisu točni.')]"),
-                    "Test Failed: Račun ili lozinka nisu točni.", wait);
-
-            // Provjera da li je korisnik uspješno preusmjeren na /home stranicu
-            if (!wait.until(ExpectedConditions.urlContains("/home"))) {
-                throw new AssertionError("Test Failed: Took too long to load home page.");
-            }
-            System.out.println("Test Passed: Login successful."); // Poruka uspjeha
-        } catch (AssertionError ae) {
-            System.out.println(ae.getMessage()); // Ispis poruke greške u slučaju neuspjeha
+        if (isElementPresent(By.xpath("//div[contains(text(),'To korisničko ime možda nije ispravno.')]"))) {
+            Assert.fail("Test Failed: To korisničko ime možda nije ispravno.");
         }
+
+        enterText(By.name("passwd"), password, wait);
+        clickElement(By.id("idSIButton9"), wait);
+
+        if (isElementPresent(By.xpath("//div[contains(text(),'Račun ili lozinka nisu točni.')]"))) {
+            Assert.fail("Test Failed: Račun ili lozinka nisu točni.");
+        }
+
+        if (!wait.until(ExpectedConditions.urlContains("/home"))) {
+            throw new AssertionError("Test Failed: Took too long to load home page.");
+        }
+
+        System.out.println("Test Passed: Login successful.");
     }
 
     @AfterClass
     public void tearDown() {
-        // Zatvaranje preglednika nakon završetka testa
         if (driver != null) {
             driver.quit();
         }
     }
 
-    // Metoda za unos teksta u element na stranici
     private void enterText(By locator, String text, WebDriverWait wait) {
-        WebElement element = wait.until(ExpectedConditions.visibilityOfElementLocated(locator)); // Čekanje da element postane vidljiv
-        element.sendKeys(text); // Unos teksta
+        WebElement element = wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
+        element.sendKeys(text);
     }
 
-    // Metoda za klik na element na stranici
     private void clickElement(By locator, WebDriverWait wait) {
-        WebElement element = wait.until(ExpectedConditions.elementToBeClickable(locator)); // Čekanje da element postane klikabilan
-        element.click(); // Klik na element
+        WebElement element = wait.until(ExpectedConditions.elementToBeClickable(locator));
+        element.click();
     }
 
-    // Metoda za provjeru greške na temelju prisutnosti određenog elementa
-    private void checkForError(By locator, String errorMessage, WebDriverWait wait) {
+    private boolean isElementPresent(By locator) {
         try {
-            wait.until(ExpectedConditions.visibilityOfElementLocated(locator)); // Čekanje da se greška prikaže
-            throw new AssertionError(errorMessage); // Bacanje greške s odgovarajućom porukom
-        } catch (Exception ignored) {
-            // Ako greška nije pronađena, ignorira se
+            wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
+            return true;
+        } catch (Exception e) {
+            return false;
         }
     }
 }

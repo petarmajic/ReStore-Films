@@ -27,26 +27,21 @@ public class BarcodeScannerTest {
     @Test
     public void testAddFilm() {
         try {
-            // Otvaranje početnog URL-a
             driver.get("https://restore-films-frontend.onrender.com");
 
-            // Čekanje da se URL promijeni na /home
             wait.until(ExpectedConditions.urlContains("/home"));
 
-            // Klik na gumb "Scan" na stranici /home
             WebElement scanButton = wait.until(ExpectedConditions.elementToBeClickable(
                     By.xpath("//button[text()='Scan Barcode']")));
             scanButton.click();
 
-            // Nastavak s testiranjem dodavanja filma
             WebElement manualInputButton = wait.until(ExpectedConditions.elementToBeClickable(
                     By.xpath("//button[text()='Manual input']")));
             manualInputButton.click();
 
-            // Unos podataka za film
             wait.until(ExpectedConditions.visibilityOfElementLocated(
                             By.xpath("//label[contains(text(), 'Original title:')]/input")))
-                    .sendKeys("Novi test film 2");
+                    .sendKeys("Unique name");
 
             driver.findElement(By.xpath("//label[contains(text(), 'Original language:')]/input"))
                     .sendKeys("Croatian");
@@ -61,25 +56,21 @@ public class BarcodeScannerTest {
             durationInput.clear();
             durationInput.sendKeys("02:30:00");
 
-            // Klik na gumb "Add"
             WebElement addButton = wait.until(ExpectedConditions.elementToBeClickable(
                     By.xpath("//button[text()='Add']")));
             addButton.click();
 
-            // Provjera za poruku "Fail to add"
             WebElement failMessage = wait.until(ExpectedConditions.presenceOfElementLocated(
                     By.xpath("//p[contains(text(), 'Failed to add film. Please try again.')]")));
             throw new AssertionError("Test failed: Duplicate film detected on screen");
         } catch (Exception e) {
-            // Ako poruka "Fail to add" nije pronađena, nastavljamo provjeru dodanog filma
             WebElement barcodeList = wait.until(ExpectedConditions.presenceOfElementLocated(
                     By.className("scan-br-list")));
 
-            Assert.assertTrue(barcodeList.getText().contains("Novi test film 2"),
+            Assert.assertTrue(barcodeList.getText().contains("Unique name"),
                     "Film was not added successfully");
         }
     }
-
 
     @AfterClass
     public void tearDown() {

@@ -27,54 +27,48 @@ public class DigitalizationTest {
     }
 
     @Test
-    public void testOnDigitalizationList() {
-        // Otvaranje početnog URL-a
+    public void testOnDigitalizationList() throws InterruptedException {
         driver.get("https://restore-films-frontend.onrender.com");
 
-        // Čekanje da se prikaže stranica /home
         wait.until(ExpectedConditions.urlContains("/home"));
 
-        // Klik na gumb "Digitization"
         WebElement digitalizationButton = wait.until(ExpectedConditions.elementToBeClickable(
                 By.xpath("//button[contains(text(),'Digitization')]")));
         digitalizationButton.click();
 
-        // Pronalaženje i odabir opcije "On Digitalization"
         WebElement selectElement = wait.until(ExpectedConditions.elementToBeClickable(
-                By.xpath("//select"))); // Pronalaženje prvog <select> elementa na stranici
-        selectElement.click(); // Klik na dropdown kako bi se prikazale opcije
+                By.xpath("//select")));
+        selectElement.click();
 
-        // Odabir opcije "On Digitalization"
         Select select = new Select(selectElement);
-        select.selectByVisibleText("On Digitalization"); // Eksplicitno odabiremo "On Digitalization"
+        select.selectByVisibleText("On Digitalization");
 
-        // Provjera je li "On Digitalization"  odabrano
         String selectedOption = select.getFirstSelectedOption().getText();
         Assert.assertEquals(selectedOption, "On Digitalization", "Test Failed: Option 'On Digitalization' not selected.");
+
+        Thread.sleep(5000);
     }
 
     @Test
-    public void testFinishedList() {
-        // Otvaranje početnog URL-a
+    public void testFinishedList() throws InterruptedException {
         driver.get("https://restore-films-frontend.onrender.com");
 
-        // Čekanje da se prikaže stranica /home
         wait.until(ExpectedConditions.urlContains("/home"));
 
-        // Klik na gumb "Digitization"
         WebElement digitalizationButton = wait.until(ExpectedConditions.elementToBeClickable(
                 By.xpath("//button[contains(text(),'Digitization')]")));
         digitalizationButton.click();
 
-        // Pronalaženje i odabir opcije "Finished"
         WebElement selectElement = wait.until(ExpectedConditions.presenceOfElementLocated(
                 By.xpath("//select")));
         Select select = new Select(selectElement);
-        select.selectByVisibleText("Finished"); // Odabiremo opciju "Finished"
+        select.selectByVisibleText("Finished");
 
         // Provjera je li "Finished"  odabrano
         String selectedOption = select.getFirstSelectedOption().getText();
         Assert.assertEquals(selectedOption, "Finished", "Test Failed: Option 'Finished' not selected.");
+
+        Thread.sleep(5000);
     }
 
     @AfterClass

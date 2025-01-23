@@ -1,10 +1,6 @@
 package hr.unizg.fer.backend.e2e;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
@@ -19,7 +15,7 @@ import java.time.Duration;
 public class AdminUserTest {
     private WebDriver driver;
     private WebDriverWait wait;
-    private WebDriverWait shortWait; // Short wait for edge cases
+    private WebDriverWait shortWait;
 
     @BeforeClass
     public void setUp() {
@@ -31,44 +27,40 @@ public class AdminUserTest {
     }
 
     @Test
-    public void testAdminCanUpdateUserRole() throws InterruptedException {
-        // 1. Otvori početnu stranicu
+    public void testAdminCanUpdateUserRole() throws TimeoutException, InterruptedException {
         driver.get("https://restore-films-frontend.onrender.com");
 
-        // 2. Čekanje na učitavanje stranice i klik na "Users"
         wait.until(ExpectedConditions.urlContains("/home"));
         WebElement usersButton = wait.until(ExpectedConditions.elementToBeClickable(
                 By.xpath("//button[contains(text(),'Users')]")));
         usersButton.click();
 
-        // 3. Čekanje da se učita lista korisnika
         wait.until(ExpectedConditions.presenceOfElementLocated(By.className("user-list")));
 
-        // 4. Pronalaženje korisnika "Petar Jakuš" unutar klase "user-item"
-        WebElement userItem;
+        WebElement userItem = null;
         try {
             userItem = shortWait.until(ExpectedConditions.elementToBeClickable(
                     By.xpath("//li[contains(@class,'user-item')]//strong[text()='Petar' and text()='Jakuš']")));
+        } catch (TimeoutException e) {
+            Assert.fail("Test Failed: User 'Petar Jakuš' not found.");
         } catch (Exception e) {
-            throw new AssertionError("Test Failed: User 'Petar Jakuš' not found within the short wait time.", e);
+            Assert.fail("Test Failed: An unexpected error occurred.");
         }
 
-        // 5. Klik na select za tog korisnika
         WebElement selectElement = userItem.findElement(By.xpath(".//following-sibling::select"));
-        selectElement.click(); // Otvori padajući izbornik
+        selectElement.click();
 
-        // 6. Korištenje JavaScript za odabir opcije "VODITELJ"
-        WebElement optionVoditelj = wait.until(ExpectedConditions.presenceOfElementLocated(
-                By.xpath(".//option[@value='VODITELJ']")));
-
+        WebElement optionVoditelj = userItem.findElement(By.xpath(".//following-sibling::select//option[@value='VODITELJ']"));
         ((JavascriptExecutor) driver).executeScript("arguments[0].selected = true;", optionVoditelj);
         ((JavascriptExecutor) driver).executeScript("arguments[0].dispatchEvent(new Event('change'));", selectElement);
 
-        // 7. Provjera da li je opcija "VODITELJ" odabrana
         Select select = new Select(selectElement);
         String selectedOption = select.getFirstSelectedOption().getText();
         Assert.assertEquals(selectedOption, "VODITELJ", "Test Failed: Option 'VODITELJ' not selected for Petar Jakuš.");
+
+        Thread.sleep(5000);
     }
+
 
     @AfterClass
     public void tearDown() {
