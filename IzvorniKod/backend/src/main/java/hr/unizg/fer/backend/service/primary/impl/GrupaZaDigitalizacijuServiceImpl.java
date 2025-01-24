@@ -29,7 +29,7 @@ public class GrupaZaDigitalizacijuServiceImpl implements GrupaZaDigitalizacijuSe
     }
 
     public Long getFilmCountByStatus(StatusDigitalizacije statusDigitalizacije) {
-         return grupaZaDigitalizacijuRepository.countFilmsByStatus(statusDigitalizacije);
+        return grupaZaDigitalizacijuRepository.countFilmsByStatus(statusDigitalizacije);
     }
     @Override
     public Long countGroupsTakenOutByUser(Long idKorisnika) {
