@@ -164,8 +164,8 @@ const Barcodes = () => {
     doc.text("Statistika digitalizacije", 10, 20); // povećajte y koordinatu za 10
 
     doc.setFontSize(12); // smanjite veličinu fonta za ispis podataka
-    doc.text("NA CEKANJU:", 10, 30);
-    doc.text(`${statusi.NA_CEKANJU}`, 60, 30);
+    // doc.text("NA CEKANJU:", 10, 30);
+    // doc.text(`${statusi.NA_CEKANJU}`, 60, 30);
     doc.text("NA DIGITALIZACIJI:", 10, 35);
     doc.text(`${statusi.NA_DIGITALIZACIJI}`, 60, 35);
     doc.text("ZAVRŠENO:", 10, 40);
@@ -194,12 +194,16 @@ const Barcodes = () => {
                         {film.zemlja} - {film.godina} - {film.trajanje}
                         {") "}
                         <br></br>
-                        {film.grupa
-                          ? `In group: ${film.grupa}`
-                          : "In group: No"}
-                        <button onClick={() => handleEditClick(film)}>
-                          Edit
-                        </button>
+                        {film.grupa ? (
+                          `In group: ${film.grupa}`
+                        ) : (
+                          <>
+                            In group: No
+                            <button onClick={() => handleEditClick(film)}>
+                              Edit
+                            </button>
+                          </>
+                        )}
                       </li>
                     ))}
                   </ul>
@@ -261,8 +265,7 @@ const Barcodes = () => {
           <div className="digit-grouped">
             <div className="group-title">Group statistics</div>
             <div className="grouped-list">
-              <strong>On waiting:</strong> {statusi.NA_CEKANJU}
-              &nbsp;&nbsp;&nbsp;&nbsp;
+              {/* <strong>On waiting:</strong> {statusi.NA_CEKANJU}&nbsp;&nbsp;&nbsp;&nbsp; */}
               <strong>On digitalization:</strong> {statusi.NA_DIGITALIZACIJI}
               &nbsp;&nbsp;&nbsp;&nbsp;
               <strong>Finished:</strong> {statusi.ZAVRSENO}
