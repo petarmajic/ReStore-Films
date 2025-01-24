@@ -29,7 +29,7 @@ public class GrupaZaDigitalizacijuServiceImpl implements GrupaZaDigitalizacijuSe
     }
 
     public Long getFilmCountByStatus(StatusDigitalizacije statusDigitalizacije) {
-         return grupaZaDigitalizacijuRepository.countFilmsByStatus(statusDigitalizacije);
+        return grupaZaDigitalizacijuRepository.countFilmsByStatus(statusDigitalizacije);
     }
     @Override
     public Long countGroupsTakenOutByUser(Long idKorisnika) {
@@ -71,6 +71,29 @@ public class GrupaZaDigitalizacijuServiceImpl implements GrupaZaDigitalizacijuSe
                 filmskaTraka.setGrupeZaDigitalizaciju(novaGrupaZaDigitalizaciju.getIdGrupe().toString());
             }
             filmskaTrakaRepository.save(filmskaTraka);
+        }
+
+        // Ažuriranje korisnika koji je iznio grupu iz skladišta
+        Long korisnikId = grupaZaDigitalizaciju.getIznioIzSkladistaKorisnikId();
+        if (korisnikId != null) {
+            Optional<Korisnik> korisnikOptional = korisnikRepository.findById(korisnikId);
+            if (korisnikOptional.isPresent()) {
+                Korisnik korisnik = korisnikOptional.get();
+
+                // Ažuriraj polje iznioIzSkladistaGrupeZaDigitalizaciju
+                List<Long> iznioGrupeIds = korisnik.getIznioIzSkladistaGrupeZaDigitalizaciju() != null
+                        ? new ArrayList<>(korisnik.getIznioIzSkladistaGrupeZaDigitalizaciju())
+                        : new ArrayList<>();
+
+                if (!iznioGrupeIds.contains(novaGrupaZaDigitalizaciju.getIdGrupe())) {
+                    iznioGrupeIds.add(novaGrupaZaDigitalizaciju.getIdGrupe());
+                }
+
+                korisnik.setIznioIzSkladistaGrupeZaDigitalizaciju(iznioGrupeIds);
+                korisnikRepository.save(korisnik);
+            } else {
+                throw new NoSuchElementException("Korisnik sa ID-jem " + korisnikId + " ne postoji!");
+            }
         }
 
         return novaGrupaZaDigitalizaciju;
