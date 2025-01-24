@@ -30,7 +30,8 @@ class KorisnikServiceTest {
     @Test
     void testAddKorisnik() {
         // 1. Definiramo ulazne podatke
-        Korisnik noviKorisnik = new Korisnik(null, "Ivan", "Ivic", "ii12345@fer.hr", null, null, null);
+        Korisnik noviKorisnik = new Korisnik(null, "Ivan", "Ivic", "ii12345@fer.hr", null,
+                null, null);
 
         // 2. Definiramo ponašanje mocka
         when(korisnikRepository.findKorisnikByEmail(noviKorisnik.getEmail())).thenReturn(Optional.empty());
