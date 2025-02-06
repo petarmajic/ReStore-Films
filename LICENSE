@@ -1,21 +1,28 @@
-MIT License
+License
 
 Copyright (c) 2024 Petar Majić
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+ReStore-Films – Ne-komercijalna Licenca
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+UVOD
+Ova licenca ("Licenca") uređuje prava korištenja softvera ("Softver") koji je razvijen i u vlasništvu je ReStore-Films ("Licencodavac"). Korištenjem Softvera, licencoprimatelj ("Korisnik") prihvaća sve uvjete navedene u ovoj Licenci. Ako Korisnik ne pristaje na ove uvjete, nije ovlašten koristiti Softver.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+1. DODJELA LICENCE
+Licencodavac ovime daje Korisniku neekskluzivnu, neprenosivu i ograničenu licencu za korištenje Softvera isključivo u nekomercijalne svrhe. Ova licenca dopušta instalaciju, izvršavanje i pregledavanje Softvera za internu, osobnu i obrazovnu upotrebu, ali ne i za komercijalne svrhe.
+
+2. OGRANIČENJE KOMERCIJALNE UPOTREBE
+Korisnik se izričito obvezuje da neće:
+
+koristiti Softver za bilo koju komercijalnu aktivnost, uključujući, ali ne ograničavajući se na, prodaju, distribuciju, licenciranje, najam ili bilo kakvu drugu upotrebu s ciljem ostvarivanja financijske koristi,
+integrirati Softver u proizvode ili usluge koje se prodaju ili na drugi način komercijalno iskorištavaju. Za bilo kakvu komercijalnu upotrebu Softvera, Korisnik mora prethodno steći posebnu komercijalnu licencu, koja se mora kupiti od Licencodavca.
+3. INTELEKTUALNO VLASNIŠTVO
+Sav softver i prateća dokumentacija ostaju u potpunosti vlasništvo Licencodavca. Ova Licenca ne prenosi nikakva prava vlasništva, uključujući autorska prava, osim onih izričito dodijeljenih ovim dokumentom.
+
+4. OGRANIČENJE ODGOVORNOSTI I ODBIJANJE JAMSTVA
+Softver se isporučuje "kakav jest", bez ikakvih izričitih ili implicitnih jamstava, uključujući, ali ne ograničavajući se na, jamstva o prikladnosti za određenu svrhu i nekršenosti prava trećih strana. Licencodavac ni u kojem slučaju neće biti odgovoran za bilo kakvu direktnu, indirektnu, slučajnu, posebnu ili posljedičnu štetu koja proizlazi iz korištenja ili nemogućnosti korištenja Softvera.
+
+5. PREKID LICENCE
+Ova Licenca ostaje na snazi sve dok je Korisnik u potpunosti u skladu s njezinim uvjetima. Licencodavac može odmah prekinuti Licencu ako Korisnik prekrši bilo koji od uvjeta. U slučaju prekida, Korisnik je dužan odmah prekinuti svu upotrebu Softvera i uništiti sve kopije.
+
+6. OPĆE ODREDBE
+Ova Licenca predstavlja cjelovit sporazum između Licencodavca i Korisnika u vezi s predmetom softvera. Bilo kakve izmjene ili dopune ove Licence moraju biti u pisanom obliku i ovlaštene od strane Licencodavca.
